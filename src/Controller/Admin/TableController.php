@@ -215,7 +215,7 @@ class TableController extends AbstractActionController
         if ($form->isValid()) {
             $response = $this->api($form)->batchDelete('tables', $resourceIds, [], ['continueOnError' => true]);
             if ($response) {
-                $this->messenger()->addSuccess('Tables  successfully deleted'); // @translate
+                $this->messenger()->addSuccess('Tables successfully deleted.'); // @translate
             }
         } else {
             $this->messenger()->addFormErrors($form);

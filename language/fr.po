@@ -1,0 +1,371 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Daniel Berthereau <Daniel.gitlab@Berthereau.net>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-29 00:00+0000\n"
+"PO-Revision-Date: 2023-05-29 00:00+0000\n"
+"Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
+"Language-Team: French <kde-i18n-doc@kde.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#: src/Controller/Admin/TableController.php:105
+msgid "Add another table?"
+msgstr "Ajouter une autre table ?"
+
+#: src/Generic/AbstractModule.php:80 src/Generic/AbstractModule.php:88
+#: src/Generic/AbstractModule.php:890
+#, php-format
+msgid "This module requires the module \"%s\"."
+msgstr "Ce module requiert le module « %s »."
+
+#: src/Generic/AbstractModule.php:93
+#, php-format
+msgid "This module requires modules \"%s\"."
+msgstr "Ce module requiert les modules \"%s\"."
+
+#: src/Generic/AbstractModule.php:101
+msgid "This module has resources that cannot be installed."
+msgstr "Ce module a des ressources qui ne peuvent pas être installées."
+
+#: src/Generic/AbstractModule.php:108
+msgid ""
+"This module cannot install its tables, because they exist already. Try to "
+"remove them first."
+msgstr ""
+"Ce module ne peut pas installer ses tables car elles existent déjà. Essayez "
+"de les supprimer manuellement."
+
+#: src/Generic/AbstractModule.php:398
+#, php-format
+msgid "The module removed tables \"%s\" from a previous broken install."
+msgstr ""
+"Le module a supprimé les tables \"%s\" depuis une installation échouée."
+
+#: src/Generic/AbstractModule.php:885
+#, php-format
+msgid "This module requires the module \"%1$s\", version %2$s or above."
+msgstr "Ce module requiert le module « %1$s », version %2$s ou supérieure."
+
+#: src/Generic/AbstractModule.php:982
+#, php-format
+msgid ""
+"The module \"%s\" was automatically deactivated because the dependencies are "
+"unavailable."
+msgstr ""
+"Le module  %s » a été automatiquement désactivé car ses dépendances ne sont "
+"plus disponibles."
+
+#: view/table/admin/table/add.phtml:13
+msgid "New table"
+msgstr "Nouvelle table"
+
+#: view/table/admin/table/add.phtml:13 view/table/admin/table/browse.phtml:22
+#: view/table/admin/table/show.phtml:19
+msgid "Tables"
+msgstr "Tables"
+
+#: view/table/admin/table/browse.phtml:26
+msgid "Add new table"
+msgstr "Ajouter une nouvelle table"
+
+#: view/table/admin/table/browse.phtml:65
+msgid "Select table"
+msgstr "Choisir une table"
+
+#: view/table/admin/table/browse.phtml:122
+#: view/table/admin/table/browse.phtml:142
+msgid "Delete tables"
+msgstr "Supprimer les tables"
+
+#: view/table/admin/table/browse.phtml:123
+msgid "Are you sure you would like to delete the selected tables?"
+msgstr "Êtes-vous sûr de vouloir supprimer les tables sélectionnées ?"
+
+#: view/table/admin/table/browse.phtml:125
+#: view/table/admin/table/browse.phtml:145
+#, php-format
+msgid ""
+"%1$s: this action will permanently delete %2$s tables and cannot be undone."
+msgstr ""
+"%1$s : cette action supprimera définitivement les %2$s tables et ne pourra "
+"pas être annulée."
+
+#: view/table/admin/table/browse.phtml:143
+msgid ""
+"Are you sure you would like to delete all tables on all pages of this result?"
+msgstr "Êtes-vous sûr de vouloir supprimer toutes les tables du résultat ?"
+
+#: view/table/admin/table/browse.phtml:186
+msgid "Omeka could not find any tables."
+msgstr "Omeka ne trouve pas de table."
+
+#: view/table/admin/table/show-details.phtml:53
+msgid "Total codes"
+msgstr "Total des codes"
+
+#: view/table/admin/table/show.phtml:23
+msgid "Edit table"
+msgstr "Modifier la table"
+
+#: view/table/admin/table/show.phtml:62
+msgid "No codes"
+msgstr "Pas de code"
+
+#: src/Form/TableForm.php:52
+msgid "List of code and label separated by \"=\""
+msgstr "Liste des codes et libellés séparés par « = »"
+
+#: src/Api/Adapter/TableAdapter.php:242 src/Api/Adapter/TableAdapter.php:251
+msgid "A table must have a title."
+msgstr "Une table doit avoir un titre."
+
+#: src/Controller/Admin/TableController.php:101
+#, php-format
+msgid "Table successfully created. %s"
+msgstr "Table créée avec succès. %s"
+
+#: src/Controller/Admin/TableController.php:144
+msgid "Table successfully updated."
+msgstr "Table mise à jour avec succès."
+
+#: src/Controller/Admin/TableController.php:169
+msgid "table"
+msgstr "table"
+
+#: src/Controller/Admin/TableController.php:187
+msgid "Table successfully deleted."
+msgstr "Table supprimée avec succès."
+
+#: src/Controller/Admin/TableController.php:209
+msgid "You must select at least one table to batch delete."
+msgstr "Vous devez choisir au moins une table  à supprimer."
+
+#: src/Controller/Admin/TableController.php:218
+msgid "Tables successfully deleted."
+msgstr "Table supprimée avec succès."
+
+#: src/Controller/Admin/TableController.php:245
+#, php-format
+msgid "Deleting tables started in job %s."
+msgstr "Suppression des tables lancée dans la tâche %s."
+
+#: config/module.config.php:96
+msgid "Code count"
+msgstr "Total des codes"
+
+#~ msgid "Lang"
+#~ msgstr "Langue"
+
+#~ msgid "Tables  successfully deleted"
+#~ msgstr "Tables supprimées avec succès"
+
+#~ msgid ""
+#~ "Logging is not active. You should enable it in the file config/local."
+#~ "config.php: `'log' => true`."
+#~ msgstr ""
+#~ "Les journaux ne sont pas activés. Vous devez les activer dans le fichier "
+#~ "config/local.config.php : `'log' => true`."
+
+#~ msgid ""
+#~ "You may need to update config/local.config.php to update your log "
+#~ "settings."
+#~ msgstr ""
+#~ "Il peut être nécessaire de mettre à jour le fichier config/local.config."
+#~ "php pour les paramètres des journaux."
+
+#, php-format
+#~ msgid "See examples of config in the %sreadme%s."
+#~ msgstr "Cf. les exemples de configuration dans le %slisez-moi%s."
+
+#~ msgid "Message contains"
+#~ msgstr "Contenu du message"
+
+#~ msgid "Reference"
+#~ msgstr "Référence"
+
+#~ msgid "Severity"
+#~ msgstr "Gravité"
+
+#~ msgid "Job"
+#~ msgstr "Tâche"
+
+#~ msgid "Unknown job"
+#~ msgstr "Tâche inconnue"
+
+#~ msgid "Logs"
+#~ msgstr "Journaux"
+
+#~ msgid "Quick search / Filter"
+#~ msgstr "Recherche rapide / filtre"
+
+#~ msgid "Message"
+#~ msgstr "Message"
+
+#~ msgid "Full log"
+#~ msgstr "Message complet"
+
+#~ msgid "Parameters"
+#~ msgstr "Paramètres"
+
+#~ msgid "Search logs"
+#~ msgstr "Rechercher les journaux"
+
+#, php-format
+#~ msgid "Log #%d on %s"
+#~ msgstr "Journal #%d sur %s"
+
+#, php-format
+#~ msgid "Job #%d"
+#~ msgstr "Tâche #%d"
+
+#, php-format
+#~ msgid "Started at %s"
+#~ msgstr "Commencé à %s"
+
+#, php-format
+#~ msgid "Ended at %s"
+#~ msgstr "Terminé à %s"
+
+#~ msgid "Id / Params"
+#~ msgstr "Id / Paramètres"
+
+#~ msgid "Status / Log"
+#~ msgstr "Statut / Journal"
+
+#~ msgid "[undefined]"
+#~ msgstr "[indéfini]"
+
+#~ msgid "Progress"
+#~ msgstr "En cours"
+
+#~ msgid "Log (database)"
+#~ msgstr "Journal (base de données)"
+
+#, php-format
+#~ msgid "View log (%d results)"
+#~ msgstr "Voir les journaux (%d resultats)"
+
+#~ msgid "Set a date with optional comparator…"
+#~ msgstr "Indiquer une date avec un signe éventuel de comparaison…"
+
+#~ msgid "Emergency"
+#~ msgstr "Urgence"
+
+#~ msgid "Alert"
+#~ msgstr "Alerte"
+
+#~ msgid "Critical"
+#~ msgstr "Critique"
+
+#~ msgid "Notice"
+#~ msgstr "Avis"
+
+#~ msgid "Debug"
+#~ msgstr "Débogage"
+
+#~ msgid "Minimum severity"
+#~ msgstr "Gravité minimale"
+
+#~ msgid "Select minimum severity…"
+#~ msgstr "Choisir la gravité minimale…"
+
+#~ msgid "Maximum severity"
+#~ msgstr "Gravité maximale"
+
+#~ msgid "Select maximum severity…"
+#~ msgstr "Choisir la gravité maximale…"
+
+#~ msgid "Set a reference…"
+#~ msgstr "Indiquer une référence…"
+
+#~ msgid "Set a job id…"
+#~ msgstr "Indiquer un id de tâche…"
+
+#~ msgid "Untranslated message"
+#~ msgstr "Message non traduit"
+
+#~ msgid "Set an untranslated string…"
+#~ msgstr "Indiquer une chaîne non traduite…"
+
+#~ msgid "Not in untranslated message"
+#~ msgstr "Absent du message non traduit"
+
+#~ msgid ""
+#~ "The logger is currently disabled for database. Check config/local.config."
+#~ "php."
+#~ msgstr ""
+#~ "Le journal en base de données est actuellement désactivé. Vérifier config/"
+#~ "local.config.php."
+
+#~ msgid "log"
+#~ msgstr "journal"
+
+#~ msgid "An error occured during deletion of logs"
+#~ msgstr "Une erreur est survenue lors de la suppression des journaux"
+
+#~ msgid ""
+#~ "Deleting logs in background (<a href=\"{job_url}\">job #{job_id}</a>). "
+#~ "This may take a while."
+#~ msgstr ""
+#~ "Suppression des journaux en arrière-plan (<a href=\"{job_url}\">tâche "
+#~ "#{job_id}</a>). Cela peut prendre un moment."
+
+#~ msgid "emergency"
+#~ msgstr "urgence"
+
+#~ msgid "alert"
+#~ msgstr "alerte"
+
+#~ msgid "critical"
+#~ msgstr "critique"
+
+#~ msgid "warning"
+#~ msgstr "attention"
+
+#~ msgid "notice"
+#~ msgstr "avis"
+
+#~ msgid "info"
+#~ msgstr "info"
+
+#~ msgid "debug"
+#~ msgstr "débogage"
+
+#~ msgid "[Omeka S] Database logging disabled: wrong config."
+#~ msgstr ""
+#~ "[Omeka S] Enregistrement des journaux en base de données désactivée : "
+#~ "erreur de configuration."
+
+#~ msgid "[Omeka S] File logging disabled: not writeable."
+#~ msgstr ""
+#~ "[Omeka S] Enregistrement des journaux dans le fichier désactivée : "
+#~ "permission refusée pour écrire dans le fichier."
+
+#~ msgid ""
+#~ "Fatal error: {message}\n"
+#~ "in {file} on line {line}"
+#~ msgstr ""
+#~ "Erreur fatale : {message}\n"
+#~ "dans {file} ligne {line}"
+
+#~ msgid ""
+#~ "Warning: {message}\n"
+#~ "in {file} on line {line}"
+#~ msgstr ""
+#~ "Attention : {message}\n"
+#~ "dans {file} ligne {line}"
+
+#~ msgid "default"
+#~ msgstr "défaut"
+
+#~ msgid "Info"
+#~ msgstr "Info"

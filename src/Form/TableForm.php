@@ -38,7 +38,7 @@ class TableForm extends Form
                 'name' => 'o:lang',
                 'type' => Element\Text::class,
                 'options' => [
-                    'label' => 'Lang', // @translate
+                    'label' => 'Language', // @translate
                 ],
                 'attributes' => [
                     'id' => 'o-lang',

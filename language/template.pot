@@ -1,0 +1,156 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-29 00:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/Controller/Admin/TableController.php:105
+msgid "Add another table?"
+msgstr ""
+
+#: src/Generic/AbstractModule.php:80 src/Generic/AbstractModule.php:88
+#: src/Generic/AbstractModule.php:890
+#, php-format
+msgid "This module requires the module \"%s\"."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:93
+#, php-format
+msgid "This module requires modules \"%s\"."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:101
+msgid "This module has resources that cannot be installed."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:108
+msgid ""
+"This module cannot install its tables, because they exist already. Try to "
+"remove them first."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:398
+#, php-format
+msgid "The module removed tables \"%s\" from a previous broken install."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:885
+#, php-format
+msgid "This module requires the module \"%1$s\", version %2$s or above."
+msgstr ""
+
+#: src/Generic/AbstractModule.php:982
+#, php-format
+msgid ""
+"The module \"%s\" was automatically deactivated because the dependencies are "
+"unavailable."
+msgstr ""
+
+#: view/table/admin/table/add.phtml:13
+msgid "New table"
+msgstr ""
+
+#: view/table/admin/table/add.phtml:13 view/table/admin/table/browse.phtml:22
+#: view/table/admin/table/show.phtml:19
+msgid "Tables"
+msgstr ""
+
+#: view/table/admin/table/browse.phtml:26
+msgid "Add new table"
+msgstr ""
+
+#: view/table/admin/table/browse.phtml:65
+msgid "Select table"
+msgstr ""
+
+#: view/table/admin/table/browse.phtml:122
+#: view/table/admin/table/browse.phtml:142
+msgid "Delete tables"
+msgstr ""
+
+#: view/table/admin/table/browse.phtml:123
+msgid "Are you sure you would like to delete the selected tables?"
+msgstr ""
+
+#: view/table/admin/table/browse.phtml:125
+#: view/table/admin/table/browse.phtml:145
+#, php-format
+msgid ""
+"%1$s: this action will permanently delete %2$s tables and cannot be undone."
+msgstr ""
+
+#: view/table/admin/table/browse.phtml:143
+msgid ""
+"Are you sure you would like to delete all tables on all pages of this result?"
+msgstr ""
+
+#: view/table/admin/table/browse.phtml:186
+msgid "Omeka could not find any tables."
+msgstr ""
+
+#: view/table/admin/table/show-details.phtml:53
+msgid "Total codes"
+msgstr ""
+
+#: view/table/admin/table/show.phtml:23
+msgid "Edit table"
+msgstr ""
+
+#: view/table/admin/table/show.phtml:62
+msgid "No codes"
+msgstr ""
+
+#: src/Form/TableForm.php:52
+msgid "List of code and label separated by \"=\""
+msgstr ""
+
+#: src/Api/Adapter/TableAdapter.php:242 src/Api/Adapter/TableAdapter.php:251
+msgid "A table must have a title."
+msgstr ""
+
+#: src/Controller/Admin/TableController.php:101
+#, php-format
+msgid "Table successfully created. %s"
+msgstr ""
+
+#: src/Controller/Admin/TableController.php:144
+msgid "Table successfully updated."
+msgstr ""
+
+#: src/Controller/Admin/TableController.php:169
+msgid "table"
+msgstr ""
+
+#: src/Controller/Admin/TableController.php:187
+msgid "Table successfully deleted."
+msgstr ""
+
+#: src/Controller/Admin/TableController.php:209
+msgid "You must select at least one table to batch delete."
+msgstr ""
+
+#: src/Controller/Admin/TableController.php:218
+msgid "Tables successfully deleted."
+msgstr ""
+
+#: src/Controller/Admin/TableController.php:245
+#, php-format
+msgid "Deleting tables started in job %s."
+msgstr ""
+
+#: config/module.config.php:96
+msgid "Code count"
+msgstr ""
