@@ -1,0 +1,25 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Table\Form\TableForm $form
+ */
+
+$plugins = $this->getHelperPluginManager();
+$translate = $plugins->get('translate');
+
+$this->htmlElement('body')->appendAttribute('class', 'tables add');
+?>
+
+<?= $this->pageTitle($translate('New table'), 1, $translate('Tables')) ?>
+
+<?php $this->trigger('view.add.before'); ?>
+
+<?= $this->partial('table/admin/table/form', [
+    'form' => $form,
+    'table' => null,
+    'resource' => null,
+    'action' => 'add',
+    'submitLabel' => $translate('Add'),
+]) ?>
+
+<?php $this->trigger('view.add.after'); ?>

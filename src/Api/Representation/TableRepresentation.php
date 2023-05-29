@@ -77,6 +77,14 @@ class TableRepresentation extends AbstractEntityRepresentation
         return $this->resource->getTitle();
     }
 
+    /**
+     * For simplicity with generic code.
+     */
+    public function displayTitle(): string
+    {
+        return $this->title();
+    }
+
     public function lang(): ?string
     {
         return $this->resource->getLang();
@@ -106,6 +114,11 @@ class TableRepresentation extends AbstractEntityRepresentation
         return $this->elements;
     }
 
+    public function elementCount(): int
+    {
+        return $this->resource->getElements()->count();
+    }
+
     /**
      * @param string|int $code Int is managed in order to fix array issues.
      */
@@ -129,5 +142,36 @@ class TableRepresentation extends AbstractEntityRepresentation
         return $code === false
             ? null
             : (string) $code;
+    }
+
+    /**
+     *@todo The route doesn't exclude add/edit etc., so an action is required.
+     *
+     * {@inheritDoc}
+     * @see \Omeka\Api\Representation\AbstractResourceRepresentation::url()
+     */
+    public function url($action = null, $canonical = false)
+    {
+        return parent::url($action ?? 'show', $canonical);
+    }
+
+    /**
+     * Use slug instead of the id.
+     *
+     * {@inheritDoc}
+     * @see \Omeka\Api\Representation\AbstractResourceRepresentation::adminUrl()
+     */
+    public function adminUrl($action = null, $canonical = false)
+    {
+        $url = $this->getViewHelper('Url');
+        return $url(
+            'admin/table-id',
+            [
+                'controller' => $this->getControllerName(),
+                'action' => $action ?? 'show',
+                'slug' => $this->slug(),
+            ],
+            ['force_canonical' => $canonical]
+        );
     }
 }

@@ -1,0 +1,34 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Table\Form\TableForm $form
+ * @var \Table\Api\Representation\TableRepresentation $table
+ * @var \Table\Api\Representation\TableRepresentation $resource
+ */
+
+$plugins = $this->getHelperPluginManager();
+$translate = $plugins->get('translate');
+
+$this->htmlElement('body')->appendAttribute('class', 'tables edit');
+
+$deleteButton = $table->userIsAllowed('delete')
+    ? '<a href="#" class="delete button">' . $translate('Delete') . '</a>'
+    : null;
+?>
+
+<?= $this->pageTitle($table->displayTitle(), 1, $translate('Items'), $translate('Edit')) ?>
+
+<?php $this->trigger('view.edit.before'); ?>
+
+<?= $this->partial('table/admin/table/form', [
+    'form' => $form,
+    'table' => $table,
+    'resource' => $table,
+    'action' => 'edit',
+    'submitLabel' => $translate('Save'),
+    'deleteButton' => $deleteButton,
+]) ?>
+
+<?= $this->deleteConfirm($table, 'table') ?>
+
+<?php $this->trigger('view.edit.after'); ?>

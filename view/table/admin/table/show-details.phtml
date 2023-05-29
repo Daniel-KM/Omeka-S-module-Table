@@ -1,0 +1,57 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Table\Api\Representation\TableRepresentation $table
+ * @var \Table\Api\Representation\TableRepresentation $resource
+ * @var bool $linkTitle
+ */
+
+$plugins = $this->getHelperPluginManager();
+$i18n = $plugins->get('i18n');
+$escape = $plugins->get('escapeHtml');
+$translate = $plugins->get('translate');
+
+$this->htmlElement('body')->appendAttribute('class', 'tables show');
+
+$owner = $table->owner();
+$lang = $table->lang();
+?>
+
+<div class="resource-details">
+    <?php if ($linkTitle): ?>
+    <h3 class="o-title"><?= $resource->link($resource->displayTitle()) ?></h3>
+    <?php else: ?>
+    <h3 class="o-title"><?= $escape($resource->displayTitle()) ?></h3>
+    <?php endif; ?>
+    <div class="meta-group">
+        <h4><?= $translate('ID') ?></h4>
+        <div class="value"><?= $escape($resource->id()) ?></div>
+    </div>
+    <div class="meta-group">
+        <h4><?= $translate('Slug') ?></h4>
+        <div class="value"><?= $escape($resource->slug()) ?></div>
+    </div>
+    <div class="meta-group">
+        <h4><?= $translate('Language') ?></h4>
+        <div class="value"><?= $lang ? $escape($lang) : $translate('None') ?></div>
+    </div>
+    <div class="meta-group">
+        <h4><?= $translate('Owner') ?></h4>
+        <div class="value"><?= $owner ? $escape($owner->name()) : $translate('None') ?></div>
+    </div>
+    <div class="meta-group">
+        <h4><?= $translate('Created') ?></h4>
+        <div class="value"><?= $escape($i18n->dateFormat($table->created())) ?></div>
+    </div>
+    <?php if ($modified = $table->modified()): ?>
+    <div class="meta-group">
+        <h4><?= $translate('Modified') ?></h4>
+        <div class="value"><?= $escape($i18n->dateFormat($modified)) ?></div>
+    </div>
+    <?php endif; ?>
+    <div class="meta-group">
+        <h4><?= $translate('Total elements') ?></h4>
+        <div class="value"><?= $table->elementCount() ?></div>
+    </div>
+    <?php $this->trigger('view.details', array('entity' => $resource)); ?>
+</div>

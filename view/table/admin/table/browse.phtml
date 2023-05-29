@@ -1,0 +1,189 @@
+<?php
+/**
+ * @var \Laminas\View\Renderer\PhpRenderer $this
+ * @var \Table\Api\Representation\TableRepresentation[] $tables
+ * @var \Table\Api\Representation\TableRepresentation[] $resources
+ * @var \Omeka\Form\ConfirmForm $formDeleteSelected
+ * @var \Omeka\Form\ConfirmForm $formDeleteAll
+ * @var array $returnQuery
+ */
+
+$plugins = $this->getHelperPluginManager();
+$escape = $plugins->get('escapeHtml');
+$translate = $plugins->get('translate');
+$hyperlink = $plugins->get('hyperlink');
+
+$this->htmlElement('body')->appendAttribute('class', 'tables browse');
+
+$canBatchUpdate = $this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class, 'batch_update');
+$canBatchDeleteAll = $this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class, 'batch_delete_all');
+?>
+
+<?= $this->pageTitle($translate('Tables')) ?>
+
+<div id="page-actions">
+    <?php if ($this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class, 'create')): ?>
+    <?= $hyperlink($translate('Add new table'), $this->url(null, ['action' => 'add'], true), ['class' => 'button']) ?>
+    <?php endif; ?>
+</div>
+
+<?php $this->trigger('view.browse.before'); ?>
+
+<?php if ($tables): ?>
+
+<form method="post" id="batch-form" class="disable-unsaved-warning">
+    <?php if ($canBatchUpdate): ?>
+    <div class="batch-inputs">
+        <select class="batch-actions-select" aria-label="<?= $translate('Batch actions') ?>">
+            <option value="default"><?= $translate('Batch actions') ?></option>
+            <option value="delete-selected" disabled="true"><?= $translate('Delete selected') ?></option>
+            <?php if ($canBatchDeleteAll): ?>
+            <option value="delete-all"><?= $translate('Delete all') ?></option>
+            <?php endif; ?>
+        </select>
+        <div class="batch-actions">
+            <button type="button" class="default active" disabled="true"><?= $translate('Go') ?></button>
+            <input type="hidden" name="query" class="batch-query" value="<?= $escape(json_encode($this->params()->fromQuery())); ?>">
+            <a class="delete button sidebar-content delete-selected" data-sidebar-selector="#sidebar-delete-selected"><?= $translate('Go') ?></a>
+            <a class="delete button sidebar-content delete-all" data-sidebar-selector="#sidebar-delete-all"><?= $translate('Go') ?></a>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <table class="tablesaw batch-edit" data-tablesaw-mode="stack">
+        <thead>
+            <tr>
+                <th><input type="checkbox" class="select-all" aria-label="<?= $translate('Select all') ?>"><?= $translate('Title') ?></th>
+                <?= $this->browse()->renderHeaderRow('tables') ?>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($tables as $table): ?>
+            <tr>
+                <td>
+                    <?php if ($canBatchUpdate && ($table->userIsAllowed('update') || $table->userIsAllowed('delete'))): ?>
+                    <input type="checkbox" name="resource_ids[]" value="<?= $table->id(); ?>" aria-label="<?= $translate('Select table') ?>">
+                    <?php endif; ?>
+                    <?= $table->link($table->displayTitle()) ?>
+                    <ul class="actions">
+                        <?php if ($table->userIsAllowed('update')): ?>
+                        <li><?= $table->link('', 'edit', [
+                            'class' => 'o-icon-edit',
+                            'title' => $translate('Edit'),
+                        ]); ?></li>
+                        <?php endif; ?>
+                        <?php if ($table->userIsAllowed('delete')): ?>
+                        <li><?= $hyperlink('', '#', [
+                            'data-sidebar-selector' => '#sidebar',
+                            'data-sidebar-content-url' => $table->url('delete-confirm'),
+                            'class' => 'o-icon-delete sidebar-content',
+                            'title' => $translate('Delete'),
+                        ]); ?></li>
+                        <?php endif; ?>
+                        <li><?= $hyperlink('', '#', [
+                            'data-sidebar-selector' => '#sidebar',
+                            'data-sidebar-content-url' => $table->url('show-details'),
+                            'class' => 'o-icon-more sidebar-content',
+                            'title' => $translate('Details'),
+                        ]); ?></li>
+                    </ul>
+                </td>
+                <?= $this->browse()->renderContentRow('tables', $table) ?>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</form>
+
+<?php $this->trigger('view.browse.after'); ?>
+
+<div class="browse-controls">
+    <?= $this->pagination() ?>
+</div>
+
+<div id="sidebar" class="sidebar">
+    <?= $hyperlink('', '#', [
+        'class' => 'sidebar-close o-icon-close',
+        'title' => $translate('Close'),
+    ]); ?>
+    <div class="sidebar-content"></div>
+</div>
+
+<?php if ($canBatchUpdate): ?>
+
+<div id="sidebar-delete-selected" class="sidebar">
+    <?= $hyperlink('', '#', [
+        'class' => 'sidebar-close o-icon-close',
+        'title' => $translate('Close'),
+    ]) ?>
+    <div class="sidebar-content">
+        <div id="sidebar-confirm">
+            <h3><?= $translate('Delete tables') ?></h3>
+            <p><?= $translate('Are you sure you would like to delete the selected tables?') ?></p>
+            <p class="error"><?= sprintf(
+                $translate('%1$s: this action will permanently delete %2$s tables and cannot be undone.'),
+                sprintf('<strong>%s</strong>', $translate('Warning')),
+                '<strong><span id="delete-selected-count"></span></strong>'
+            ) ?></p>
+            <?= $this->form($formDeleteSelected) ?>
+        </div>
+    </div>
+</div>
+
+<?php if ($canBatchDeleteAll): ?>
+<div id="sidebar-delete-all" class="sidebar">
+    <?=  $hyperlink('', '#', [
+        'class' => 'sidebar-close o-icon-close',
+        'title' => $translate('Close'),
+    ]) ?>
+    <div class="sidebar-content">
+        <div id="sidebar-confirm">
+            <h3><?= $translate('Delete tables') ?></h3>
+            <p><?= $translate('Are you sure you would like to delete all tables on all pages of this result?') ?></p>
+            <p class="error"><?= sprintf(
+                $translate('%1$s: this action will permanently delete %2$s tables and cannot be undone.'),
+                sprintf('<strong>%s</strong>', $translate('Warning')),
+                sprintf('<strong>%s</strong>', number_format($this->pagination()->getPaginator()->getTotalCount()))
+            ) ?></p>
+            <label><input type="checkbox" name="confirm-delete-all-check"> <?= $translate('Are you sure?') ?></label>
+            <?= $this->form($formDeleteAll) ?>
+        </div>
+    </div>
+</div>
+    <?php endif; ?>
+
+<?php endif; ?>
+
+<script>
+// Complete the batch delete form after confirmation.
+$('#confirm-delete-selected, #confirm-delete-all').on('submit', function(e) {
+    var confirmForm = $(this);
+    if ('confirm-delete-all' === this.id) {
+        confirmForm.append($('.batch-query').clone());
+    } else {
+        $('#batch-form').find('input[name="resource_ids[]"]:checked').each(function() {
+            confirmForm.append($(this).clone().prop('disabled', false).attr('type', 'hidden'));
+        });
+    }
+});
+$('.delete-all').on('click', function(e) {
+    Omeka.closeSidebar($('#sidebar-delete-selected'));
+});
+$('.delete-selected').on('click', function(e) {
+    Omeka.closeSidebar($('#sidebar-delete-all'));
+    var inputs = $('input[name="resource_ids[]"]');
+    $('#delete-selected-count').text(inputs.filter(':checked').length);
+});
+$('#sidebar-delete-all').on('click', 'input[name="confirm-delete-all-check"]', function(e) {
+    $('#confirm-delete-all input[type="submit"]').prop('disabled', this.checked ? false : true);
+});
+</script>
+
+<?php else: ?>
+
+<div class="no-resources">
+    <p><?= $translate('Omeka could not find any tables.') ?></p>
+</div>
+
+<?php endif; ?>
