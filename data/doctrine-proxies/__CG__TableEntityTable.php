@@ -327,7 +327,7 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getElements(): \Doctrine\Common\Collections\ArrayCollection
+    public function getElements()
     {
 
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getElements', []);

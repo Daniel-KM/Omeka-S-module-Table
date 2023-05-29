@@ -8,9 +8,11 @@ use Omeka\Entity\AbstractEntity;
 use Omeka\Entity\User;
 
 /**
+ * Uses a specific name, because "`table`" is a reserved sql keyword that is not fully managed in Omeka (ticks may be skipped).
+ *
  * @Entity
  * @Table(
- *     name="`table`",
+ *     name="tables",
  *     indexes={
  *         @Index(
  *             name="idx_table_slug",
@@ -100,7 +102,7 @@ class Table extends AbstractEntity
      *
      * @OneToMany(
      *     targetEntity="Table\Entity\Element",
-     *     mappedBy="`table`",
+     *     mappedBy="table",
      *     orphanRemoval=true,
      *     cascade={"persist", "remove", "detach"},
      *     indexBy="property_id"

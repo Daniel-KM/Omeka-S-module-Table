@@ -9,7 +9,7 @@ use Omeka\Entity\AbstractEntity;
  *
  * @Entity
  * @Table(
- *     name="`table_element`",
+ *     name="table_element",
  *     uniqueConstraints={
  *         @UniqueConstraint(
  *             name="idx_table_code",
