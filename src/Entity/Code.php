@@ -6,20 +6,19 @@ use Omeka\Entity\AbstractEntity;
 
 /**
  * @todo The id is useless, but simplifies management in doctrine.
+ * @todo "idx_table_code" should be uniqueConstraints, but duplicate issue on update (mysql is not sql), so only checked in adapter for now.
  *
  * @Entity
  * @Table(
  *     name="table_element",
- *     uniqueConstraints={
- *         @UniqueConstraint(
+ *      indexes={
+ *         @Index(
  *             name="idx_table_code",
  *             columns={
  *                 "table_id",
  *                 "code"
  *             }
- *         )
- *     },
- *      indexes={
+ *         ),
  *         @Index(
  *             name="idx_table_label",
  *             columns={
