@@ -1,0 +1,29 @@
+{
+    "name": "daniel-km/omeka-s-module-table",
+    "description": "Table (module for Omeka S)",
+    "type": "library",
+    "license": "CECILL-2.1",
+    "authors": [
+        {
+            "name": "Daniel Berthereau",
+            "email": "Daniel.packagist@Berthereau.net"
+        }
+    ],
+    "homepage": "https://gitlab.com/Daniel-KM/Omeka-S-module-Table",
+    "support": {
+        "issues": "https://gitlab.com/Daniel-KM/Omeka-S-module-Table/-/issues",
+        "forum": "https://forum.omeka.org/"
+    },
+    "keywords": [
+        "Omeka S",
+        "module",
+        "table",
+        "data",
+        "admin"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Table\\": "src/"
+        }
+    }
+}
