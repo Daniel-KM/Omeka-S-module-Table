@@ -242,11 +242,12 @@ class TableController extends AbstractActionController
                 'query' => $query,
             ]);
             $message = new Message(
-                'Deleting tables started in job %1$s#%2$d%3$s (%4$slogs%3$s)', // @translate
-                sprintf('<a href="%1$s">', $this->url()->fromRoute('admin/id', ['controller' => 'job', 'id' => $job->getId()])),
-                $job->getId(),
-                '</a>',
-                sprintf('<a href="%1$s">', class_exists('Log\Stdlib\PsrMessage') ? $this->url()->fromRoute('admin/default', ['controller' => 'log'], ['query' => ['job_id' => $job->getId()]]) :  $this->url()->fromRoute('admin/id', ['controller' => 'job', 'action' => 'log', 'id' => $job->getId()]))
+                'Deleting tables started in job %s.', // @translate
+                sprintf(
+                    '<a href="%1$s">%2$s</a>',
+                    $this->url()->fromRoute('admin/id', ['controller' => 'job', 'id' => $job->getId()]),
+                    $job->getId(),
+                )
             );
             $message->setEscapeHtml(false);
             $this->messenger()->addSuccess($message);

@@ -106,8 +106,8 @@ class TableRepresentation extends AbstractEntityRepresentation
             return $this->codes;
         }
 
-        /** @var \Table\Entity\Code $code */
         $this->codes = [];
+        /** @var \Table\Entity\Code $code */
         foreach ($this->resource->getCodes() as $code) {
             $this->codes[$code->getCode()] = $code->getLabel();
         }

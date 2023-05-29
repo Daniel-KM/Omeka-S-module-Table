@@ -191,7 +191,7 @@ class TableAdapter extends AbstractEntityAdapter
 
         // Order codes by code early.
         // Code may be a number, so avoid a strict type issue with direct uksort().
-        $cmp = function($a, $b) {
+        $cmp = function ($a, $b) {
             return strcasecmp((string) $a, (string) $b);
         };
         uksort($codeData, $cmp);
@@ -201,18 +201,18 @@ class TableAdapter extends AbstractEntityAdapter
         $newCodes = [];
 
         foreach ($codeData as $code => $label) {
-            $code = current($existingCodes);
-            if ($code === false) {
-                $code = new Code();
-                $code->setTable($table);
-                $newCodes[] = $code;
+            $codeEntity = current($existingCodes);
+            if ($codeEntity === false) {
+                $codeEntity = new Code();
+                $codeEntity->setTable($table);
+                $newCodes[] = $codeEntity;
             } else {
                 // Null out values as we re-use them.
                 $existingCodes[key($existingCodes)] = null;
                 next($existingCodes);
             }
 
-            $code
+            $codeEntity
                 ->setCode($code)
                 ->setLabel($label);
         }
@@ -230,7 +230,7 @@ class TableAdapter extends AbstractEntityAdapter
         }
     }
 
-    public function validateRequest(Request $request, ErrorStore $errorStore)
+    public function validateRequest(Request $request, ErrorStore $errorStore): void
     {
         $data = $request->getContent();
 
@@ -244,7 +244,7 @@ class TableAdapter extends AbstractEntityAdapter
         }
     }
 
-    public function validateEntity(EntityInterface $entity, ErrorStore $errorStore)
+    public function validateEntity(EntityInterface $entity, ErrorStore $errorStore): void
     {
         $title = $entity->getTitle();
         if (!is_string($title) || $title === '') {
