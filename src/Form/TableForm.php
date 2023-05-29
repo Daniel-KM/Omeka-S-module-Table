@@ -46,14 +46,14 @@ class TableForm extends Form
                 ],
             ])
             ->add([
-                'name' => 'o:element',
+                'name' => 'o:codes',
                 'type' => OmekaElement\ArrayTextarea::class,
                 'options' => [
-                    'label' => 'List of pairs of code and label separated by "="', // @translate
+                    'label' => 'List of code and label separated by "="', // @translate
                     'as_key_value' => true,
                 ],
                 'attributes' => [
-                    'id' => 'o-element',
+                    'id' => 'o-codes',
                     'rows' => '20',
                 ],
             ])

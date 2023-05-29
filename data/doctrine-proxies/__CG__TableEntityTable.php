@@ -67,10 +67,10 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'created', 'modified', 'elements'];
+            return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'created', 'modified', 'codes'];
         }
 
-        return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'created', 'modified', 'elements'];
+        return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'created', 'modified', 'codes'];
     }
 
     /**
@@ -327,12 +327,12 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function getElements()
+    public function getCodes()
     {
 
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getElements', []);
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getCodes', []);
 
-        return parent::getElements();
+        return parent::getCodes();
     }
 
     /**

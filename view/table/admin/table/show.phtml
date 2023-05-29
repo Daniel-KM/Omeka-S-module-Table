@@ -43,14 +43,14 @@ $lang = $table->lang();
             <?php endif; ?>
         </div>
     </dl>
-    <?php if ($table->elementCount()): ?>
+    <?php if ($table->codeCount()): ?>
     <table class="tablesaw" data-tablesaw-mode="stack">
         <thead>
             <th><?= $translate('Code') ?></th>
             <th><?= $translate('Label') ?></th>
         </thead>
         <tbody>
-            <?php foreach($table->elements() as $code => $label): ?>
+            <?php foreach($table->codes() as $code => $label): ?>
             <tr>
                 <td><?= $escape($code) ?></td>
                 <td><?= $escape($label) ?></td>
@@ -59,7 +59,7 @@ $lang = $table->lang();
         </tbody>
     </table>
     <?php else: ?>
-    <p><?= $translate('No elements') ?></p>
+    <p><?= $translate('No codes') ?></p>
     <?php endif; ?>
 </div>
 

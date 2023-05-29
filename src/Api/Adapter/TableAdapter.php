@@ -10,7 +10,7 @@ use Omeka\Api\Request;
 use Omeka\Entity\EntityInterface;
 use Omeka\Stdlib\ErrorStore;
 use Omeka\Stdlib\Message;
-use Table\Entity\Element;
+use Table\Entity\Code;
 use Table\Entity\Table;
 
 class TableAdapter extends AbstractEntityAdapter
@@ -154,8 +154,8 @@ class TableAdapter extends AbstractEntityAdapter
             $entity->setLang($data['o:lang'] ?? null);
         }
 
-        if ($this->shouldHydrate($request, 'o:element')) {
-            $this->hydrateElements($request, $entity, $errorStore);
+        if ($this->shouldHydrate($request, 'o:codes')) {
+            $this->hydrateCodes($request, $entity, $errorStore);
         }
 
         $this->updateTimestamps($request, $entity);
@@ -166,19 +166,19 @@ class TableAdapter extends AbstractEntityAdapter
      *
      * @see \Omeka\Api\Adapter\SitePageAdapter::hydrateAttachments().
      */
-    protected function hydrateElements(
+    protected function hydrateCodes(
         Request $request,
         Table $table,
         ErrorStore $errorStore
     ): void {
-        $elementData = $request->getValue('o:element') ?: [];
+        $codeData = $request->getValue('o:codes') ?: [];
 
         // First, clean input.
         $clean = [];
-        foreach ($elementData as $code => $label) {
+        foreach ($codeData as $code => $label) {
             $code = trim((string) $code);
             if (!strlen($code)) {
-                unset($elementData[$code]);
+                unset($codeData[$code]);
                 continue;
             }
             $label = trim((string) $label);
@@ -187,46 +187,46 @@ class TableAdapter extends AbstractEntityAdapter
             }
             $clean[$code] = $label;
         }
-        $elementData = $clean;
+        $codeData = $clean;
 
-        // Order elements by code early.
+        // Order codes by code early.
         // Code may be a number, so avoid a strict type issue with direct uksort().
         $cmp = function($a, $b) {
             return strcasecmp((string) $a, (string) $b);
         };
-        uksort($elementData, $cmp);
+        uksort($codeData, $cmp);
 
-        $elements = $table->getElements();
-        $existingElements = $elements->toArray();
-        $newElements = [];
+        $codes = $table->getCodes();
+        $existingCodes = $codes->toArray();
+        $newCodes = [];
 
-        foreach ($elementData as $code => $label) {
-            $element = current($existingElements);
-            if ($element === false) {
-                $element = new Element();
-                $element->setTable($table);
-                $newElements[] = $element;
+        foreach ($codeData as $code => $label) {
+            $code = current($existingCodes);
+            if ($code === false) {
+                $code = new Code();
+                $code->setTable($table);
+                $newCodes[] = $code;
             } else {
                 // Null out values as we re-use them.
-                $existingElements[key($existingElements)] = null;
-                next($existingElements);
+                $existingCodes[key($existingCodes)] = null;
+                next($existingCodes);
             }
 
-            $element
+            $code
                 ->setCode($code)
                 ->setLabel($label);
         }
 
-        // Remove any elements that weren't reused.
-        foreach ($existingElements as $key => $existingElement) {
-            if ($existingElement !== null) {
-                $elements->remove($key);
+        // Remove any codes that weren't reused.
+        foreach ($existingCodes as $key => $existingCode) {
+            if ($existingCode !== null) {
+                $codes->remove($key);
             }
         }
 
-        // Add any new elements that had to be created.
-        foreach ($newElements as $newElement) {
-            $elements->add($newElement);
+        // Add any new codes that had to be created.
+        foreach ($newCodes as $newCode) {
+            $codes->add($newCode);
         }
     }
 

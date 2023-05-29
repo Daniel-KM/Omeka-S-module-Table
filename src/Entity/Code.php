@@ -10,7 +10,7 @@ use Omeka\Entity\AbstractEntity;
  *
  * @Entity
  * @Table(
- *     name="table_element",
+ *     name="table_code",
  *      indexes={
  *         @Index(
  *             name="idx_table_code",
@@ -32,7 +32,7 @@ use Omeka\Entity\AbstractEntity;
  *     }
  * )
  */
-class Element extends AbstractEntity
+class Code extends AbstractEntity
 {
     /**
      * @var int
@@ -48,7 +48,7 @@ class Element extends AbstractEntity
     /**
      * @ManyToOne(
      *     targetEntity="Table\Entity\Table",
-     *     inversedBy="elements"
+     *     inversedBy="codes"
      * )
      * @JoinColumn(
      *     nullable=false,

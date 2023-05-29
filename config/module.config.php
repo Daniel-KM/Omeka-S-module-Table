@@ -93,7 +93,7 @@ return [
                 'owner_name' => 'Owner', // @translate
                 'created' => 'Created', // @translate
                 'slug' => 'Slug', // @translate
-                'element_count' => 'Element count', // @translate
+                'code_count' => 'Code count', // @translate
             ],
         ],
     ],

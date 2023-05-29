@@ -101,7 +101,7 @@ class Table extends AbstractEntity
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
      * @OneToMany(
-     *     targetEntity="Table\Entity\Element",
+     *     targetEntity="Table\Entity\Code",
      *     mappedBy="table",
      *     orphanRemoval=true,
      *     cascade={"persist", "remove", "detach"},
@@ -111,11 +111,11 @@ class Table extends AbstractEntity
      *     {"code"="ASC"}
      * )
      */
-    protected $elements;
+    protected $codes;
 
     public function __construct()
     {
-        $this->elements = new ArrayCollection();
+        $this->codes = new ArrayCollection();
     }
 
     public function getId()
@@ -192,8 +192,8 @@ class Table extends AbstractEntity
     /**
      * @return \Doctrine\Common\Collections\ArrayCollection|\Doctrine\ORM\PersistentCollection
      */
-    public function getElements()
+    public function getCodes()
     {
-        return $this->elements;
+        return $this->codes;
     }
 }

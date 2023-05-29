@@ -50,8 +50,8 @@ $lang = $table->lang();
     </div>
     <?php endif; ?>
     <div class="meta-group">
-        <h4><?= $translate('Total elements') ?></h4>
-        <div class="value"><?= $table->elementCount() ?></div>
+        <h4><?= $translate('Total codes') ?></h4>
+        <div class="value"><?= $table->codeCount() ?></div>
     </div>
     <?php $this->trigger('view.details', array('entity' => $resource)); ?>
 </div>

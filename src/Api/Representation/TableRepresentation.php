@@ -14,11 +14,11 @@ class TableRepresentation extends AbstractEntityRepresentation
     protected $resource;
 
     /**
-     * Associative array of codes and values.
+     * Associative array of codes and labels.
      *
      * @var array
      */
-    protected $elements;
+    protected $codes;
 
     public function getControllerName()
     {
@@ -55,7 +55,7 @@ class TableRepresentation extends AbstractEntityRepresentation
             'o:lang' => $this->lang(),
             'o:created' => $created,
             'o:modified' => $modified,
-            'o:element' => $this->elements(),
+            'o:codes' => $this->codes(),
         ];
     }
 
@@ -100,23 +100,23 @@ class TableRepresentation extends AbstractEntityRepresentation
         return $this->resource->getModified();
     }
 
-    public function elements(): array
+    public function codes(): array
     {
-        if (is_array($this->elements)) {
-            return $this->elements;
+        if (is_array($this->codes)) {
+            return $this->codes;
         }
 
-        /** @var \Table\Entity\Element $element */
-        $this->elements = [];
-        foreach ($this->resource->getElements() as $element) {
-            $this->elements[$element->getCode()] = $element->getLabel();
+        /** @var \Table\Entity\Code $code */
+        $this->codes = [];
+        foreach ($this->resource->getCodes() as $code) {
+            $this->codes[$code->getCode()] = $code->getLabel();
         }
-        return $this->elements;
+        return $this->codes;
     }
 
-    public function elementCount(): int
+    public function codeCount(): int
     {
-        return $this->resource->getElements()->count();
+        return $this->resource->getCodes()->count();
     }
 
     /**
@@ -124,21 +124,21 @@ class TableRepresentation extends AbstractEntityRepresentation
      */
     public function labelFromCode($code): ?string
     {
-        if ($this->elements === null) {
-            $this->elements();
+        if ($this->codes === null) {
+            $this->codes();
         }
         $code = (string) $code;
-        return $this->elements[$code]
+        return $this->codes[$code]
             ?? null;
     }
 
     public function codeFromLabel($label): ?string
     {
-        if ($this->elements === null) {
-            $this->elements();
+        if ($this->codes === null) {
+            $this->codes();
         }
         $label = (string) $label;
-        $code = array_search($label, $this->elements);
+        $code = array_search($label, $this->codes);
         return $code === false
             ? null
             : (string) $code;
