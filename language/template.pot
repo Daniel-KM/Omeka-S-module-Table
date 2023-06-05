@@ -64,7 +64,7 @@ msgid "New table"
 msgstr ""
 
 #: view/table/admin/table/add.phtml:13 view/table/admin/table/browse.phtml:22
-#: view/table/admin/table/show.phtml:19
+#: view/table/admin/table/show.phtml:18
 msgid "Tables"
 msgstr ""
 
@@ -101,24 +101,48 @@ msgstr ""
 msgid "Omeka could not find any tables."
 msgstr ""
 
-#: view/table/admin/table/show-details.phtml:53
+#: view/table/admin/table/show-details.phtml:66
 msgid "Total codes"
 msgstr ""
 
-#: view/table/admin/table/show.phtml:23
+#: view/table/admin/table/show.phtml:22
 msgid "Edit table"
 msgstr ""
 
-#: view/table/admin/table/show.phtml:62
+#: view/table/admin/table/show.phtml:73
 msgid "No codes"
 msgstr ""
 
-#: src/Form/TableForm.php:52
+#: src/Form/Element/TraitGroupByOwner.php:64
+msgid "[No owner]"
+msgstr ""
+
+#: src/Form/TableForm.php:30
+msgid "Source (generally a url)"
+msgstr ""
+
+#: src/Form/TableForm.php:74
 msgid "List of code and label separated by \"=\""
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:242 src/Api/Adapter/TableAdapter.php:251
+#: src/Api/Adapter/TableAdapter.php:274 src/Api/Adapter/TableAdapter.php:283
 msgid "A table must have a title."
+msgstr ""
+
+#: src/Api/Adapter/TableAdapter.php:291
+msgid "A slug cannot be longer than 190 characters."
+msgstr ""
+
+#: src/Api/Adapter/TableAdapter.php:296
+msgid "A slug should be lower case."
+msgstr ""
+
+#: src/Api/Adapter/TableAdapter.php:298
+msgid "A slug should not be a numeric string."
+msgstr ""
+
+#: src/Api/Adapter/TableAdapter.php:300
+msgid "A slug cannot be a reserved keyword."
 msgstr ""
 
 #: src/Controller/Admin/TableController.php:101
@@ -151,6 +175,6 @@ msgstr ""
 msgid "Deleting tables started in job %s."
 msgstr ""
 
-#: config/module.config.php:96
+#: config/module.config.php:106
 msgid "Code count"
 msgstr ""

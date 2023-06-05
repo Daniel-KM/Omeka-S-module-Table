@@ -69,7 +69,7 @@ msgid "New table"
 msgstr "Nouvelle table"
 
 #: view/table/admin/table/add.phtml:13 view/table/admin/table/browse.phtml:22
-#: view/table/admin/table/show.phtml:19
+#: view/table/admin/table/show.phtml:18
 msgid "Tables"
 msgstr "Tables"
 
@@ -108,25 +108,49 @@ msgstr "Êtes-vous sûr de vouloir supprimer toutes les tables du résultat ?"
 msgid "Omeka could not find any tables."
 msgstr "Omeka ne trouve pas de table."
 
-#: view/table/admin/table/show-details.phtml:53
+#: view/table/admin/table/show-details.phtml:66
 msgid "Total codes"
 msgstr "Total des codes"
 
-#: view/table/admin/table/show.phtml:23
+#: view/table/admin/table/show.phtml:22
 msgid "Edit table"
 msgstr "Modifier la table"
 
-#: view/table/admin/table/show.phtml:62
+#: view/table/admin/table/show.phtml:73
 msgid "No codes"
 msgstr "Pas de code"
 
-#: src/Form/TableForm.php:52
+#: src/Form/Element/TraitGroupByOwner.php:64
+msgid "[No owner]"
+msgstr "[Pas de propriétaire]"
+
+#: src/Form/TableForm.php:30
+msgid "Source (generally a url)"
+msgstr "Source (généralement une url)"
+
+#: src/Form/TableForm.php:74
 msgid "List of code and label separated by \"=\""
 msgstr "Liste des codes et libellés séparés par « = »"
 
-#: src/Api/Adapter/TableAdapter.php:242 src/Api/Adapter/TableAdapter.php:251
+#: src/Api/Adapter/TableAdapter.php:274 src/Api/Adapter/TableAdapter.php:283
 msgid "A table must have a title."
 msgstr "Une table doit avoir un titre."
+
+#: src/Api/Adapter/TableAdapter.php:291
+msgid "A slug cannot be longer than 190 characters."
+msgstr "Un identifiant ne peut pas être plus long que 190 caractères."
+
+#: src/Api/Adapter/TableAdapter.php:296
+msgid "A slug should be lower case."
+msgstr "Un identifiant doit être en minuscule."
+
+#: src/Api/Adapter/TableAdapter.php:298
+msgid "A slug should not be a numeric string."
+msgstr "Un identifiant ne doit pas être un nombre."
+
+#: src/Api/Adapter/TableAdapter.php:300
+msgid "A slug cannot be a reserved keyword."
+msgstr "Un identifiant ne peut pas être un mot réservé."
 
 #: src/Controller/Admin/TableController.php:101
 #, php-format
@@ -158,7 +182,7 @@ msgstr "Table supprimée avec succès."
 msgid "Deleting tables started in job %s."
 msgstr "Suppression des tables lancée dans la tâche %s."
 
-#: config/module.config.php:96
+#: config/module.config.php:106
 msgid "Code count"
 msgstr "Total des codes"
 
