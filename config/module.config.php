@@ -21,6 +21,11 @@ return [
             dirname(__DIR__) . '/view',
         ],
     ],
+    'view_helpers' => [
+        'invokables' => [
+            'table' => View\Helper\Table::class,
+        ],
+    ],
     'form_elements' => [
         'invokables' => [
             Form\TableForm::class => Form\TableForm::class,
