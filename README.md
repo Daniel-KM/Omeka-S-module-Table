@@ -9,10 +9,10 @@ Table (module for Omeka S)
 example a list of language codes, a list of country codes, or unimarc codes.
 
 It is a library useful to normalize data or to denormalize them. It can be used
-by some other modules:
+by some other modules or in themes:
 
-- [Bulk Import] to convert codes into data (label, translation, or a more
-  standard code) or the reverse.
+- [Advanced Resource Template] to display a select for literal data. Unlike [Custom Vocab]
+  or [Value Suggest], the data type should be literal.
 - [Advanced Search adapter for Solr] to normalize data to index and to search,
   in particular when it is not possible to have consistent data because some
   librarians want to fill languages, countries or other data as plain text and
@@ -20,10 +20,17 @@ by some other modules:
   letters iso codes, some other ones with the three-letters bibliographic
   variant, or when data are fetched from various external repositories with
   specific codes.
+- [Bulk Import] to convert codes into data (label, translation, or a more
+  standard code) or the reverse.
+- [User Profile] to add a select in user form.
 
 A table contains two columns: a code, a keyword or a uri and the matching value
-or label. When using an uri, the purpose is similar to a list of uris managed by
-the module [Custom Vocab].
+or label.
+
+When using a uri, the purpose is similar to a list of uris managed by the module
+[Custom Vocab]. Of course, when possible, it is recommended to use online
+standard vocabularies via module [Value Suggest], for example for countries or
+languages.
 
 
 Installation
@@ -51,8 +58,27 @@ composer install --no-dev
 Usage
 -----
 
-Just fill the form: set a unique name (slug), a label, a language and fill the
-textarea.
+Just fill the form: set a unique name (the slug, a lower case string starting
+with a letter), a label, a language and fill the text area with a list of codes
+and labels, separated with a `=`, one pair by line.
+
+### User Profile and config of themes
+
+To use a table in module [User Profile] or in config of themes, add it like that:
+
+```ini
+elements.userprofile_organisation.name                          = "userprofile_organisation"
+elements.userprofile_organisation.type                          = "Table\Form\Element\TableSelect"
+elements.userprofile_organisation.options.element_group         = "profile"
+elements.userprofile_organisation.options.label                 = "Organisation"
+elements.userprofile_organisation.options.table                 = "organisation"
+elements.userprofile_organisation.options.empty_option          = ""
+elements.userprofile_organisation.attributes.id                 = "userprofile_organisation"
+elements.userprofile_organisation.attributes.class              = "chosen-select"
+elements.userprofile_organisation.attributes.data-placeholder   = "Select an organisation…"
+```
+
+The option `table` can be the table id or the table slug.
 
 
 TODO
@@ -117,9 +143,12 @@ Initially created for the digital Library [Numistral].
 
 [Table]: https://gitlab.com/Daniel-KM/Omeka-S-module-Table
 [Omeka S]: https://omeka.org/s
-[Bulk Import]: https://gitlab.com/Daniel-KM/Omeka-S-module-BulkImport
+[Advanced Resource Template]: https://gitlab.com/Daniel-KM/Omeka-S-module-AdvancedResourceTemplate
 [Advanced Search adapter for Solr]: https://gitlab.com/Daniel-KM/Omeka-S-module-SearchSolr
+[Bulk Import]: https://gitlab.com/Daniel-KM/Omeka-S-module-BulkImport
+[User Profile]: https://gitlab.com/Daniel-KM/Omeka-S-module-UserProfile
 [Custom Vocab]: https://omeka.org/s/modules/CustomVocab
+[Value Suggest]: https://omeka.org/s/modules/ValueSuggest
 [Generic]: https://gitlab.com/Daniel-KM/Omeka-S-module-Generic
 [Installing a module]: https://omeka.org/s/docs/user-manual/modules
 [Table.zip]: https://github.com/Daniel-KM/Omeka-S-module-Table/releases
