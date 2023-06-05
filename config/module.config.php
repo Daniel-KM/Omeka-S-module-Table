@@ -30,6 +30,9 @@ return [
         'invokables' => [
             Form\TableForm::class => Form\TableForm::class,
         ],
+        'factories' => [
+            Form\Element\TablesSelect::class => Service\Form\Element\TablesSelectFactory::class,
+        ],
     ],
     'controllers' => [
         'invokables' => [
