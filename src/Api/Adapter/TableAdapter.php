@@ -21,6 +21,8 @@ class TableAdapter extends AbstractEntityAdapter
         'id' => 'id',
         'owner' => 'owner',
         'title' => 'title',
+        'source' => 'source',
+        'comment' => 'comment',
         'slug' => 'slug',
         'lang' => 'lang',
         'created' => 'created',
@@ -31,6 +33,8 @@ class TableAdapter extends AbstractEntityAdapter
         'id' => 'id',
         'owner' => 'owner',
         'title' => 'title',
+        'source' => 'source',
+        'comment' => 'comment',
         'slug' => 'slug',
         'lang' => 'lang',
         'created' => 'created',
@@ -67,6 +71,20 @@ class TableAdapter extends AbstractEntityAdapter
             $qb->andWhere($expr->eq(
                 'omeka_root.title',
                 $this->createNamedParameter($qb, $query['title']))
+            );
+        }
+
+        if (isset($query['source']) && strlen((string) $query['source'])) {
+            $qb->andWhere($expr->eq(
+                'omeka_root.source',
+                $this->createNamedParameter($qb, $query['source']))
+            );
+        }
+
+        if (isset($query['comment']) && strlen((string) $query['comment'])) {
+            $qb->andWhere($expr->eq(
+                'omeka_root.comment',
+                $this->createNamedParameter($qb, $query['comment']))
             );
         }
 
@@ -135,6 +153,16 @@ class TableAdapter extends AbstractEntityAdapter
         if ($this->shouldHydrate($request, 'o:title')) {
             $title = trim($data['o:title'] ?? '') ?: null;
             $entity->setTitle($title);
+        }
+
+        if ($this->shouldHydrate($request, 'o:source')) {
+            $source = trim($data['o:source'] ?? '') ?: null;
+            $entity->setSource($source);
+        }
+
+        if ($this->shouldHydrate($request, 'o:comment')) {
+            $comment = trim($data['o:comment'] ?? '') ?: null;
+            $entity->setComment($comment);
         }
 
         if ($this->shouldHydrate($request, 'o:slug')) {

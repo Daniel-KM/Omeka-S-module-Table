@@ -53,20 +53,42 @@ class Table extends AbstractEntity
      * @var string
      *
      * @Column(
-     *     unique=true,
      *     length=190
      * )
      */
-    protected $slug;
+    protected $title;
 
     /**
      * @var string
      *
      * @Column(
+     *     type="text",
+     *     length=65535,
+     *     nullable=true
+     * )
+     */
+    protected $source;
+
+    /**
+     * @var string
+     *
+     * @Column(
+     *     type="text",
+     *     length=65535,
+     *     nullable=true
+     * )
+     */
+    protected $comment;
+
+    /**
+     * @var string
+     *
+     * @Column(
+     *     unique=true,
      *     length=190
      * )
      */
-    protected $title;
+    protected $slug;
 
     /**
      * @var string|null
@@ -134,17 +156,6 @@ class Table extends AbstractEntity
         return $this->owner;
     }
 
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
-        return $this;
-    }
-
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -154,6 +165,39 @@ class Table extends AbstractEntity
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function setSource(?string $source): self
+    {
+        $this->source = $source ?: null;
+        return $this;
+    }
+
+    public function getSource(): ?string
+    {
+        return $this->source;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment ?: null;
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
     }
 
     public function setLang(?string $lang): self

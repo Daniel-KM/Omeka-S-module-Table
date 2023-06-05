@@ -67,10 +67,10 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'created', 'modified', 'codes'];
+            return ['__isInitialized__', 'id', 'owner', 'title', 'source', 'comment', 'slug', 'lang', 'created', 'modified', 'codes'];
         }
 
-        return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'created', 'modified', 'codes'];
+        return ['__isInitialized__', 'id', 'owner', 'title', 'source', 'comment', 'slug', 'lang', 'created', 'modified', 'codes'];
     }
 
     /**
@@ -217,28 +217,6 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
-    public function setSlug(string $slug): \Table\Entity\Table
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSlug', [$slug]);
-
-        return parent::setSlug($slug);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSlug(): string
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSlug', []);
-
-        return parent::getSlug();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function setTitle(string $title): \Table\Entity\Table
     {
 
@@ -256,6 +234,72 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTitle', []);
 
         return parent::getTitle();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSource(?string $source): \Table\Entity\Table
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSource', [$source]);
+
+        return parent::setSource($source);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSource(): ?string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSource', []);
+
+        return parent::getSource();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setComment(?string $comment): \Table\Entity\Table
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setComment', [$comment]);
+
+        return parent::setComment($comment);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getComment(): ?string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getComment', []);
+
+        return parent::getComment();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setSlug(string $slug): \Table\Entity\Table
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSlug', [$slug]);
+
+        return parent::setSlug($slug);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSlug(): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSlug', []);
+
+        return parent::getSlug();
     }
 
     /**

@@ -14,7 +14,6 @@ $translate = $plugins->get('translate');
 $this->htmlElement('body')->appendAttribute('class', 'tables show');
 
 $owner = $table->owner();
-$lang = $table->lang();
 ?>
 
 <div class="resource-details">
@@ -25,20 +24,34 @@ $lang = $table->lang();
     <?php endif; ?>
     <div class="meta-group">
         <h4><?= $translate('ID') ?></h4>
-        <div class="value"><?= $escape($resource->id()) ?></div>
-    </div>
-    <div class="meta-group">
-        <h4><?= $translate('Slug') ?></h4>
-        <div class="value"><?= $escape($resource->slug()) ?></div>
-    </div>
-    <div class="meta-group">
-        <h4><?= $translate('Language') ?></h4>
-        <div class="value"><?= $lang ? $escape($lang) : $translate('None') ?></div>
+        <div class="value"><?= $resource->id() ?></div>
     </div>
     <div class="meta-group">
         <h4><?= $translate('Owner') ?></h4>
         <div class="value"><?= $owner ? $escape($owner->name()) : $translate('None') ?></div>
     </div>
+    <?php if ($v = $table->source()): ?>
+    <div class="meta-group">
+        <h4><?= $translate('Source') ?></h4>
+        <div class="value"><?= $escape($v) ?></div>
+    </div>
+    <?php endif; ?>
+    <?php if ($v = $table->comment()): ?>
+    <div class="meta-group">
+        <h4><?= $translate('Comment') ?></h4>
+        <div class="value"><?= $escape($v) ?></div>
+    </div>
+    <?php endif; ?>
+    <div class="meta-group">
+        <h4><?= $translate('Slug') ?></h4>
+        <div class="value"><?= $escape($resource->slug()) ?></div>
+    </div>
+    <?php if ($v = $table->lang()): ?>
+    <div class="meta-group">
+        <h4><?= $translate('Language') ?></h4>
+        <div class="value"><?= $escape($v) ?></div>
+    </div>
+    <?php endif; ?>
     <div class="meta-group">
         <h4><?= $translate('Created') ?></h4>
         <div class="value"><?= $escape($i18n->dateFormat($table->created())) ?></div>

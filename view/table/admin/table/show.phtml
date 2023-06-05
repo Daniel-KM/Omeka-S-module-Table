@@ -13,7 +13,6 @@ $translate = $plugins->get('translate');
 $this->htmlElement('body')->appendAttribute('class', 'tables show');
 
 $owner = $table->owner();
-$lang = $table->lang();
 ?>
 
 <?= $this->pageTitle($table->displayTitle(), 1, $translate('Tables')) ?>
@@ -29,12 +28,24 @@ $lang = $table->lang();
 <div id="item-metadata">
     <dl class="table-resource">
         <div class="meta-group">
-            <dt><?= $translate('Slug') ?></dt>
-            <dd class="value"><?= $escape($translate($table->slug())) ?></dd>
-            <dt><?= $translate('Language') ?></dt>
-            <dd class="value"><?= $lang ? $escape($translate($lang)) : $translate('None') ?></dd>
+            <dt><?= $translate('ID') ?></dt>
+            <dd class="value"><?= $table->id() ?></dd>
             <dt><?= $translate('Owner') ?></dt>
             <dd class="value"><?= $owner ? $escape($owner->name()) : $translate('None') ?></dd>
+            <?php if ($v = $table->source()): ?>
+            <dt><?= $translate('Source') ?></dt>
+            <dd class="value"><?= $escape($v) ?></dd>
+            <?php endif; ?>
+            <?php if ($v = $table->comment()): ?>
+            <dt><?= $translate('Comment') ?></dt>
+            <dd class="value"><?= $escape($v) ?></dd>
+            <?php endif; ?>
+            <dt><?= $translate('Slug') ?></dt>
+            <dd class="value"><?= $escape($table->slug()) ?></dd>
+            <?php if ($v = $table->lang()): ?>
+            <dt><?= $translate('Language') ?></dt>
+            <dd class="value"><?= $escape($v) ?></dd>
+            <?php endif; ?>
             <dt><?= $translate('Created') ?></dt>
             <dd class="value"><?= $escape($i18n->dateFormat($table->created())) ?></dd>
             <?php if ($modified = $table->modified()): ?>

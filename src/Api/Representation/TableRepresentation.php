@@ -65,6 +65,8 @@ class TableRepresentation extends AbstractEntityRepresentation
             'o:id' => $this->id(),
             'o:owner' => $owner ? $owner->getReference() : null,
             'o:title' => $this->title(),
+            'o:source' => $this->source(),
+            'o:comment' => $this->comment(),
             'o:slug' => $this->slug(),
             'o:lang' => $this->lang(),
             'o:created' => $created,
@@ -81,11 +83,6 @@ class TableRepresentation extends AbstractEntityRepresentation
             : null;
     }
 
-    public function slug(): string
-    {
-        return $this->resource->getSlug();
-    }
-
     public function title(): string
     {
         return $this->resource->getTitle();
@@ -97,6 +94,21 @@ class TableRepresentation extends AbstractEntityRepresentation
     public function displayTitle(): string
     {
         return $this->title();
+    }
+
+    public function source(): ?string
+    {
+        return $this->resource->getSource();
+    }
+
+    public function comment(): ?string
+    {
+        return $this->resource->getComment();
+    }
+
+    public function slug(): string
+    {
+        return $this->resource->getSlug();
     }
 
     public function lang(): ?string
