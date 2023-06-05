@@ -52,10 +52,11 @@ return [
                     'table-id' => [
                         'type' => \Laminas\Router\Http\Segment::class,
                         'options' => [
-                            // TODO Exclude common action as slug (add, edit, browse, show, delete, etc.). So action will be skippable.
+                            // TODO Exclude common action as slug (add, edit, browse, show, delete, etc.). So action will be skippable. For now, a check is done during hydration.
                             'route' => '/table/:slug/:action',
                             'constraints' => [
-                                'slug' => '\d+|[a-zA-Z][a-zA-Z0-9_-]*',
+                                // The slug may be a id or a slug. A slug should never be fully numeric.
+                                'slug' => '[a-z0-9_-]+',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ],
                             'defaults' => [

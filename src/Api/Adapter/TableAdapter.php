@@ -139,13 +139,17 @@ class TableAdapter extends AbstractEntityAdapter
 
         if ($this->shouldHydrate($request, 'o:slug')) {
             $title = $entity->getTitle();
-            $slug = trim($data['o:slug'] ?? '');
+            $slug = mb_strtolower(trim($data['o:slug'] ?? ''));
             if ($slug === ''
                 && $request->getOperation() === Request::CREATE
                 && is_string($title)
                 && $title !== ''
             ) {
                 $slug = $this->getAutomaticSlug($title);
+                if (is_numeric($slug)) {
+                    $slug = 't-' . $slug;
+                }
+                $slug = mb_substr($slug, 0, 190);
             }
             $entity->setSlug($slug);
         }
@@ -254,15 +258,25 @@ class TableAdapter extends AbstractEntityAdapter
         $slug = $entity->getSlug();
         if (!is_string($slug) || $slug === '') {
             $errorStore->addError('o:slug', 'The slug cannot be empty.'); // @translate
-        }
-        if (preg_match('/[^a-zA-Z0-9_-]/u', $slug)) {
-            $errorStore->addError('o:slug', 'A slug can only contain letters, numbers, underscores, and hyphens.'); // @translate
-        }
-        if (!$this->isUnique($entity, ['slug' => $slug])) {
-            $errorStore->addError('o:slug', new Message(
-                'The slug "%s" is already taken.', // @translate
-                $slug
-            ));
+        } else {
+            if (mb_strlen($slug) >= 190) {
+                $errorStore->addError('o:slug', 'A slug cannot be longer than 190 characters.'); // @translate
+            }
+            if (preg_match('/[^a-zA-Z0-9_-]/u', $slug)) {
+                $errorStore->addError('o:slug', 'A slug can only contain letters, numbers, underscores, and hyphens.'); // @translate
+            } elseif (preg_match('/[^a-z0-9_-]/u', $slug)) {
+                $errorStore->addError('o:slug', 'A slug should be lower case.'); // @translate
+            } elseif (is_numeric($slug)) {
+                $errorStore->addError('o:slug', 'A slug should not be a numeric string.'); // @translate
+            } elseif (in_array($slug, ['index', 'search', 'view', 'browse', 'add', 'edit', 'show', 'show-details', 'delete', 'delete-confirm', 'batch-edit', 'batch-edit-all'])) {
+                $errorStore->addError('o:slug', 'A slug cannot be a reserved keyword.'); // @translate
+            }
+            if (!$this->isUnique($entity, ['slug' => $slug])) {
+                $errorStore->addError('o:slug', new Message(
+                    'The slug "%s" is already taken.', // @translate
+                    $slug
+                ));
+            }
         }
     }
 }
