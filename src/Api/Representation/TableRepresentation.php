@@ -20,6 +20,20 @@ class TableRepresentation extends AbstractEntityRepresentation
      */
     protected $codes;
 
+    /**
+     * Associative array of codes in lower case without diacritics and labels.
+     *
+     * @var array
+     */
+    protected $cleanCodes;
+
+    /**
+     * Associative array of codes and labels in lower case without diacritics.
+     *
+     * @var array
+     */
+    protected $cleanLabels;
+
     public function getControllerName()
     {
         return 'table';
@@ -107,9 +121,15 @@ class TableRepresentation extends AbstractEntityRepresentation
         }
 
         $this->codes = [];
+        $this->cleanCodes = [];
+        $this->cleanCodeCodes = [];
         /** @var \Table\Entity\Code $code */
         foreach ($this->resource->getCodes() as $code) {
-            $this->codes[$code->getCode()] = $code->getLabel();
+            $codeCode = $code->getCode();
+            $label = $code->getLabel();
+            $this->codes[$codeCode] = $label;
+            $this->cleanCodes[$codeCode] = $this->cleanString($codeCode);
+            $this->cleanLabels[$codeCode] = $this->cleanString($label);
         }
         return $this->codes;
     }
@@ -122,26 +142,40 @@ class TableRepresentation extends AbstractEntityRepresentation
     /**
      * @param string|int $code Int is managed in order to fix array issues.
      */
-    public function labelFromCode($code): ?string
+    public function labelFromCode($code, bool $strict = false): ?string
     {
         if ($this->codes === null) {
             $this->codes();
         }
         $code = (string) $code;
-        return $this->codes[$code]
-            ?? null;
+        if (isset($this->codes[$code])) {
+            return $this->codes[$code];
+        }
+        if ($strict) {
+            return null;
+        }
+        $cleanCode = $this->cleanString($code);
+        return $this->cleanCodes[$cleanCode] ?? null;
     }
 
-    public function codeFromLabel($label): ?string
+    public function codeFromLabel($label, bool $strict = false): ?string
     {
         if ($this->codes === null) {
             $this->codes();
         }
         $label = (string) $label;
         $code = array_search($label, $this->codes);
+        if ($code !== false) {
+            return (string) $code;
+        }
+        if ($strict) {
+            return null;
+        }
+        $cleanLabel = $this->cleanString($label);
+        $code = array_search($cleanLabel, $this->cleanLabels);
         return $code === false
             ? null
-            : (string) $code;
+            : $this->cleanLabels[$code];
     }
 
     /**
@@ -173,5 +207,22 @@ class TableRepresentation extends AbstractEntityRepresentation
             ],
             ['force_canonical' => $canonical]
         );
+    }
+
+    /**
+     * Remove diacritics from a string and set it lowercase.
+     *
+     * @see \Omeka\Api\Adapter\SiteSlugTrait::slugify()
+     */
+    public function cleanString($string): string
+    {
+        $string = (string) $string;
+        if (extension_loaded('intl')) {
+            $transliterator = \Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;');
+            $string = $transliterator->transliterate($string);
+        } elseif (extension_loaded('iconv')) {
+            $string = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
+        }
+        return mb_strtolower($string, 'UTF-8');
     }
 }
