@@ -20,3 +20,14 @@ $settings = $services->get('Omeka\Settings');
 $connection = $services->get('Omeka\Connection');
 $messenger = $plugins->get('messenger');
 $entityManager = $services->get('Omeka\EntityManager');
+
+if (version_compare($oldVersion, '3.4.1', '<')) {
+    $sql = <<<SQL
+ALTER TABLE `tables`
+CHANGE `title` `title` varchar(190) NOT NULL AFTER `owner_id`,
+ADD`source` TEXT DEFAULT NULL AFTER `title`,
+ADD `comment` TEXT DEFAULT NULL AFTER `source`,
+CHANGE `slug` `slug` varchar(190) NOT NULL AFTER `comment`;
+SQL;
+    $connection->executeStatement($sql);
+}
