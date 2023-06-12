@@ -134,7 +134,8 @@ class TableRepresentation extends AbstractEntityRepresentation
 
         $this->codes = [];
         $this->cleanCodes = [];
-        $this->cleanCodeCodes = [];
+        $this->cleanLabels = [];
+
         /** @var \Table\Entity\Code $code */
         foreach ($this->resource->getCodes() as $code) {
             $codeCode = $code->getCode();
