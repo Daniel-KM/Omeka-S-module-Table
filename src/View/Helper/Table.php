@@ -12,6 +12,9 @@ class Table extends AbstractHelper
      */
     public function __invoke($idOrSlug): ?TableRepresentation
     {
+        if (!$idOrSlug) {
+            return null;
+        }
         return $this->getView()->api()
             ->searchOne('tables', is_numeric($idOrSlug) ? ['id' => $idOrSlug] : ['slug' => $idOrSlug])
             ->getContent();
