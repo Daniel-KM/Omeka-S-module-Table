@@ -36,23 +36,21 @@ languages.
 Installation
 ------------
 
-This module uses the optional module [Generic].
-
 See general end user documentation for [installing a module].
+
+This module requires the module [Common], that should be installed first.
 
 * From the zip
 
-Download the last release [Table.zip] from the list of releases (the master does
-not contain the dependency), and uncompress it in the `modules` directory.
+Download the last release [Table.zip] from the list of releases, and
+uncompress it in the `modules` directory.
 
 * From the source and for development
 
 If the module was installed from the source, rename the name of the folder of
-the module to `Table`, go to the root module, and run:
+the module to `Table`.
 
-```sh
-composer install --no-dev
-```
+Then install it like any other Omeka module and follow the config instructions.
 
 
 Usage
@@ -84,7 +82,11 @@ The option `table` can be the table id or the table slug.
 TODO
 ----
 
-- [ ] Use js [datatables] (or see packagist/github).
+- [ ] Add an option to allow to use the same code for multiple values, for
+      example for multiple labels or languages or a code with different
+      meanings. The point is mainly the api representation.
+- [ ] Use js [datatables] (or see packagist/github) or use direct edition (see
+      module Group).
 - [ ] Provide common tables by default (languages, countries, unimarc).
 
 
@@ -136,7 +138,7 @@ of the CeCILL license and that you accept its terms.
 Copyright
 ---------
 
-* Copyright Daniel Berthereau, 2023 (see [Daniel-KM] on GitLab)
+* Copyright Daniel Berthereau, 2023-2024 (see [Daniel-KM] on GitLab)
 
 Initially created for the digital Library [Numistral].
 
@@ -149,8 +151,8 @@ Initially created for the digital Library [Numistral].
 [User Profile]: https://gitlab.com/Daniel-KM/Omeka-S-module-UserProfile
 [Custom Vocab]: https://omeka.org/s/modules/CustomVocab
 [Value Suggest]: https://omeka.org/s/modules/ValueSuggest
-[Generic]: https://gitlab.com/Daniel-KM/Omeka-S-module-Generic
-[Installing a module]: https://omeka.org/s/docs/user-manual/modules
+[Common]: https://gitlab.com/Daniel-KM/Omeka-S-module-Common
+[installing a module]: https://omeka.org/s/docs/user-manual/modules
 [Table.zip]: https://github.com/Daniel-KM/Omeka-S-module-Table/releases
 [datatables]: https://datatables.net
 [module issues]: https://gitlab.com/Daniel-KM/Omeka-S-module-Table/issues
