@@ -2,6 +2,7 @@
 
 namespace Table\Form\Element;
 
+use Common\Form\Element\TraitOptionalElement;
 use Laminas\Form\Element\Select;
 use Omeka\Api\Manager as ApiManager;
 

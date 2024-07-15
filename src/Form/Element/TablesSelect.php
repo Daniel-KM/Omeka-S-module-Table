@@ -2,6 +2,8 @@
 
 namespace Table\Form\Element;
 
+use Common\Form\Element\TraitGroupByOwner;
+use Common\Form\Element\TraitOptionalElement;
 use Omeka\Form\Element\AbstractGroupByOwnerSelect;
 
 class TablesSelect extends AbstractGroupByOwnerSelect
