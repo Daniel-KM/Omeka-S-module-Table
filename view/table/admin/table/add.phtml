@@ -5,9 +5,13 @@
  */
 
 $plugins = $this->getHelperPluginManager();
+$assetUrl = $plugins->get('assetUrl');
 $translate = $plugins->get('translate');
 
 $this->htmlElement('body')->appendAttribute('class', 'tables add');
+
+$this->headLink()
+    ->appendStylesheet($assetUrl('css/table.css', 'Table'));
 ?>
 
 <?= $this->pageTitle($translate('New table'), 1, $translate('Tables')) ?>

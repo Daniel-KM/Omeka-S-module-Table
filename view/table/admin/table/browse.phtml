@@ -10,10 +10,14 @@
 
 $plugins = $this->getHelperPluginManager();
 $escape = $plugins->get('escapeHtml');
+$assetUrl = $plugins->get('assetUrl');
 $translate = $plugins->get('translate');
 $hyperlink = $plugins->get('hyperlink');
 
 $this->htmlElement('body')->appendAttribute('class', 'tables browse');
+
+$this->headLink()
+    ->appendStylesheet($assetUrl('css/table.css', 'Table'));
 
 $canBatchUpdate = $this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class, 'batch_update');
 $canBatchDeleteAll = $this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class, 'batch_delete_all');

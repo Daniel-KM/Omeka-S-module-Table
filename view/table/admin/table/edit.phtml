@@ -8,8 +8,12 @@
 
 $plugins = $this->getHelperPluginManager();
 $translate = $plugins->get('translate');
+$assetUrl = $plugins->get('assetUrl');
 
 $this->htmlElement('body')->appendAttribute('class', 'tables edit');
+
+$this->headLink()
+    ->appendStylesheet($assetUrl('css/table.css', 'Table'));
 
 $deleteButton = $table->userIsAllowed('delete')
     ? '<a href="#" class="delete button">' . $translate('Delete') . '</a>'
