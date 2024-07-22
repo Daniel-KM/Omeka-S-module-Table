@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-29 00:00+0000\n"
-"PO-Revision-Date: 2023-05-29 00:00+0000\n"
+"POT-Creation-Date: 2024-07-22 00:00+0000\n"
+"PO-Revision-Date: 2024-07-22 00:00+0000\n"
 "Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: fr\n"
@@ -15,83 +15,49 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.2.2\n"
 
-#: src/Controller/Admin/TableController.php:105
-msgid "Add another table?"
-msgstr "Ajouter une autre table ?"
-
-#: src/Generic/AbstractModule.php:80 src/Generic/AbstractModule.php:88
-#: src/Generic/AbstractModule.php:890
+#: data/scripts/upgrade.php:29 Module.php:182
 #, php-format
-msgid "This module requires the module \"%s\"."
-msgstr "Ce module requiert le module « %s »."
+msgid "The module %1$s should be upgraded to version %2$s or later."
+msgstr "Le module %1$s doit être mis à niveau à la version %2$s ou ultérieure."
 
-#: src/Generic/AbstractModule.php:93
-#, php-format
-msgid "This module requires modules \"%s\"."
-msgstr "Ce module requiert les modules \"%s\"."
-
-#: src/Generic/AbstractModule.php:101
-msgid "This module has resources that cannot be installed."
-msgstr "Ce module a des ressources qui ne peuvent pas être installées."
-
-#: src/Generic/AbstractModule.php:108
+#: src/Form/TableForm.php:134
 msgid ""
-"This module cannot install its tables, because they exist already. Try to "
-"remove them first."
+"Some codes are not unique once transliterated or languages are not unique by "
+"codes or some codes have languages and some none."
 msgstr ""
-"Ce module ne peut pas installer ses tables car elles existent déjà. Essayez "
-"de les supprimer manuellement."
+"Certains codes ne sont pas uniques après translittération ou les langues ne "
+"sont pas uniques par code ou certains codes ont des langues et d’autres non."
 
-#: src/Generic/AbstractModule.php:398
-#, php-format
-msgid "The module removed tables \"%s\" from a previous broken install."
-msgstr ""
-"Le module a supprimé les tables \"%s\" depuis une installation échouée."
-
-#: src/Generic/AbstractModule.php:885
-#, php-format
-msgid "This module requires the module \"%1$s\", version %2$s or above."
-msgstr "Ce module requiert le module « %1$s », version %2$s ou supérieure."
-
-#: src/Generic/AbstractModule.php:982
-#, php-format
-msgid ""
-"The module \"%s\" was automatically deactivated because the dependencies are "
-"unavailable."
-msgstr ""
-"Le module  %s » a été automatiquement désactivé car ses dépendances ne sont "
-"plus disponibles."
-
-#: view/table/admin/table/add.phtml:13
+#: view/table/admin/table/add.phtml:17
 msgid "New table"
 msgstr "Nouvelle table"
 
-#: view/table/admin/table/add.phtml:13 view/table/admin/table/browse.phtml:22
-#: view/table/admin/table/show.phtml:18
+#: view/table/admin/table/add.phtml:17 view/table/admin/table/browse.phtml:26
+#: view/table/admin/table/show.phtml:22
 msgid "Tables"
 msgstr "Tables"
 
-#: view/table/admin/table/browse.phtml:26
+#: view/table/admin/table/browse.phtml:30
 msgid "Add new table"
 msgstr "Ajouter une nouvelle table"
 
-#: view/table/admin/table/browse.phtml:65
+#: view/table/admin/table/browse.phtml:69
 msgid "Select table"
 msgstr "Choisir une table"
 
-#: view/table/admin/table/browse.phtml:122
-#: view/table/admin/table/browse.phtml:142
+#: view/table/admin/table/browse.phtml:126
+#: view/table/admin/table/browse.phtml:146
 msgid "Delete tables"
 msgstr "Supprimer les tables"
 
-#: view/table/admin/table/browse.phtml:123
+#: view/table/admin/table/browse.phtml:127
 msgid "Are you sure you would like to delete the selected tables?"
 msgstr "Êtes-vous sûr de vouloir supprimer les tables sélectionnées ?"
 
-#: view/table/admin/table/browse.phtml:125
-#: view/table/admin/table/browse.phtml:145
+#: view/table/admin/table/browse.phtml:129
+#: view/table/admin/table/browse.phtml:149
 #, php-format
 msgid ""
 "%1$s: this action will permanently delete %2$s tables and cannot be undone."
@@ -99,95 +65,196 @@ msgstr ""
 "%1$s : cette action supprimera définitivement les %2$s tables et ne pourra "
 "pas être annulée."
 
-#: view/table/admin/table/browse.phtml:143
+#: view/table/admin/table/browse.phtml:147
 msgid ""
 "Are you sure you would like to delete all tables on all pages of this result?"
 msgstr "Êtes-vous sûr de vouloir supprimer toutes les tables du résultat ?"
 
-#: view/table/admin/table/browse.phtml:186
+#: view/table/admin/table/browse.phtml:190
 msgid "Omeka could not find any tables."
 msgstr "Omeka ne trouve pas de table."
 
-#: view/table/admin/table/show-details.phtml:66
+#: view/table/admin/table/show-details.phtml:38
+#: view/table/admin/table/show.phtml:41
+msgid "Manage multiple labels by code"
+msgstr "Gérer plusieurs libellés par code"
+
+#: view/table/admin/table/show-details.phtml:70
 msgid "Total codes"
 msgstr "Total des codes"
 
-#: view/table/admin/table/show.phtml:22
+#: view/table/admin/table/show.phtml:26
 msgid "Edit table"
 msgstr "Modifier la table"
 
-#: view/table/admin/table/show.phtml:73
+#: view/table/admin/table/show.phtml:83
+msgid "Lang"
+msgstr "Langue"
+
+#: view/table/admin/table/show.phtml:96
 msgid "No codes"
 msgstr "Pas de code"
 
-#: src/Form/Element/TraitGroupByOwner.php:64
-msgid "[No owner]"
-msgstr "[Pas de propriétaire]"
+#: data/scripts/upgrade.php:81
+msgid "It is now possible to create table with multiple labels for one code."
+msgstr ""
+"Il est désormais possible de créer une table avec plusieurs libellés par "
+"code."
 
-#: src/Form/TableForm.php:30
+#: data/scripts/upgrade.php:86
+msgid ""
+"It is now possible to set a language to labels. When set, all labels should "
+"have a different language."
+msgstr ""
+"Il est désormais possible d’ajouter des langues aux libellés. Lorsque c’est "
+"le cas, tous les libellés doivent avoir des langues différentes."
+
+#: data/scripts/upgrade.php:91
+msgid ""
+"The api output did not change for associative tables, but is different for "
+"tables with multiple labels. Check your code if needed."
+msgstr ""
+"La sortie de l’api n’a pas changé pour les tables associatives, mais est "
+"différente pour les tables avec plusieurs labels par code. Vérifiez votre "
+"code si besoin."
+
+#: src/Form/TableForm.php:78
 msgid "Source (generally a url)"
 msgstr "Source (généralement une url)"
 
-#: src/Form/TableForm.php:74
-msgid "List of code and label separated by \"=\""
-msgstr "Liste des codes et libellés séparés par « = »"
+#: src/Form/TableForm.php:100
+msgid "List of code and label separated by \"=\", with optional language"
+msgstr ""
+"Liste des codes et libellés séparés par « = », avec une langue facultative"
 
-#: src/Api/Adapter/TableAdapter.php:274 src/Api/Adapter/TableAdapter.php:283
+#: src/Api/Adapter/TableAdapter.php:274 src/Api/Adapter/TableAdapter.php:401
 msgid "A table must have a title."
 msgstr "Une table doit avoir un titre."
 
-#: src/Api/Adapter/TableAdapter.php:291
+#: src/Api/Adapter/TableAdapter.php:282
+msgid "The codes must be an array."
+msgstr "Les codes doivent être un tableau."
+
+#: src/Api/Adapter/TableAdapter.php:328 src/Api/Adapter/TableAdapter.php:353
+msgid "Some codes are not unique once transliterated: {list}."
+msgstr "Certains codes ne sont pas uniques après translittération : {list}."
+
+#: src/Api/Adapter/TableAdapter.php:377
+msgid "Some labels have not a unique language once transliterated: {list}."
+msgstr ""
+"Certains libellés n’ont pas une langue unique après translittération : "
+"{list}."
+
+#: src/Api/Adapter/TableAdapter.php:389
+msgid "A table cannot mix codes with languages and codes without languages."
+msgstr ""
+"Une table ne peut pas mélanger des codes avec langues et des codes sans "
+"langues."
+
+#: src/Api/Adapter/TableAdapter.php:409
 msgid "A slug cannot be longer than 190 characters."
 msgstr "Un identifiant ne peut pas être plus long que 190 caractères."
 
-#: src/Api/Adapter/TableAdapter.php:296
+#: src/Api/Adapter/TableAdapter.php:414
 msgid "A slug should be lower case."
 msgstr "Un identifiant doit être en minuscule."
 
-#: src/Api/Adapter/TableAdapter.php:298
+#: src/Api/Adapter/TableAdapter.php:416
 msgid "A slug should not be a numeric string."
 msgstr "Un identifiant ne doit pas être un nombre."
 
-#: src/Api/Adapter/TableAdapter.php:300
+#: src/Api/Adapter/TableAdapter.php:418
 msgid "A slug cannot be a reserved keyword."
 msgstr "Un identifiant ne peut pas être un mot réservé."
 
-#: src/Controller/Admin/TableController.php:101
-#, php-format
-msgid "Table successfully created. %s"
-msgstr "Table créée avec succès. %s"
+#: src/Api/Adapter/TableAdapter.php:422
+msgid "The slug \"{slug}\" is already taken."
+msgstr "Le nom « {slug} » est déjà utilisé."
 
-#: src/Controller/Admin/TableController.php:144
+#: src/Api/Adapter/TableAdapter.php:499
+msgid ""
+"The php extension \"intl\" is not installed, so transliteration to ascii is "
+"not managed."
+msgstr ""
+"L’extension php « intl » n’est pas installé et la translittération vers "
+"l’ascii ne peut pas être gérée."
+
+#: src/Controller/Admin/TableController.php:101
+msgid "Table successfully created. {link}Add another table?{link_end}"
+msgstr "Table créée avec succès. {link}Ajouter une autre table ?{link_end}"
+
+#: src/Controller/Admin/TableController.php:145
 msgid "Table successfully updated."
 msgstr "Table mise à jour avec succès."
 
-#: src/Controller/Admin/TableController.php:169
+#: src/Controller/Admin/TableController.php:170
 msgid "table"
 msgstr "table"
 
-#: src/Controller/Admin/TableController.php:187
+#: src/Controller/Admin/TableController.php:188
 msgid "Table successfully deleted."
 msgstr "Table supprimée avec succès."
 
-#: src/Controller/Admin/TableController.php:209
+#: src/Controller/Admin/TableController.php:210
 msgid "You must select at least one table to batch delete."
 msgstr "Vous devez choisir au moins une table  à supprimer."
 
-#: src/Controller/Admin/TableController.php:218
+#: src/Controller/Admin/TableController.php:219
 msgid "Tables successfully deleted."
 msgstr "Table supprimée avec succès."
 
-#: src/Controller/Admin/TableController.php:245
-#, php-format
-msgid "Deleting tables started in job %s."
-msgstr "Suppression des tables lancée dans la tâche %s."
+#: src/Controller/Admin/TableController.php:247
+msgid ""
+"Deleting tables started in background (job {link_job}#{job_id}{link_end}, "
+"{link_log}logs{link_end})."
+msgstr ""
+"Suppression des tables lancée en arrière plan (tâche {link_job}#{job_id}"
+"{link_end}, {link_log}journaux{link_end})."
 
-#: config/module.config.php:106
+#: config/module.config.php:104
 msgid "Code count"
 msgstr "Total des codes"
 
-#~ msgid "Lang"
-#~ msgstr "Langue"
+#~ msgid "Add another table?"
+#~ msgstr "Ajouter une autre table ?"
+
+#, php-format
+#~ msgid "This module requires the module \"%s\"."
+#~ msgstr "Ce module requiert le module « %s »."
+
+#, php-format
+#~ msgid "This module requires modules \"%s\"."
+#~ msgstr "Ce module requiert les modules \"%s\"."
+
+#~ msgid "This module has resources that cannot be installed."
+#~ msgstr "Ce module a des ressources qui ne peuvent pas être installées."
+
+#~ msgid ""
+#~ "This module cannot install its tables, because they exist already. Try to "
+#~ "remove them first."
+#~ msgstr ""
+#~ "Ce module ne peut pas installer ses tables car elles existent déjà. "
+#~ "Essayez de les supprimer manuellement."
+
+#, php-format
+#~ msgid "The module removed tables \"%s\" from a previous broken install."
+#~ msgstr ""
+#~ "Le module a supprimé les tables \"%s\" depuis une installation échouée."
+
+#, php-format
+#~ msgid ""
+#~ "The module \"%s\" was automatically deactivated because the dependencies "
+#~ "are unavailable."
+#~ msgstr ""
+#~ "Le module  %s » a été automatiquement désactivé car ses dépendances ne "
+#~ "sont plus disponibles."
+
+#~ msgid "[No owner]"
+#~ msgstr "[Pas de propriétaire]"
+
+#, php-format
+#~ msgid "Deleting tables started in job %s."
+#~ msgstr "Suppression des tables lancée dans la tâche %s."
 
 #~ msgid "Tables  successfully deleted"
 #~ msgstr "Tables supprimées avec succès"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-29 00:00+0000\n"
+"POT-Creation-Date: 2024-07-22 00:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,164 +17,180 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/Controller/Admin/TableController.php:105
-msgid "Add another table?"
-msgstr ""
-
-#: src/Generic/AbstractModule.php:80 src/Generic/AbstractModule.php:88
-#: src/Generic/AbstractModule.php:890
+#: data/scripts/upgrade.php:29 Module.php:182
 #, php-format
-msgid "This module requires the module \"%s\"."
+msgid "The module %1$s should be upgraded to version %2$s or later."
 msgstr ""
 
-#: src/Generic/AbstractModule.php:93
-#, php-format
-msgid "This module requires modules \"%s\"."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:101
-msgid "This module has resources that cannot be installed."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:108
+#: src/Form/TableForm.php:134
 msgid ""
-"This module cannot install its tables, because they exist already. Try to "
-"remove them first."
+"Some codes are not unique once transliterated or languages are not unique by "
+"codes or some codes have languages and some none."
 msgstr ""
 
-#: src/Generic/AbstractModule.php:398
-#, php-format
-msgid "The module removed tables \"%s\" from a previous broken install."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:885
-#, php-format
-msgid "This module requires the module \"%1$s\", version %2$s or above."
-msgstr ""
-
-#: src/Generic/AbstractModule.php:982
-#, php-format
-msgid ""
-"The module \"%s\" was automatically deactivated because the dependencies are "
-"unavailable."
-msgstr ""
-
-#: view/table/admin/table/add.phtml:13
+#: view/table/admin/table/add.phtml:17
 msgid "New table"
 msgstr ""
 
-#: view/table/admin/table/add.phtml:13 view/table/admin/table/browse.phtml:22
-#: view/table/admin/table/show.phtml:18
+#: view/table/admin/table/add.phtml:17 view/table/admin/table/browse.phtml:26
+#: view/table/admin/table/show.phtml:22
 msgid "Tables"
 msgstr ""
 
-#: view/table/admin/table/browse.phtml:26
+#: view/table/admin/table/browse.phtml:30
 msgid "Add new table"
 msgstr ""
 
-#: view/table/admin/table/browse.phtml:65
+#: view/table/admin/table/browse.phtml:69
 msgid "Select table"
 msgstr ""
 
-#: view/table/admin/table/browse.phtml:122
-#: view/table/admin/table/browse.phtml:142
+#: view/table/admin/table/browse.phtml:126
+#: view/table/admin/table/browse.phtml:146
 msgid "Delete tables"
 msgstr ""
 
-#: view/table/admin/table/browse.phtml:123
+#: view/table/admin/table/browse.phtml:127
 msgid "Are you sure you would like to delete the selected tables?"
 msgstr ""
 
-#: view/table/admin/table/browse.phtml:125
-#: view/table/admin/table/browse.phtml:145
+#: view/table/admin/table/browse.phtml:129
+#: view/table/admin/table/browse.phtml:149
 #, php-format
 msgid ""
 "%1$s: this action will permanently delete %2$s tables and cannot be undone."
 msgstr ""
 
-#: view/table/admin/table/browse.phtml:143
+#: view/table/admin/table/browse.phtml:147
 msgid ""
 "Are you sure you would like to delete all tables on all pages of this result?"
 msgstr ""
 
-#: view/table/admin/table/browse.phtml:186
+#: view/table/admin/table/browse.phtml:190
 msgid "Omeka could not find any tables."
 msgstr ""
 
-#: view/table/admin/table/show-details.phtml:66
+#: view/table/admin/table/show-details.phtml:38
+#: view/table/admin/table/show.phtml:41
+msgid "Manage multiple labels by code"
+msgstr ""
+
+#: view/table/admin/table/show-details.phtml:70
 msgid "Total codes"
 msgstr ""
 
-#: view/table/admin/table/show.phtml:22
+#: view/table/admin/table/show.phtml:26
 msgid "Edit table"
 msgstr ""
 
-#: view/table/admin/table/show.phtml:73
+#: view/table/admin/table/show.phtml:83
+msgid "Lang"
+msgstr ""
+
+#: view/table/admin/table/show.phtml:96
 msgid "No codes"
 msgstr ""
 
-#: src/Form/Element/TraitGroupByOwner.php:64
-msgid "[No owner]"
+#: data/scripts/upgrade.php:81
+msgid "It is now possible to create table with multiple labels for one code."
 msgstr ""
 
-#: src/Form/TableForm.php:30
+#: data/scripts/upgrade.php:86
+msgid ""
+"It is now possible to set a language to labels. When set, all labels should "
+"have a different language."
+msgstr ""
+
+#: data/scripts/upgrade.php:91
+msgid ""
+"The api output did not change for associative tables, but is different for "
+"tables with multiple labels. Check your code if needed."
+msgstr ""
+
+#: src/Form/TableForm.php:78
 msgid "Source (generally a url)"
 msgstr ""
 
-#: src/Form/TableForm.php:74
-msgid "List of code and label separated by \"=\""
+#: src/Form/TableForm.php:100
+msgid "List of code and label separated by \"=\", with optional language"
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:274 src/Api/Adapter/TableAdapter.php:283
+#: src/Api/Adapter/TableAdapter.php:274 src/Api/Adapter/TableAdapter.php:401
 msgid "A table must have a title."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:291
+#: src/Api/Adapter/TableAdapter.php:282
+msgid "The codes must be an array."
+msgstr ""
+
+#: src/Api/Adapter/TableAdapter.php:328 src/Api/Adapter/TableAdapter.php:353
+msgid "Some codes are not unique once transliterated: {list}."
+msgstr ""
+
+#: src/Api/Adapter/TableAdapter.php:377
+msgid "Some labels have not a unique language once transliterated: {list}."
+msgstr ""
+
+#: src/Api/Adapter/TableAdapter.php:389
+msgid "A table cannot mix codes with languages and codes without languages."
+msgstr ""
+
+#: src/Api/Adapter/TableAdapter.php:409
 msgid "A slug cannot be longer than 190 characters."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:296
+#: src/Api/Adapter/TableAdapter.php:414
 msgid "A slug should be lower case."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:298
+#: src/Api/Adapter/TableAdapter.php:416
 msgid "A slug should not be a numeric string."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:300
+#: src/Api/Adapter/TableAdapter.php:418
 msgid "A slug cannot be a reserved keyword."
 msgstr ""
 
-#: src/Controller/Admin/TableController.php:101
-#, php-format
-msgid "Table successfully created. %s"
+#: src/Api/Adapter/TableAdapter.php:422
+msgid "The slug \"{slug}\" is already taken."
 msgstr ""
 
-#: src/Controller/Admin/TableController.php:144
+#: src/Api/Adapter/TableAdapter.php:499
+msgid ""
+"The php extension \"intl\" is not installed, so transliteration to ascii is "
+"not managed."
+msgstr ""
+
+#: src/Controller/Admin/TableController.php:101
+msgid "Table successfully created. {link}Add another table?{link_end}"
+msgstr ""
+
+#: src/Controller/Admin/TableController.php:145
 msgid "Table successfully updated."
 msgstr ""
 
-#: src/Controller/Admin/TableController.php:169
+#: src/Controller/Admin/TableController.php:170
 msgid "table"
 msgstr ""
 
-#: src/Controller/Admin/TableController.php:187
+#: src/Controller/Admin/TableController.php:188
 msgid "Table successfully deleted."
 msgstr ""
 
-#: src/Controller/Admin/TableController.php:209
+#: src/Controller/Admin/TableController.php:210
 msgid "You must select at least one table to batch delete."
 msgstr ""
 
-#: src/Controller/Admin/TableController.php:218
+#: src/Controller/Admin/TableController.php:219
 msgid "Tables successfully deleted."
 msgstr ""
 
-#: src/Controller/Admin/TableController.php:245
-#, php-format
-msgid "Deleting tables started in job %s."
+#: src/Controller/Admin/TableController.php:247
+msgid ""
+"Deleting tables started in background (job {link_job}#{job_id}{link_end}, "
+"{link_log}logs{link_end})."
 msgstr ""
 
-#: config/module.config.php:106
+#: config/module.config.php:104
 msgid "Code count"
 msgstr ""
