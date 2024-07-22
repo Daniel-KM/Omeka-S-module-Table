@@ -21,11 +21,11 @@ class TableRepresentation extends AbstractEntityRepresentation
     protected $codes;
 
     /**
-     * Associative array of codes in lower case without diacritics and labels.
+     * Associative array of codes in lower case without diacritics and codes.
      *
      * @var array
      */
-    protected $cleanCodesToLabels;
+    protected $cleanCodesToCodes;
 
     /**
      * Associative array of labels in lower case without diacritics and codes.
@@ -33,6 +33,13 @@ class TableRepresentation extends AbstractEntityRepresentation
      * @var array
      */
     protected $cleanLabelsToCodes;
+
+    /**
+     * Associative array of labels and codes.
+     *
+     * @var array
+     */
+    protected $labelsToCodes;
 
     public function getControllerName()
     {
@@ -65,6 +72,7 @@ class TableRepresentation extends AbstractEntityRepresentation
             'o:id' => $this->id(),
             'o:owner' => $owner ? $owner->getReference() : null,
             'o:slug' => $this->slug(),
+            'o:is_associative' => $this->isAssociative(),
             'o:title' => $this->title(),
             'o:lang' => $this->lang(),
             'o:source' => $this->source(),
@@ -86,6 +94,11 @@ class TableRepresentation extends AbstractEntityRepresentation
     public function slug(): string
     {
         return $this->resource->getSlug();
+    }
+
+    public function isAssociative(): bool
+    {
+        return $this->resource->isAssociative();
     }
 
     public function title(): string
@@ -126,6 +139,12 @@ class TableRepresentation extends AbstractEntityRepresentation
         return $this->resource->getModified();
     }
 
+    /**
+     * Get the codes of the tables.
+     *
+     * The codes are a flat array of codes/labels pairs when the table is
+     * associative, else it is a list of codes associated to an array of labels.
+     */
     public function codes(): array
     {
         if (is_array($this->codes)) {
@@ -133,31 +152,109 @@ class TableRepresentation extends AbstractEntityRepresentation
         }
 
         $this->codes = [];
-        $this->cleanCodesToLabels = [];
+        $this->cleanCodesToCodes = [];
         $this->cleanLabelsToCodes = [];
+        $this->labelsToCodes = [];
 
         // Prepare all tables and cleaned codes one time.
 
         /** @var \Table\Entity\Code $code */
-        foreach ($this->resource->getCodes() as $code) {
-            $codeCode = $code->getCode();
-            $codeLabel = $code->getLabel();
-            $this->codes[$codeCode] = $codeLabel;
-            // In case of duplicates, the last code is kept, like in database.
-            $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode)
-            $cleanLabel = $this->adapter->stringToLowercaseAscii($codeLabel);
-            $this->cleanCodesToLabels[$cleanCode] = $codeLabel;
-            $this->cleanLabelsToCodes[$cleanLabel] = $codeCode;
+        if ($this->isAssociative()) {
+            foreach ($this->resource->getCodes() as $code) {
+                $codeCode = $code->getCode();
+                $codeLabel = $code->getLabel();
+                $this->codes[$codeCode] = $codeLabel;
+                // In case of duplicates, the last code is kept, like in database.
+                // TODO Find a way to convert only the last one (but useless, because it should be the first one in most of the cases).
+                $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode)
+                $cleanLabel = $this->adapter->stringToLowercaseAscii($codeLabel);
+                $this->cleanCodesToCodes[$cleanCode] = $codeCode;
+                $this->cleanLabelsToCodes[$cleanLabel] = $codeCode;
+                $this->labelsToCodes[$label] = $codeCode;
+            }
+        } else {
+            foreach ($this->resource->getCodes() as $code) {
+                $codeCode = $code->getCode();
+                $label = $code->getLabel();
+                $this->codes[$codeCode][] = $label;
+                // In case of duplicates, the last code is kept, like in database.
+                $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode)
+                $cleanLabel = $this->adapter->stringToLowercaseAscii($codeLabel);
+                $this->cleanCodesToCodes[$cleanCode] = $codeCode;
+                $this->cleanLabelsToCodes[$cleanLabel] = $codeCode;
+                $this->labelsToCodes[$label] = $codeCode;
+            }
         }
+
         return $this->codes;
     }
 
+    /**
+     * Get the codes of the tables as a list of pairs code/label.
+     *
+     * When the original table is not associative, the label is the last one.
+     */
+    public function codesAssociative(): array
+    {
+        if ($this->isAssociative()) {
+            return $this->codes();
+        }
+
+        if ($this->codes === null) {
+            $this->codes();
+        }
+
+        return array_column($this->codes, 'label', 'code');
+    }
+
+    /**
+     * Get the codes of the tables as a list of code with associated labels.
+     */
+    public function codesMultiple(): array
+    {
+        if (!$this->isAssociative()) {
+            return $this->codes();
+        }
+
+        if ($this->codes === null) {
+            $this->codes();
+        }
+
+        $result = [];
+        foreach ($this->codes as $code => $label) {
+            $result[$code] = [$label];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the codes of the tables as a list of code with data as array.
+     */
+    public function codesData(): array
+    {
+        $result = [];
+        foreach ($this->resource->getCodes() as $codeEntity) {
+            $code = $codeEntity->getCode();
+            $result[] = [
+                'code' => $code,
+                'label' => $codeEntity->getLabel(),
+            ];
+        }
+        return $result;
+    }
+
+    /**
+     * Get the total codes of the table.
+     */
     public function codeCount(): int
     {
         return $this->resource->getCodes()->count();
     }
 
     /**
+     * Get a label from a code.
+     *
      * @param string|int $code Int is managed in order to fix array issues.
      * @param bool $strict Don't check transliterated lower case code.
      * @return string|null In case of a transliterated lower case duplicate, the
@@ -171,7 +268,9 @@ class TableRepresentation extends AbstractEntityRepresentation
 
         $code = (string) $code;
         if (isset($this->codes[$code])) {
-            return $this->codes[$code];
+            return $this->isAssociative()
+                ? $this->codes[$code]
+                : end($this->codes[$code]);
         }
 
         if ($strict) {
@@ -179,10 +278,52 @@ class TableRepresentation extends AbstractEntityRepresentation
         }
 
         $cleanCode = $this->adapter->stringToLowercaseAscii($code);
-        return $this->cleanCodesToLabels[$cleanCode] ?? null;
+        if (!isset($this->cleanCodesToCodes[$cleanCode])) {
+            return null;
+        }
+
+        $realCode = $this->cleanCodesToCodes[$cleanCode];
+        return $this->isAssociative()
+            ? $this->codes[$realCode]
+            : end($this->codes[$realCode]);
     }
 
     /**
+     * Get all labels for a code.
+     *
+     * @param string|int $code Int is managed in order to fix array issues.
+     * @param bool $strict Don't check transliterated lower case code.
+     * @return string|null In case of a transliterated lower case duplicate, the
+     *   last one is returned, like database.
+     */
+    public function labelsFromCode($code, bool $strict = false): array
+    {
+        if ($this->isAssociative()) {
+            return (array) $this->labelFromCode($code, $strict);
+        }
+
+        if ($this->codes === null) {
+            $this->codes();
+        }
+
+        $code = (string) $code;
+        if (isset($this->codes[$code])) {
+            return $this->codes[$code];
+        }
+
+        if ($strict) {
+            return [];
+        }
+
+        $cleanCode = $this->adapter->stringToLowercaseAscii($code);
+        return isset($this->cleanCodesToCodes[$cleanCode])
+            ? $this->codes[$this->cleanCodesToCodes[$cleanCode]]
+            : [];
+    }
+
+    /**
+     * Get a code from a label.
+     *
      * @param string|int $code Int is managed in order to fix array issues.
      * @param bool $strict Don't check transliterated lower case code.
      * @return string|null In case of a transliterated lower case duplicate, the
@@ -195,9 +336,9 @@ class TableRepresentation extends AbstractEntityRepresentation
         }
 
         $label = (string) $label;
-        $codeCodes = array_keys($this->codes, $label);
-        if ($codeCodes) {
-            return (string) end($codeCodes);
+
+        if (isset($this->labelsToCodes[$label])) {
+            return $this->labelsToCodes[$label];
         }
 
         if ($strict) {

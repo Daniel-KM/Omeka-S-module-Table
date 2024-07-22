@@ -45,6 +45,22 @@ class TableForm extends Form implements TranslatorAwareInterface
                 ],
             ])
             ->add([
+                'name' => 'o:is_associative',
+                'type' => CommonElement\OptionalRadio::class,
+                'options' => [
+                    'label' => 'Manage multiple labels by code', // @translate
+                    'value_options' => [
+                        '0' => 'Yes', // @translate
+                        '1' => 'No', // @translate
+                    ],
+                ],
+                'attributes' => [
+                    'id' => 'o-slug',
+                    'required' => false,
+                    'value' => '0',
+                ],
+            ])
+            ->add([
                 'name' => 'o:lang',
                 'type' => Element\Text::class,
                 'options' => [
@@ -106,32 +122,7 @@ class TableForm extends Form implements TranslatorAwareInterface
                     ],
                 ],
             ],
-            'validators' => [
-                [
-                    'name' => \Laminas\Validator\Callback::class,
-                    'options' => [
-                        'callback' => [$this, 'isValidCodes'],
-                        'messages' => [
-                            'callbackValue' => $this->translator->translate(
-                                'Some codes are not unique once transliterated.' // @translate
-                            ),
-                        ],
-                    ],
-                ],
-            ],
         ]);
-    }
-
-    public function isValidCodes($codes): bool
-    {
-        if (empty($codes)) {
-            return true;
-        }
-
-        $codes = $this->apiAdapterTable->cleanListOfCodesAndLabels($codes);
-        $clean = $this->apiAdapterTable->deduplicateTransliteratedCodes($codes);
-
-        return count($clean) !== count($codes);
     }
 
     public function setApiAdapterTable(TableAdapter $apiTableAdapter): self

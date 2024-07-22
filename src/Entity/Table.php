@@ -52,6 +52,19 @@ class Table extends AbstractEntity
     protected $slug;
 
     /**
+     * @var bool
+     *
+     * @Column(
+     *     type="boolean",
+     *     nullable=false,
+     *     options={
+     *         "default"=0
+     *     }
+     * )
+     */
+    protected $isAssociative = false;
+
+    /**
      * @var string
      *
      * @Column(
@@ -157,6 +170,25 @@ class Table extends AbstractEntity
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function setIsAssociative(?bool $isAssociative): self
+    {
+        $this->isAssociative = (bool) $isAssociative;
+        return $this;
+    }
+
+    public function getIsAssociative(): bool
+    {
+        return $this->isAssociative;
+    }
+
+    /**
+     * Alias of getIsAssociative().
+     */
+    public function isAssociative(): bool
+    {
+        return $this->isAssociative;
     }
 
     public function setTitle(string $title): self

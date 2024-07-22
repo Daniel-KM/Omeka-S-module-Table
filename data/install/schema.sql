@@ -2,6 +2,7 @@ CREATE TABLE `tables` (
     `id` INT AUTO_INCREMENT NOT NULL,
     `owner_id` INT DEFAULT NULL,
     `slug` VARCHAR(190) NOT NULL,
+    `is_associative` TINYINT(1) NOT NULL DEFAULT 0,
     `title` VARCHAR(190) NOT NULL,
     `lang` VARCHAR(190) DEFAULT NULL,
     `source` TEXT DEFAULT NULL,

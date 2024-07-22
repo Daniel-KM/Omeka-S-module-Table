@@ -123,6 +123,7 @@ class TableController extends AbstractActionController
         $table = $this->getTableFromRoute();
 
         $data = $table->jsonSerialize();
+        $data['o:codes'] = $table->codesData();
 
         /** @var \Table\Form\TableForm $form */
         $form = $this->getForm(TableForm::class);

@@ -38,6 +38,8 @@ $owner = $table->owner();
             <dd class="value"><?= $owner ? $escape($owner->name()) : $translate('None') ?></dd>
             <dt><?= $translate('Slug') ?></dt>
             <dd class="value"><?= $escape($table->slug()) ?></dd>
+            <dt><?= $translate('Manage multiple labels by code') ?></dt>
+            <dd class="value"><?= $escape($table->isAssociative() ? $translate('No') : $translate('Yes')) ?></dd>
             <?php if ($v = $table->lang()): ?>
             <dt><?= $translate('Language') ?></dt>
             <dd class="value"><?= $escape($v) ?></dd>
@@ -58,17 +60,32 @@ $owner = $table->owner();
             <?php endif; ?>
         </div>
     </dl>
-    <?php if ($table->codeCount()): ?>
+    <?php if ($table->isAssociative() && $table->codeCount()): ?>
     <table class="tablesaw" data-tablesaw-mode="stack">
         <thead>
             <th><?= $translate('Code') ?></th>
             <th><?= $translate('Label') ?></th>
         </thead>
         <tbody>
-            <?php foreach($table->codes() as $code => $label): ?>
+            <?php foreach($table->codesAssociative() as $code => $label): ?>
             <tr>
                 <td><?= $escape($code) ?></td>
                 <td><?= $escape($label) ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+    <?php elseif ($table->codeCount()): ?>
+    <table class="tablesaw" data-tablesaw-mode="stack">
+        <thead>
+            <th><?= $translate('Code') ?></th>
+            <th><?= $translate('Label') ?></th>
+        </thead>
+        <tbody>
+            <?php foreach($table->codesData() as $codeData): ?>
+            <tr>
+                <td><?= $escape($codeData['code']) ?></td>
+                <td><?= $escape($codeData['label']) ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>

@@ -67,10 +67,10 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
+            return ['__isInitialized__', 'id', 'owner', 'slug', 'isAssociative', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
         }
 
-        return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
+        return ['__isInitialized__', 'id', 'owner', 'slug', 'isAssociative', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
     }
 
     /**
@@ -234,6 +234,39 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSlug', []);
 
         return parent::getSlug();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setIsAssociative(?bool $isAssociative): \Table\Entity\Table
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIsAssociative', [$isAssociative]);
+
+        return parent::setIsAssociative($isAssociative);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIsAssociative(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getIsAssociative', []);
+
+        return parent::getIsAssociative();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isAssociative(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isAssociative', []);
+
+        return parent::isAssociative();
     }
 
     /**

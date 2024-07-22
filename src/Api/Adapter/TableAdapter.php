@@ -21,6 +21,7 @@ class TableAdapter extends AbstractEntityAdapter
         'id' => 'id',
         'owner' => 'owner',
         'slug' => 'slug',
+        'is_associative' => 'isAssociative',
         'title' => 'title',
         'lang' => 'lang',
         'source' => 'source',
@@ -33,6 +34,7 @@ class TableAdapter extends AbstractEntityAdapter
         'id' => 'id',
         'owner' => 'owner',
         'slug' => 'slug',
+        'is_associative' => 'isAssociative',
         'title' => 'title',
         'lang' => 'lang',
         'source' => 'source',
@@ -72,6 +74,13 @@ class TableAdapter extends AbstractEntityAdapter
                 'omeka_root.slug',
                 $this->createNamedParameter($qb, $query['slug']))
             );
+        }
+
+        if (isset($query['is_associative']) && (is_numeric($query['is_associative']) || is_bool($query['is_associative']))) {
+            $qb->andWhere($expr->eq(
+                'omeka_root.isAssociative',
+                $this->createNamedParameter($qb, (bool) $query['is_associative'])
+            ));
         }
 
         if (isset($query['title']) && strlen((string) $query['title'])) {
@@ -146,7 +155,7 @@ class TableAdapter extends AbstractEntityAdapter
         EntityInterface $entity,
         ErrorStore $errorStore
     ): void {
-        /** @var \Table\Entity\Table $entity*/
+        /** @var \Table\Entity\Table $entity */
 
         $data = $request->getContent();
 
@@ -167,6 +176,10 @@ class TableAdapter extends AbstractEntityAdapter
                 $slug = mb_substr($slug, 0, 190);
             }
             $entity->setSlug($slug);
+        }
+
+        if ($this->shouldHydrate($request, 'o:is_associative')) {
+            $entity->setIsAssociative(!empty($data['o:is_associative']));
         }
 
         if ($this->shouldHydrate($request, 'o:title')) {
@@ -196,11 +209,6 @@ class TableAdapter extends AbstractEntityAdapter
         $this->updateTimestamps($request, $entity);
     }
 
-    /**
-     * Adapted from SitePageAdapter.
-     *
-     * @see \Omeka\Api\Adapter\SitePageAdapter::hydrateAttachments().
-     */
     protected function hydrateCodes(
         Request $request,
         Table $table,
@@ -214,7 +222,10 @@ class TableAdapter extends AbstractEntityAdapter
         // Order codes by code early.
         usort($codes, fn ($a, $b) => strcasecmp((string) $a['code'], (string) $b['code']));
 
-        $codes = $this->deduplicateTransliteratedCodes($codes);
+        // Only associative should deduplicate codes.
+        if ($table->isAssociative()) {
+            $codes = $this->deduplicateTransliteratedCodes($codes);
+        }
 
         $tableCodes = $table->getCodes();
         $existingCodes = $tableCodes->toArray();
@@ -231,7 +242,6 @@ class TableAdapter extends AbstractEntityAdapter
                 $existingCodes[key($existingCodes)] = null;
                 next($existingCodes);
             }
-
             $codeEntity
                 ->setCode($codeLabel['code'])
                 ->setLabel($codeLabel['label']);
@@ -266,13 +276,33 @@ class TableAdapter extends AbstractEntityAdapter
         if (!empty($data['o:codes'])) {
             // Pre-normalize codes.
             $codes = $this->cleanListOfCodesAndLabels($data['o:codes']);
-            $clean = $this->deduplicateTransliteratedCodes($codes);
-            if (count($clean) !== count($codes)) {
-                $errors = array_map('unserialize', array_diff(array_map('serialize', $codes), array_map('serialize', $clean)));
-                $errorStore->addError('o:codes', new PsrMessage(
-                    'Some codes are not unique once transliterated: {list}.', // @translate
-                    ['list' => implode(', ', array_column('code', $errors))]
-                ));
+            $codes = array_values(array_map('unserialize', array_unique(array_map('serialize', $codes))));
+            if (!empty($data['o:is_associative'])) {
+                $clean = $this->deduplicateTransliteratedCodes($codes);
+                if (count($clean) !== count($codes)) {
+                    $errors = array_map('unserialize', array_diff(array_map('serialize', $codes), array_map('serialize', $clean)));
+                    $errorStore->addError('o:codes', new PsrMessage(
+                        'Some codes are not unique once transliterated: {list}.', // @translate
+                        ['list' => implode(', ', array_column('code', $errors))]
+                    ));
+                }
+            } else {
+                // When multiple labels are allowed, codes can be duplicated,
+                // except when they are variants (diacritic and case).
+                $checks = [];
+                $checks2 = [];
+                foreach ($codes as $codeLabel) {
+                    $code = $this->stringToLowercaseAscii($codeLabel['code']);
+                    $checks[$codeLabel['code']] = true;
+                    $checks2[$code] = true;
+                }
+                if (count($checks) !== count($checks2)) {
+                    $errors = array_diff_key(array_keys($checks), array_keys($checks2));
+                    $errorStore->addError('o:codes', new PsrMessage(
+                        'Some codes are not unique once transliterated: {list}.', // @translate
+                        ['list' => implode(', ', $errors)]
+                    ));
+                }
             }
         }
     }
@@ -352,7 +382,7 @@ class TableAdapter extends AbstractEntityAdapter
             $result[$cleanCode] = [
                 'code' => $codeLabel['code'],
                 'label' => $codeLabel['label'],
-            ],
+            ];
         }
         return array_values($result);
     }

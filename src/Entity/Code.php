@@ -5,8 +5,11 @@ namespace Table\Entity;
 use Omeka\Entity\AbstractEntity;
 
 /**
- * @todo The id is useless, but simplifies management in doctrine.
- * @todo "idx_table_code" should be uniqueConstraints, but duplicate issue on update (mysql is not sql), so only checked in adapter for now.
+ * The index "idx_table_code" cannot be unique: a code may have multiple labels.
+ * Anyway, if unique, there is a duplicate issue on update (mysql is not sql).
+ *
+ * For index: most of the time, we look the code from the label or the label
+ * from the code in a specific table.
  *
  * @Entity
  * @Table(
