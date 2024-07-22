@@ -25,14 +25,14 @@ class TableRepresentation extends AbstractEntityRepresentation
      *
      * @var array
      */
-    protected $cleanCodes;
+    protected $cleanCodesToLabels;
 
     /**
-     * Associative array of codes and labels in lower case without diacritics.
+     * Associative array of labels in lower case without diacritics and codes.
      *
      * @var array
      */
-    protected $cleanLabels;
+    protected $cleanLabelsToCodes;
 
     public function getControllerName()
     {
@@ -133,18 +133,21 @@ class TableRepresentation extends AbstractEntityRepresentation
         }
 
         $this->codes = [];
-        $this->cleanCodes = [];
-        $this->cleanLabels = [];
+        $this->cleanCodesToLabels = [];
+        $this->cleanLabelsToCodes = [];
 
         // Prepare all tables and cleaned codes one time.
 
         /** @var \Table\Entity\Code $code */
         foreach ($this->resource->getCodes() as $code) {
             $codeCode = $code->getCode();
-            $label = $code->getLabel();
-            $this->codes[$codeCode] = $label;
-            $this->cleanCodes[$codeCode] = $this->adapter->stringToLowercaseAscii($codeCode);
-            $this->cleanLabels[$codeCode] = $this->adapter->stringToLowercaseAscii($label);
+            $codeLabel = $code->getLabel();
+            $this->codes[$codeCode] = $codeLabel;
+            // In case of duplicates, the last code is kept, like in database.
+            $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode)
+            $cleanLabel = $this->adapter->stringToLowercaseAscii($codeLabel);
+            $this->cleanCodesToLabels[$cleanCode] = $codeLabel;
+            $this->cleanLabelsToCodes[$cleanLabel] = $codeCode;
         }
         return $this->codes;
     }
@@ -156,41 +159,53 @@ class TableRepresentation extends AbstractEntityRepresentation
 
     /**
      * @param string|int $code Int is managed in order to fix array issues.
+     * @param bool $strict Don't check transliterated lower case code.
+     * @return string|null In case of a transliterated lower case duplicate, the
+     *   last one is returned, like database.
      */
     public function labelFromCode($code, bool $strict = false): ?string
     {
         if ($this->codes === null) {
             $this->codes();
         }
+
         $code = (string) $code;
         if (isset($this->codes[$code])) {
             return $this->codes[$code];
         }
+
         if ($strict) {
             return null;
         }
+
         $cleanCode = $this->adapter->stringToLowercaseAscii($code);
-        return $this->cleanCodes[$cleanCode] ?? null;
+        return $this->cleanCodesToLabels[$cleanCode] ?? null;
     }
 
+    /**
+     * @param string|int $code Int is managed in order to fix array issues.
+     * @param bool $strict Don't check transliterated lower case code.
+     * @return string|null In case of a transliterated lower case duplicate, the
+     *   last one is returned, like database.
+     */
     public function codeFromLabel($label, bool $strict = false): ?string
     {
         if ($this->codes === null) {
             $this->codes();
         }
+
         $label = (string) $label;
-        $code = array_search($label, $this->codes);
-        if ($code !== false) {
-            return (string) $code;
+        $codeCodes = array_keys($this->codes, $label);
+        if ($codeCodes) {
+            return (string) end($codeCodes);
         }
+
         if ($strict) {
             return null;
         }
+
         $cleanLabel = $this->adapter->stringToLowercaseAscii($label);
-        $code = array_search($cleanLabel, $this->cleanLabels);
-        return $code === false
-            ? null
-            : $this->cleanLabels[$code];
+        return $this->cleanLabelsToCodes[$cleanLabel] ?? null;
     }
 
     /**
