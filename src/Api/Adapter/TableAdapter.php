@@ -2,6 +2,7 @@
 
 namespace Table\Api\Adapter;
 
+use Common\Stdlib\PsrMessage;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Omeka\Api\Adapter\AbstractEntityAdapter;
@@ -9,7 +10,6 @@ use Omeka\Api\Adapter\SiteSlugTrait;
 use Omeka\Api\Request;
 use Omeka\Entity\EntityInterface;
 use Omeka\Stdlib\ErrorStore;
-use Omeka\Stdlib\Message;
 use Table\Entity\Code;
 use Table\Entity\Table;
 
@@ -270,7 +270,7 @@ class TableAdapter extends AbstractEntityAdapter
         if (isset($data['o:title'])
             && (!is_string($data['o:title']) || $data['o:title'] === '')
         ) {
-            $errorStore->addError('o:title', new Message(
+            $errorStore->addError('o:title', new PsrMessage(
                 'A table must have a title.' // @translate
             ));
         }
@@ -300,9 +300,9 @@ class TableAdapter extends AbstractEntityAdapter
                 $errorStore->addError('o:slug', 'A slug cannot be a reserved keyword.'); // @translate
             }
             if (!$this->isUnique($entity, ['slug' => $slug])) {
-                $errorStore->addError('o:slug', new Message(
-                    'The slug "%s" is already taken.', // @translate
-                    $slug
+                $errorStore->addError('o:slug', new PsrMessage(
+                    'The slug "{slug}" is already taken.', // @translate
+                    ['slug' => $slug]
                 ));
             }
         }
