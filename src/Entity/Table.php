@@ -12,15 +12,7 @@ use Omeka\Entity\User;
  *
  * @Entity
  * @Table(
- *     name="tables",
- *     indexes={
- *         @Index(
- *             name="idx_table_slug",
- *             columns={
- *                 "slug"
- *             }
- *         )
- *     }
+ *     name="tables"
  * )
  */
 class Table extends AbstractEntity

@@ -10,7 +10,6 @@ CREATE TABLE `tables` (
     `modified` DATETIME DEFAULT NULL,
     UNIQUE INDEX UNIQ_84470221989D9B62 (`slug`),
     INDEX IDX_844702217E3C61F9 (`owner_id`),
-    INDEX idx_table_slug (`slug`),
     PRIMARY KEY(`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 CREATE TABLE `table_code` (
