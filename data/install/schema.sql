@@ -18,6 +18,7 @@ CREATE TABLE `table_code` (
     `table_id` INT NOT NULL,
     `code` VARCHAR(190) NOT NULL,
     `label` LONGTEXT NOT NULL,
+    `lang` VARCHAR(190) DEFAULT NULL,
     INDEX IDX_3DC37053ECFF285C (`table_id`),
     INDEX idx_table_code (`table_id`, `code`),
     INDEX idx_table_label (`table_id`, `label`(190)),

@@ -217,21 +217,19 @@ class TableAdapter extends AbstractEntityAdapter
         $codes = $request->getValue('o:codes') ?: [];
 
         // Codes are already checked in validateRequest().
-        $codes = $this->cleanListOfCodesAndLabels($codes);
+        $codes = $this->cleanListOfCodesAndLabelsAndLangs($codes);
 
-        // Order codes by code early.
-        usort($codes, fn ($a, $b) => strcasecmp((string) $a['code'], (string) $b['code']));
-
-        // Only associative should deduplicate codes.
-        if ($table->isAssociative()) {
-            $codes = $this->deduplicateTransliteratedCodes($codes);
+        // Only associative should deduplicate codes by code.
+        $isAssociative = $table->isAssociative();
+        if ($isAssociative) {
+            $codes = $this->deduplicateByTransliteratedCodes($codes);
         }
 
         $tableCodes = $table->getCodes();
         $existingCodes = $tableCodes->toArray();
         $newCodes = [];
 
-        foreach ($codes as $codeLabel) {
+        foreach ($codes as $codeData) {
             $codeEntity = current($existingCodes);
             if ($codeEntity === false) {
                 $codeEntity = new Code();
@@ -242,9 +240,13 @@ class TableAdapter extends AbstractEntityAdapter
                 $existingCodes[key($existingCodes)] = null;
                 next($existingCodes);
             }
+            $lang = $isAssociative || empty($codeData['lang']) || is_numeric($codeData['lang'])
+                ? null
+                : (string) $codeData['lang'];
             $codeEntity
-                ->setCode($codeLabel['code'])
-                ->setLabel($codeLabel['label']);
+                ->setCode((string) $codeData['code'])
+                ->setLabel((string) $codeData['label'])
+                ->setLang($lang);
         }
 
         // Remove any codes that weren't reused.
@@ -264,7 +266,7 @@ class TableAdapter extends AbstractEntityAdapter
     {
         $data = $request->getContent();
 
-        // A resource template may not have duplicate properties.
+        // A table should have a title.
         if (isset($data['o:title'])
             && (!is_string($data['o:title']) || $data['o:title'] === '')
         ) {
@@ -273,38 +275,123 @@ class TableAdapter extends AbstractEntityAdapter
             ));
         }
 
+        // A table should have valid codes.
         if (!empty($data['o:codes'])) {
-            // Pre-normalize codes.
-            $codes = $this->cleanListOfCodesAndLabels($data['o:codes']);
-            $codes = array_values(array_map('unserialize', array_unique(array_map('serialize', $codes))));
-            if (!empty($data['o:is_associative'])) {
-                $clean = $this->deduplicateTransliteratedCodes($codes);
-                if (count($clean) !== count($codes)) {
-                    $errors = array_map('unserialize', array_diff(array_map('serialize', $codes), array_map('serialize', $clean)));
-                    $errorStore->addError('o:codes', new PsrMessage(
-                        'Some codes are not unique once transliterated: {list}.', // @translate
-                        ['list' => implode(', ', array_column('code', $errors))]
-                    ));
-                }
+            if (!is_array($data['o:codes'])) {
+                $errorStore->addError('o:codes', new PsrMessage(
+                    'The codes must be an array.' // @translate
+                ));
             } else {
-                // When multiple labels are allowed, codes can be duplicated,
-                // except when they are variants (diacritic and case).
-                $checks = [];
-                $checks2 = [];
-                foreach ($codes as $codeLabel) {
-                    $code = $this->stringToLowercaseAscii($codeLabel['code']);
-                    $checks[$codeLabel['code']] = true;
-                    $checks2[$code] = true;
-                }
-                if (count($checks) !== count($checks2)) {
-                    $errors = array_diff_key(array_keys($checks), array_keys($checks2));
-                    $errorStore->addError('o:codes', new PsrMessage(
-                        'Some codes are not unique once transliterated: {list}.', // @translate
-                        ['list' => implode(', ', $errors)]
-                    ));
-                }
+                $isAssociative = !empty($data['o:is_associative']);
+                $this->validateCodes($data['o:codes'], [
+                    'o:is_associative' => $isAssociative,
+                    'error_store' => $errorStore,
+                ]);
             }
         }
+    }
+
+    /**
+     * Check if a list of codes (code/label/language) is valid.
+     *
+     * If the codes are associative (one label by code), the transliterated
+     * codes should be unique and the language is skipped.
+     *
+     * When multiple labels are allowed, codes can be duplicated, except when
+     * they are variants (diacritic and case).
+     * Furthermore, if there are languages, they should be single and not mixed
+     * with numeric keys.
+     * Finally, if a code has a language, all codes with multiple labels should
+     * have a language.
+     *
+     *  @param array $context Managed keys:
+     *  - o:is_associative (bool)
+     *  - error_store (ErrorStore)
+     */
+    public function validateCodes(?array $codes, array $context = []): bool
+    {
+        if (!$codes) {
+            return true;
+        }
+
+        $isAssociative = !empty($context['o:is_associative']);
+        $errorStore = $context['error_store'] ?? new ErrorStore();
+
+        // Pre-normalize codes to simplify checks.
+        $codes = $this->cleanListOfCodesAndLabelsAndLangs($codes);
+
+        if ($isAssociative) {
+            $clean = $this->deduplicateByTransliteratedCodes($codes);
+            if (count($clean) !== count($codes)) {
+                $errors = array_map('unserialize', array_diff(array_map('serialize', $codes), array_map('serialize', $clean)));
+                $errorStore->addError('o:codes', new PsrMessage(
+                    'Some codes are not unique once transliterated: {list}.', // @translate
+                    ['list' => implode(', ', array_column($errors, 'code'))]
+                ));
+                return false;
+            }
+            // TODO May add a warning when languages are used with associative table.
+            return true;
+        }
+
+        // Prepare checks one time.
+        $checks = [];
+        $checks2 = [];
+        $checksLang = [];
+        foreach ($codes as $codeData) {
+            $code = $this->stringToLowercaseAscii($codeData['code']);
+            $lang = empty($codeData['lang']) || is_numeric($codeData['lang']) ? null : $codeData['lang'];
+            $checks[$codeData['code']] = true;
+            $checks2[$code] = true;
+            $checksLang[$code][] = $lang;
+        }
+
+        // Checks transliterated codes.
+        if (count($checks) !== count($checks2)) {
+            $errors = array_diff_key(array_keys($checks), array_keys($checks2));
+            $errorStore->addError('o:codes', new PsrMessage(
+                'Some codes are not unique once transliterated: {list}.', // @translate
+                ['list' => implode(', ', $errors)]
+            ));
+            return false;
+        }
+
+        // Prepare next checks for languages.
+        $errors = [];
+        $haveOnlyNull = [];
+        $haveOnlyStringsAndOneNull = [];
+        foreach ($checksLang as $code => $langs) {
+            // Checks for unique language by code.
+            // Prepare checks for mixing numeric/languages: an empty language
+            // is allowed.
+            $haveOnlyNull[$code] = count(array_filter($langs, 'is_null')) === count($langs);
+            $haveOnlyStringsAndOneNull[$code] = count(array_filter($langs, 'is_null')) <= 1;
+            $hasMultipleLanguages = count(array_filter($langs)) > 0;
+            if ($hasMultipleLanguages && count(array_unique($langs)) !== count($langs)) {
+                $errors[] = $code;
+            }
+        }
+
+        if ($errors) {
+            $errorStore->addError('o:codes', new PsrMessage(
+                'Some labels have not a unique language once transliterated: {list}.', // @translate
+                ['list' => implode(', ', $errors)]
+            ));
+            return false;
+        }
+
+        // Check for mixing labels with and without languages.
+        $hasMixed = count(array_filter($haveOnlyNull)) !== count($haveOnlyNull)
+            && count(array_filter($haveOnlyStringsAndOneNull))
+            && count(array_filter($haveOnlyStringsAndOneNull)) !== count($haveOnlyStringsAndOneNull);
+        if ($hasMixed) {
+            $errorStore->addError('o:codes', new PsrMessage(
+                'A table cannot mix codes with languages and codes without languages.' // @translate
+            ));
+            return false;
+        }
+
+        return true;
     }
 
     public function validateEntity(EntityInterface $entity, ErrorStore $errorStore): void
@@ -340,49 +427,51 @@ class TableAdapter extends AbstractEntityAdapter
     }
 
     /**
-     * Check if all values are well-formed with code and label, and deduplicate.
+     * Check if values are well-formed with code/label/lang and deduplicate.
      *
      * Normally, this is checked in form, but it may be skipped via api.
      */
-    public function cleanListOfCodesAndLabels(array $codes): array
+    public function cleanListOfCodesAndLabelsAndLangs(array $codes): array
     {
-        // Normalize code and label.
-        foreach ($codes as $key => &$codeLabel) {
-            $codeLabel = array_filter(array_map(fn ($v) => strlen($v ?? '') ? trim((string) $v) : '', $codeLabel), 'strlen');
-            if (isset($codeLabel['code'] && isset($codeLabel['label']))) {
-                $codeLabel = [
-                    'code' => $codeLabel['code'],
-                    'label' => $codeLabel['label'],
+        $result = [];
+
+        foreach ($codes as $codeData) {
+            $codeData = array_filter(array_map(fn ($v) => strlen($v ?? '') ? trim((string) $v) : '', $codeData), 'strlen') + ['lang' => null];
+            ksort($codeData);
+            if (isset($codeData['code']) || isset($codeData['label']) && ($codeData['code'] ?? $codeData['label'] ?? '') !== '') {
+                $result[] = [
+                    'code' => $codeData['code'] ?? $codeData['label'],
+                    'label' => $codeData['label'] ?? $codeData['code'],
+                    'lang' => empty($codeData['lang']) || is_numeric($codeData['lang']) ? null : $codeData['lang'],
                 ];
-            } elseif (count($codeLabel) === 1) {
-                $codeLabel = [
-                    'code' => reset($codeLabel),
-                    'label' => reset($codeLabel),
-                ];
-            } else {
-                unset($codes[$key]);
             }
         }
-        unset($codeLabel);
 
-        // In all cases, remove full duplicates (code and label).
-        return array_values(array_map('unserialize', array_unique(array_map('serialize', $codes))));
+        // In all cases, remove full duplicates (code, label and lang).
+        $result = array_values(array_map('unserialize', array_unique(array_map('serialize', $result))));
+
+        // Order codes by code, labels and language early.
+        $cmp = function ($a, $b) {
+            return strcasecmp((string) $a['code'], (string) $b['code'])
+                ?: strcasecmp((string) $a['label'], (string) $b['label'])
+                ?: strcasecmp((string) $a['lang'], (string) $b['lang']);
+        };
+        usort($result, $cmp);
+
+        return $result;
     }
 
     /**
      * Deduplicate transliterated codes from an array of arrays with key "code".
      *
-     * @param $codes Codes should be already prepared via cleanListOfCodesAndLabels().
+     * @param $codes Codes should be already prepared via cleanListOfCodesAndLabelsAndLangs().
      */
-    public function deduplicateTransliteratedCodes(array $codes): array
+    public function deduplicateByTransliteratedCodes(array $codes): array
     {
         $result = [];
-        foreach ($codes as $codeLabel) {
-            $cleanCode = $this->stringToLowercaseAscii($codeLabel['code']);
-            $result[$cleanCode] = [
-                'code' => $codeLabel['code'],
-                'label' => $codeLabel['label'],
-            ];
+        foreach ($codes as $codeData) {
+            $cleanCode = $this->stringToLowercaseAscii($codeData['code']);
+            $result[$cleanCode] = $codeData;
         }
         return array_values($result);
     }

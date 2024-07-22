@@ -135,7 +135,11 @@ class Table extends AbstractEntity
      *     indexBy="property_id"
      * )
      * @OrderBy(
-     *     {"code"="ASC"}
+     *     {
+     *         "code"="ASC",
+     *         "label"="ASC",
+     *         "lang"="ASC"
+     *     }
      * )
      */
     protected $codes;

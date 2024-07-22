@@ -143,7 +143,8 @@ class TableRepresentation extends AbstractEntityRepresentation
      * Get the codes of the tables.
      *
      * The codes are a flat array of codes/labels pairs when the table is
-     * associative, else it is a list of codes associated to an array of labels.
+     * associative, else it is a list of codes associated to an array of labels,
+     * keyed by languages if any.
      */
     public function codes(): array
     {
@@ -157,6 +158,7 @@ class TableRepresentation extends AbstractEntityRepresentation
         $this->labelsToCodes = [];
 
         // Prepare all tables and cleaned codes one time.
+        // Order is done via doctrine.
 
         /** @var \Table\Entity\Code $code */
         if ($this->isAssociative()) {
@@ -166,23 +168,38 @@ class TableRepresentation extends AbstractEntityRepresentation
                 $this->codes[$codeCode] = $codeLabel;
                 // In case of duplicates, the last code is kept, like in database.
                 // TODO Find a way to convert only the last one (but useless, because it should be the first one in most of the cases).
-                $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode)
+                $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode);
                 $cleanLabel = $this->adapter->stringToLowercaseAscii($codeLabel);
                 $this->cleanCodesToCodes[$cleanCode] = $codeCode;
                 $this->cleanLabelsToCodes[$cleanLabel] = $codeCode;
-                $this->labelsToCodes[$label] = $codeCode;
+                $this->labelsToCodes[$codeLabel] = $codeCode;
             }
         } else {
+            $codesLabelsByLang = [];
             foreach ($this->resource->getCodes() as $code) {
                 $codeCode = $code->getCode();
-                $label = $code->getLabel();
-                $this->codes[$codeCode][] = $label;
+                $codeLabel = $code->getLabel();
+                $codeLang = $code->getLang();
+                $codesLabelsByLang[$codeCode][$codeLang] = $codeLabel;
+                $countByCodes[$codeCode] = empty($countByCodes[$codeCode]) ? 1 : ++$countByCodes[$codeCode];
+                $this->codes[$codeCode][] = $codeLabel;
                 // In case of duplicates, the last code is kept, like in database.
-                $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode)
+                $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode);
                 $cleanLabel = $this->adapter->stringToLowercaseAscii($codeLabel);
                 $this->cleanCodesToCodes[$cleanCode] = $codeCode;
                 $this->cleanLabelsToCodes[$cleanLabel] = $codeCode;
-                $this->labelsToCodes[$label] = $codeCode;
+                $this->labelsToCodes[$codeLabel] = $codeCode;
+            }
+            // If all codes have unique languages, use them.
+            $hasLang = true;
+            foreach ($this->codes as $codeCode => $codeData) {
+                if (count($codeData) !== count($codesLabelsByLang[$codeCode])) {
+                    $hasLang = false;
+                    break;
+                }
+            }
+            if ($hasLang) {
+                $this->codes = $codesLabelsByLang;
             }
         }
 
@@ -239,6 +256,7 @@ class TableRepresentation extends AbstractEntityRepresentation
             $result[] = [
                 'code' => $code,
                 'label' => $codeEntity->getLabel(),
+                'lang' => $codeEntity->getLang(),
             ];
         }
         return $result;

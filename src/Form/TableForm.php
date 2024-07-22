@@ -97,10 +97,11 @@ class TableForm extends Form implements TranslatorAwareInterface
                 'name' => 'o:codes',
                 'type' => CommonElement\DataTextarea::class,
                 'options' => [
-                    'label' => 'List of code and label separated by "="', // @translate
+                    'label' => 'List of code and label separated by "=", with optional language', // @translate
                     'data_options' => [
                         'code' => null,
                         'label' => null,
+                        'lang' => null,
                     ],
                 ],
                 'attributes' => [
@@ -118,10 +119,40 @@ class TableForm extends Form implements TranslatorAwareInterface
                 [
                     'name' => \Laminas\Filter\Callback::class,
                     'options' => [
-                        'callback' => [$this->apiAdapterTable, 'cleanListOfCodesAndLabels'],
+                        'callback' => [$this->apiAdapterTable, 'cleanListOfCodesAndLabelsAndLangs'],
                     ],
                 ],
             ],
+            'validators' => [
+                [
+                    'name' => \Laminas\Validator\Callback::class,
+                    'options' => [
+                        'callback' => [$this, 'validateCodes'],
+                        'bind' => true,
+                        'messages' => [
+                            'callbackValue' => $this->translator->translate(
+                                'Some codes are not unique once transliterated or languages are not unique by codes or some codes have languages and some none.' // @translate
+                            ),
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function validateCodes($codes, $context): bool
+    {
+        if (empty($codes)) {
+            return true;
+        }
+
+        // The context is the post.
+
+        // TODO Output messages of the error store when validating, without dividing the checks.
+        $errorStore = new \Omeka\Stdlib\ErrorStore();
+        return $this->apiAdapterTable->validateCodes($codes, [
+            'o:is_associative' => !empty($context['o:is_associative']),
+            'error_store' => $errorStore,
         ]);
     }
 

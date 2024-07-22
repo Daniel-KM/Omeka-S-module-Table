@@ -80,6 +80,16 @@ class Code extends AbstractEntity
      */
     protected $label;
 
+    /**
+     * @var string
+     *
+     * @Column(
+     *     length=190,
+     *     nullable=true
+     * )
+     */
+    protected $lang;
+
     public function getId()
     {
         return $this->id;
@@ -116,5 +126,16 @@ class Code extends AbstractEntity
     public function getLabel(): string
     {
         return $this->label;
+    }
+
+    public function setLang(?string $lang): self
+    {
+        $this->lang = $lang;
+        return $this;
+    }
+
+    public function getLang(): ?string
+    {
+        return $this->lang;
     }
 }

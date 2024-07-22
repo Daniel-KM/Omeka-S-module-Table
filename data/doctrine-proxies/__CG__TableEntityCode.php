@@ -67,10 +67,10 @@ class Code extends \Table\Entity\Code implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'table', 'code', 'label'];
+            return ['__isInitialized__', 'id', 'table', 'code', 'label', 'lang'];
         }
 
-        return ['__isInitialized__', 'id', 'table', 'code', 'label'];
+        return ['__isInitialized__', 'id', 'table', 'code', 'label', 'lang'];
     }
 
     /**
@@ -256,6 +256,28 @@ class Code extends \Table\Entity\Code implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLabel', []);
 
         return parent::getLabel();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setLang(?string $lang): \Table\Entity\Code
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLang', [$lang]);
+
+        return parent::setLang($lang);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLang(): ?string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLang', []);
+
+        return parent::getLang();
     }
 
     /**

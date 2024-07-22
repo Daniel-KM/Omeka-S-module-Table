@@ -80,12 +80,14 @@ $owner = $table->owner();
         <thead>
             <th><?= $translate('Code') ?></th>
             <th><?= $translate('Label') ?></th>
+            <th><?= $translate('Lang') ?></th>
         </thead>
         <tbody>
             <?php foreach($table->codesData() as $codeData): ?>
             <tr>
                 <td><?= $escape($codeData['code']) ?></td>
                 <td><?= $escape($codeData['label']) ?></td>
+                <td><?= $escape($codeData['lang']) ?></td>
             </tr>
             <?php endforeach; ?>
         </tbody>
