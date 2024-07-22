@@ -141,8 +141,8 @@ class TableRepresentation extends AbstractEntityRepresentation
             $codeCode = $code->getCode();
             $label = $code->getLabel();
             $this->codes[$codeCode] = $label;
-            $this->cleanCodes[$codeCode] = $this->cleanString($codeCode);
-            $this->cleanLabels[$codeCode] = $this->cleanString($label);
+            $this->cleanCodes[$codeCode] = $this->stringToLowercaseAscii($codeCode);
+            $this->cleanLabels[$codeCode] = $this->stringToLowercaseAscii($label);
         }
         return $this->codes;
     }
@@ -167,7 +167,7 @@ class TableRepresentation extends AbstractEntityRepresentation
         if ($strict) {
             return null;
         }
-        $cleanCode = $this->cleanString($code);
+        $cleanCode = $this->stringToLowercaseAscii($code);
         return $this->cleanCodes[$cleanCode] ?? null;
     }
 
@@ -184,7 +184,7 @@ class TableRepresentation extends AbstractEntityRepresentation
         if ($strict) {
             return null;
         }
-        $cleanLabel = $this->cleanString($label);
+        $cleanLabel = $this->stringToLowercaseAscii($label);
         $code = array_search($cleanLabel, $this->cleanLabels);
         return $code === false
             ? null
@@ -225,16 +225,19 @@ class TableRepresentation extends AbstractEntityRepresentation
     /**
      * Remove diacritics from a string and set it lowercase.
      *
-     * @see \Omeka\Api\Adapter\SiteSlugTrait::slugify()
+     * Mysql is case insensitive and skips diacritics so php should do the same.
+     *
+     * Don't use iconv() neither mb_convert_encoding(), that are system
+     * dependant and that provides bad conversion by default.
      */
-    public function cleanString($string): string
+    public function stringToLowercaseAscii($string): string
     {
+        // Don't use iconv, that transliterates badly to ascii, depending on
+        // system config. The same for mb_convert_encoding(),
         $string = (string) $string;
         if (extension_loaded('intl')) {
             $transliterator = \Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;');
             $string = $transliterator->transliterate($string);
-        } elseif (extension_loaded('iconv')) {
-            $string = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
         }
         return mb_strtolower($string, 'UTF-8');
     }
