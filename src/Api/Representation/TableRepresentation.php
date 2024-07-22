@@ -232,12 +232,19 @@ class TableRepresentation extends AbstractEntityRepresentation
      */
     public function stringToLowercaseAscii($string): string
     {
+        static $isLogged;
+
         // Don't use iconv, that transliterates badly to ascii, depending on
         // system config. The same for mb_convert_encoding(),
         $string = (string) $string;
         if (extension_loaded('intl')) {
             $transliterator = \Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;');
             $string = $transliterator->transliterate($string);
+        } elseif (!$isLogged) {
+            $this->getServiceLocator()->get('Omeka\Logger')->warn(
+                'The php extension "intl" is not installed, so transliteration to ascii is not managed.' // @translate
+            );
+            $isLogged = true;
         }
         return mb_strtolower($string, 'UTF-8');
     }
