@@ -27,12 +27,10 @@ return [
         ],
     ],
     'form_elements' => [
-        'invokables' => [
-            Form\TableForm::class => Form\TableForm::class,
-        ],
         'factories' => [
             Form\Element\TableSelect::class => Service\Form\Element\TableSelectFactory::class,
             Form\Element\TablesSelect::class => Service\Form\Element\TablesSelectFactory::class,
+            Form\TableForm::class => Service\Form\TableFormFactory::class,
         ],
     ],
     'controllers' => [

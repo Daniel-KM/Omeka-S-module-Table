@@ -5,9 +5,19 @@ namespace Table\Form;
 use Common\Form\Element as CommonElement;
 use Laminas\Form\Element;
 use Laminas\Form\Form;
+use Laminas\I18n\Translator\TranslatorAwareInterface;
+use Laminas\I18n\Translator\TranslatorAwareTrait;
+use Table\Api\Adapter\TableAdapter;
 
-class TableForm extends Form
+class TableForm extends Form implements TranslatorAwareInterface
 {
+    use TranslatorAwareTrait;
+
+    /**
+     * @var \Table\Api\Adapter\TableAdapter
+     */
+    protected $apiAdapterTable;
+
     public function init(): void
     {
         $this
@@ -83,5 +93,50 @@ class TableForm extends Form
                 ],
             ])
         ;
+
+        $inputFilter = $this->getInputFilter();
+        $inputFilter->add([
+            'name' => 'o:codes',
+            'required' => false,
+            'filters' => [
+                [
+                    'name' => \Laminas\Filter\Callback::class,
+                    'options' => [
+                        'callback' => [$this->apiAdapterTable, 'cleanListOfCodesAndLabels'],
+                    ],
+                ],
+            ],
+            'validators' => [
+                [
+                    'name' => \Laminas\Validator\Callback::class,
+                    'options' => [
+                        'callback' => [$this, 'isValidCodes'],
+                        'messages' => [
+                            'callbackValue' => $this->translator->translate(
+                                'Some codes are not unique once transliterated.' // @translate
+                            ),
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+    }
+
+    public function isValidCodes($codes): bool
+    {
+        if (empty($codes)) {
+            return true;
+        }
+
+        $codes = $this->apiAdapterTable->cleanListOfCodesAndLabels($codes);
+        $clean = $this->apiAdapterTable->deduplicateTransliteratedCodes($codes);
+
+        return count($clean) !== count($codes);
+    }
+
+    public function setApiAdapterTable(TableAdapter $apiTableAdapter): self
+    {
+        $this->apiAdapterTable = $apiTableAdapter;
+        return $this;
     }
 }

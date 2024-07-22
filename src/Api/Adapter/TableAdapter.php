@@ -210,10 +210,11 @@ class TableAdapter extends AbstractEntityAdapter
 
         // Codes are already checked in validateRequest().
         $codes = $this->cleanListOfCodesAndLabels($codes);
-        $codes = $this->deduplicateTransliteratedCodes($codes);
 
         // Order codes by code early.
         usort($codes, fn ($a, $b) => strcasecmp((string) $a['code'], (string) $b['code']));
+
+        $codes = $this->deduplicateTransliteratedCodes($codes);
 
         $tableCodes = $table->getCodes();
         $existingCodes = $tableCodes->toArray();
@@ -309,12 +310,13 @@ class TableAdapter extends AbstractEntityAdapter
     }
 
     /**
-     * Check if all values are well-formed with code and label and deduplicate.
+     * Check if all values are well-formed with code and label, and deduplicate.
      *
      * Normally, this is checked in form, but it may be skipped via api.
      */
-    protected function cleanListOfCodesAndLabels(array $codes): array
+    public function cleanListOfCodesAndLabels(array $codes): array
     {
+        // Normalize code and label.
         foreach ($codes as $key => &$codeLabel) {
             $codeLabel = array_filter(array_map(fn ($v) => strlen($v ?? '') ? trim((string) $v) : '', $codeLabel), 'strlen');
             if (isset($codeLabel['code'] && isset($codeLabel['label']))) {
@@ -333,7 +335,8 @@ class TableAdapter extends AbstractEntityAdapter
         }
         unset($codeLabel);
 
-        return array_values($clean);
+        // In all cases, remove full duplicates (code and label).
+        return array_values(array_map('unserialize', array_unique(array_map('serialize', $codes))));
     }
 
     /**
@@ -341,7 +344,7 @@ class TableAdapter extends AbstractEntityAdapter
      *
      * @param $codes Codes should be already prepared via cleanListOfCodesAndLabels().
      */
-    protected function deduplicateTransliteratedCodes(array $codes): array
+    public function deduplicateTransliteratedCodes(array $codes): array
     {
         $result = [];
         foreach ($codes as $codeLabel) {
