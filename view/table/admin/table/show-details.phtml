@@ -30,6 +30,16 @@ $owner = $table->owner();
         <h4><?= $translate('Owner') ?></h4>
         <div class="value"><?= $owner ? $escape($owner->name()) : $translate('None') ?></div>
     </div>
+    <div class="meta-group">
+        <h4><?= $translate('Slug') ?></h4>
+        <div class="value"><?= $escape($resource->slug()) ?></div>
+    </div>
+    <?php if ($v = $table->lang()): ?>
+    <div class="meta-group">
+        <h4><?= $translate('Language') ?></h4>
+        <div class="value"><?= $escape($v) ?></div>
+    </div>
+    <?php endif; ?>
     <?php if ($v = $table->source()): ?>
     <div class="meta-group">
         <h4><?= $translate('Source') ?></h4>
@@ -39,16 +49,6 @@ $owner = $table->owner();
     <?php if ($v = $table->comment()): ?>
     <div class="meta-group">
         <h4><?= $translate('Comment') ?></h4>
-        <div class="value"><?= $escape($v) ?></div>
-    </div>
-    <?php endif; ?>
-    <div class="meta-group">
-        <h4><?= $translate('Slug') ?></h4>
-        <div class="value"><?= $escape($resource->slug()) ?></div>
-    </div>
-    <?php if ($v = $table->lang()): ?>
-    <div class="meta-group">
-        <h4><?= $translate('Language') ?></h4>
         <div class="value"><?= $escape($v) ?></div>
     </div>
     <?php endif; ?>

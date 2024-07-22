@@ -53,10 +53,30 @@ class Table extends AbstractEntity
      * @var string
      *
      * @Column(
+     *     unique=true,
+     *     length=190
+     * )
+     */
+    protected $slug;
+
+    /**
+     * @var string
+     *
+     * @Column(
      *     length=190
      * )
      */
     protected $title;
+
+    /**
+     * @var string|null
+     *
+     * @Column(
+     *     nullable=true,
+     *     length=190
+     * )
+     */
+    protected $lang;
 
     /**
      * @var string
@@ -79,26 +99,6 @@ class Table extends AbstractEntity
      * )
      */
     protected $comment;
-
-    /**
-     * @var string
-     *
-     * @Column(
-     *     unique=true,
-     *     length=190
-     * )
-     */
-    protected $slug;
-
-    /**
-     * @var string|null
-     *
-     * @Column(
-     *     nullable=true,
-     *     length=190
-     * )
-     */
-    protected $lang;
 
     /**
      * @var \DateTime
@@ -156,6 +156,17 @@ class Table extends AbstractEntity
         return $this->owner;
     }
 
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -165,6 +176,17 @@ class Table extends AbstractEntity
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function setLang(?string $lang): self
+    {
+        $this->lang = $lang ?: null;
+        return $this;
+    }
+
+    public function getLang(): ?string
+    {
+        return $this->lang;
     }
 
     public function setSource(?string $source): self
@@ -187,28 +209,6 @@ class Table extends AbstractEntity
     public function getComment(): ?string
     {
         return $this->comment;
-    }
-
-    public function setSlug(string $slug): self
-    {
-        $this->slug = $slug;
-        return $this;
-    }
-
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
-
-    public function setLang(?string $lang): self
-    {
-        $this->lang = $lang ?: null;
-        return $this;
-    }
-
-    public function getLang(): ?string
-    {
-        return $this->lang;
     }
 
     public function setCreated(DateTime $created): self

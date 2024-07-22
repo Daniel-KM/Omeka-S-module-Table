@@ -67,10 +67,10 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'owner', 'title', 'source', 'comment', 'slug', 'lang', 'created', 'modified', 'codes'];
+            return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
         }
 
-        return ['__isInitialized__', 'id', 'owner', 'title', 'source', 'comment', 'slug', 'lang', 'created', 'modified', 'codes'];
+        return ['__isInitialized__', 'id', 'owner', 'slug', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
     }
 
     /**
@@ -217,6 +217,28 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
     /**
      * {@inheritDoc}
      */
+    public function setSlug(string $slug): \Table\Entity\Table
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSlug', [$slug]);
+
+        return parent::setSlug($slug);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSlug(): string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSlug', []);
+
+        return parent::getSlug();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function setTitle(string $title): \Table\Entity\Table
     {
 
@@ -234,6 +256,28 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getTitle', []);
 
         return parent::getTitle();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setLang(?string $lang): \Table\Entity\Table
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLang', [$lang]);
+
+        return parent::setLang($lang);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getLang(): ?string
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLang', []);
+
+        return parent::getLang();
     }
 
     /**
@@ -278,50 +322,6 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'getComment', []);
 
         return parent::getComment();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setSlug(string $slug): \Table\Entity\Table
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setSlug', [$slug]);
-
-        return parent::setSlug($slug);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getSlug(): string
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getSlug', []);
-
-        return parent::getSlug();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function setLang(?string $lang): \Table\Entity\Table
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setLang', [$lang]);
-
-        return parent::setLang($lang);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getLang(): ?string
-    {
-
-        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getLang', []);
-
-        return parent::getLang();
     }
 
     /**

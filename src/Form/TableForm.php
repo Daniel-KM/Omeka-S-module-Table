@@ -24,28 +24,6 @@ class TableForm extends Form
                 ],
             ])
             ->add([
-                'name' => 'o:source',
-                'type' => Element\Text::class,
-                'options' => [
-                    'label' => 'Source (generally a url)', // @translate
-                ],
-                'attributes' => [
-                    'id' => 'o-source',
-                    'required' => false,
-                ],
-            ])
-            ->add([
-                'name' => 'o:comment',
-                'type' => Element\Text::class,
-                'options' => [
-                    'label' => 'Comment', // @translate
-                ],
-                'attributes' => [
-                    'id' => 'o-comment',
-                    'required' => false,
-                ],
-            ])
-            ->add([
                 'name' => 'o:slug',
                 'type' => Element\Text::class,
                 'options' => [
@@ -64,6 +42,28 @@ class TableForm extends Form
                 ],
                 'attributes' => [
                     'id' => 'o-lang',
+                    'required' => false,
+                ],
+            ])
+            ->add([
+                'name' => 'o:source',
+                'type' => Element\Text::class,
+                'options' => [
+                    'label' => 'Source (generally a url)', // @translate
+                ],
+                'attributes' => [
+                    'id' => 'o-source',
+                    'required' => false,
+                ],
+            ])
+            ->add([
+                'name' => 'o:comment',
+                'type' => Element\Text::class,
+                'options' => [
+                    'label' => 'Comment', // @translate
+                ],
+                'attributes' => [
+                    'id' => 'o-comment',
                     'required' => false,
                 ],
             ])

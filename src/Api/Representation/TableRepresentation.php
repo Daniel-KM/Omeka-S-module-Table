@@ -64,11 +64,11 @@ class TableRepresentation extends AbstractEntityRepresentation
         return [
             'o:id' => $this->id(),
             'o:owner' => $owner ? $owner->getReference() : null,
+            'o:slug' => $this->slug(),
             'o:title' => $this->title(),
+            'o:lang' => $this->lang(),
             'o:source' => $this->source(),
             'o:comment' => $this->comment(),
-            'o:slug' => $this->slug(),
-            'o:lang' => $this->lang(),
             'o:created' => $created,
             'o:modified' => $modified,
             'o:codes' => $this->codes(),
@@ -81,6 +81,11 @@ class TableRepresentation extends AbstractEntityRepresentation
         return $owner
             ? $this->getAdapter('users')->getRepresentation($owner)
             : null;
+    }
+
+    public function slug(): string
+    {
+        return $this->resource->getSlug();
     }
 
     public function title(): string
@@ -96,6 +101,11 @@ class TableRepresentation extends AbstractEntityRepresentation
         return $this->title();
     }
 
+    public function lang(): ?string
+    {
+        return $this->resource->getLang();
+    }
+
     public function source(): ?string
     {
         return $this->resource->getSource();
@@ -104,16 +114,6 @@ class TableRepresentation extends AbstractEntityRepresentation
     public function comment(): ?string
     {
         return $this->resource->getComment();
-    }
-
-    public function slug(): string
-    {
-        return $this->resource->getSlug();
-    }
-
-    public function lang(): ?string
-    {
-        return $this->resource->getLang();
     }
 
     public function created(): DateTime

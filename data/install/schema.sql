@@ -1,11 +1,11 @@
 CREATE TABLE `tables` (
     `id` INT AUTO_INCREMENT NOT NULL,
     `owner_id` INT DEFAULT NULL,
+    `slug` VARCHAR(190) NOT NULL,
     `title` VARCHAR(190) NOT NULL,
+    `lang` VARCHAR(190) DEFAULT NULL,
     `source` TEXT DEFAULT NULL,
     `comment` TEXT DEFAULT NULL,
-    `slug` VARCHAR(190) NOT NULL,
-    `lang` VARCHAR(190) DEFAULT NULL,
     `created` DATETIME NOT NULL,
     `modified` DATETIME DEFAULT NULL,
     UNIQUE INDEX UNIQ_84470221989D9B62 (`slug`),

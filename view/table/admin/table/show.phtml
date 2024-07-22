@@ -36,18 +36,18 @@ $owner = $table->owner();
             <dd class="value"><?= $table->id() ?></dd>
             <dt><?= $translate('Owner') ?></dt>
             <dd class="value"><?= $owner ? $escape($owner->name()) : $translate('None') ?></dd>
+            <dt><?= $translate('Slug') ?></dt>
+            <dd class="value"><?= $escape($table->slug()) ?></dd>
+            <?php if ($v = $table->lang()): ?>
+            <dt><?= $translate('Language') ?></dt>
+            <dd class="value"><?= $escape($v) ?></dd>
+            <?php endif; ?>
             <?php if ($v = $table->source()): ?>
             <dt><?= $translate('Source') ?></dt>
             <dd class="value"><?= $escape($v) ?></dd>
             <?php endif; ?>
             <?php if ($v = $table->comment()): ?>
             <dt><?= $translate('Comment') ?></dt>
-            <dd class="value"><?= $escape($v) ?></dd>
-            <?php endif; ?>
-            <dt><?= $translate('Slug') ?></dt>
-            <dd class="value"><?= $escape($table->slug()) ?></dd>
-            <?php if ($v = $table->lang()): ?>
-            <dt><?= $translate('Language') ?></dt>
             <dd class="value"><?= $escape($v) ?></dd>
             <?php endif; ?>
             <dt><?= $translate('Created') ?></dt>

@@ -20,11 +20,11 @@ class TableAdapter extends AbstractEntityAdapter
     protected $sortFields = [
         'id' => 'id',
         'owner' => 'owner',
+        'slug' => 'slug',
         'title' => 'title',
+        'lang' => 'lang',
         'source' => 'source',
         'comment' => 'comment',
-        'slug' => 'slug',
-        'lang' => 'lang',
         'created' => 'created',
         'modified' => 'modified',
     ];
@@ -32,11 +32,11 @@ class TableAdapter extends AbstractEntityAdapter
     protected $scalarFields = [
         'id' => 'id',
         'owner' => 'owner',
+        'slug' => 'slug',
         'title' => 'title',
+        'lang' => 'lang',
         'source' => 'source',
         'comment' => 'comment',
-        'slug' => 'slug',
-        'lang' => 'lang',
         'created' => 'created',
         'modified' => 'modified',
     ];
@@ -67,10 +67,24 @@ class TableAdapter extends AbstractEntityAdapter
             ));
         }
 
+        if (isset($query['slug']) && strlen((string) $query['slug'])) {
+            $qb->andWhere($expr->eq(
+                'omeka_root.slug',
+                $this->createNamedParameter($qb, $query['slug']))
+            );
+        }
+
         if (isset($query['title']) && strlen((string) $query['title'])) {
             $qb->andWhere($expr->eq(
                 'omeka_root.title',
                 $this->createNamedParameter($qb, $query['title']))
+            );
+        }
+
+        if (isset($query['lang']) && strlen((string) $query['lang'])) {
+            $qb->andWhere($expr->eq(
+                'omeka_root.lang',
+                $this->createNamedParameter($qb, $query['lang']))
             );
         }
 
@@ -85,20 +99,6 @@ class TableAdapter extends AbstractEntityAdapter
             $qb->andWhere($expr->eq(
                 'omeka_root.comment',
                 $this->createNamedParameter($qb, $query['comment']))
-            );
-        }
-
-        if (isset($query['slug']) && strlen((string) $query['slug'])) {
-            $qb->andWhere($expr->eq(
-                'omeka_root.slug',
-                $this->createNamedParameter($qb, $query['slug']))
-            );
-        }
-
-        if (isset($query['lang']) && strlen((string) $query['lang'])) {
-            $qb->andWhere($expr->eq(
-                'omeka_root.lang',
-                $this->createNamedParameter($qb, $query['lang']))
             );
         }
 
@@ -146,24 +146,11 @@ class TableAdapter extends AbstractEntityAdapter
         EntityInterface $entity,
         ErrorStore $errorStore
     ): void {
+        /** @var \Table\Entity\Table $entity*/
+
         $data = $request->getContent();
 
         $this->hydrateOwner($request, $entity);
-
-        if ($this->shouldHydrate($request, 'o:title')) {
-            $title = trim($data['o:title'] ?? '') ?: null;
-            $entity->setTitle($title);
-        }
-
-        if ($this->shouldHydrate($request, 'o:source')) {
-            $source = trim($data['o:source'] ?? '') ?: null;
-            $entity->setSource($source);
-        }
-
-        if ($this->shouldHydrate($request, 'o:comment')) {
-            $comment = trim($data['o:comment'] ?? '') ?: null;
-            $entity->setComment($comment);
-        }
 
         if ($this->shouldHydrate($request, 'o:slug')) {
             $title = $entity->getTitle();
@@ -182,8 +169,24 @@ class TableAdapter extends AbstractEntityAdapter
             $entity->setSlug($slug);
         }
 
+        if ($this->shouldHydrate($request, 'o:title')) {
+            $title = trim($data['o:title'] ?? '') ?: null;
+            $entity->setTitle($title);
+        }
+
         if ($this->shouldHydrate($request, 'o:lang')) {
-            $entity->setLang($data['o:lang'] ?? null);
+            $lang = trim($data['o:lang'] ?? '') ?: null;
+            $entity->setLang($lang);
+        }
+
+        if ($this->shouldHydrate($request, 'o:source')) {
+            $source = trim($data['o:source'] ?? '') ?: null;
+            $entity->setSource($source);
+        }
+
+        if ($this->shouldHydrate($request, 'o:comment')) {
+            $comment = trim($data['o:comment'] ?? '') ?: null;
+            $entity->setComment($comment);
         }
 
         if ($this->shouldHydrate($request, 'o:codes')) {
