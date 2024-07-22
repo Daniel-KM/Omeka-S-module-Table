@@ -206,36 +206,20 @@ class TableAdapter extends AbstractEntityAdapter
         Table $table,
         ErrorStore $errorStore
     ): void {
-        $codeData = $request->getValue('o:codes') ?: [];
+        $codes = $request->getValue('o:codes') ?: [];
 
-        // First, clean input.
-        $clean = [];
-        foreach ($codeData as $code => $label) {
-            $code = trim((string) $code);
-            if (!strlen($code)) {
-                unset($codeData[$code]);
-                continue;
-            }
-            $label = trim((string) $label);
-            if (!strlen($label)) {
-                $label = $code;
-            }
-            $clean[$code] = $label;
-        }
-        $codeData = $clean;
+        // Codes are already checked in validateRequest().
+        $codes = $this->cleanListOfCodesAndLabels($codes);
+        $codes = $this->deduplicateTransliteratedCodes($codes);
 
         // Order codes by code early.
-        // Code may be a number, so avoid a strict type issue with direct uksort().
-        $cmp = function ($a, $b) {
-            return strcasecmp((string) $a, (string) $b);
-        };
-        uksort($codeData, $cmp);
+        usort($codes, fn ($a, $b) => strcasecmp((string) $a['code'], (string) $b['code']));
 
-        $codes = $table->getCodes();
-        $existingCodes = $codes->toArray();
+        $tableCodes = $table->getCodes();
+        $existingCodes = $tableCodes->toArray();
         $newCodes = [];
 
-        foreach ($codeData as $code => $label) {
+        foreach ($codes as $codeLabel) {
             $codeEntity = current($existingCodes);
             if ($codeEntity === false) {
                 $codeEntity = new Code();
@@ -248,20 +232,20 @@ class TableAdapter extends AbstractEntityAdapter
             }
 
             $codeEntity
-                ->setCode($code)
-                ->setLabel($label);
+                ->setCode($codeLabel['code'])
+                ->setLabel($codeLabel['label']);
         }
 
         // Remove any codes that weren't reused.
         foreach ($existingCodes as $key => $existingCode) {
             if ($existingCode !== null) {
-                $codes->remove($key);
+                $tableCodes->remove($key);
             }
         }
 
         // Add any new codes that had to be created.
         foreach ($newCodes as $newCode) {
-            $codes->add($newCode);
+            $tableCodes->add($newCode);
         }
     }
 
@@ -276,6 +260,19 @@ class TableAdapter extends AbstractEntityAdapter
             $errorStore->addError('o:title', new PsrMessage(
                 'A table must have a title.' // @translate
             ));
+        }
+
+        if (!empty($data['o:codes'])) {
+            // Pre-normalize codes.
+            $codes = $this->cleanListOfCodesAndLabels($data['o:codes']);
+            $clean = $this->deduplicateTransliteratedCodes($codes);
+            if (count($clean) !== count($codes)) {
+                $errors = array_map('unserialize', array_diff(array_map('serialize', $codes), array_map('serialize', $clean)));
+                $errorStore->addError('o:codes', new PsrMessage(
+                    'Some codes are not unique once transliterated: {list}.', // @translate
+                    ['list' => implode(', ', array_column('code', $errors))]
+                ));
+            }
         }
     }
 
@@ -309,5 +306,78 @@ class TableAdapter extends AbstractEntityAdapter
                 ));
             }
         }
+    }
+
+    /**
+     * Check if all values are well-formed with code and label and deduplicate.
+     *
+     * Normally, this is checked in form, but it may be skipped via api.
+     */
+    protected function cleanListOfCodesAndLabels(array $codes): array
+    {
+        foreach ($codes as $key => &$codeLabel) {
+            $codeLabel = array_filter(array_map(fn ($v) => strlen($v ?? '') ? trim((string) $v) : '', $codeLabel), 'strlen');
+            if (isset($codeLabel['code'] && isset($codeLabel['label']))) {
+                $codeLabel = [
+                    'code' => $codeLabel['code'],
+                    'label' => $codeLabel['label'],
+                ];
+            } elseif (count($codeLabel) === 1) {
+                $codeLabel = [
+                    'code' => reset($codeLabel),
+                    'label' => reset($codeLabel),
+                ];
+            } else {
+                unset($codes[$key]);
+            }
+        }
+        unset($codeLabel);
+
+        return array_values($clean);
+    }
+
+    /**
+     * Deduplicate transliterated codes from an array of arrays with key "code".
+     *
+     * @param $codes Codes should be already prepared via cleanListOfCodesAndLabels().
+     */
+    protected function deduplicateTransliteratedCodes(array $codes): array
+    {
+        $result = [];
+        foreach ($codes as $codeLabel) {
+            $cleanCode = $this->stringToLowercaseAscii($codeLabel['code']);
+            $result[$cleanCode] = [
+                'code' => $codeLabel['code'],
+                'label' => $codeLabel['label'],
+            ],
+        }
+        return array_values($result);
+    }
+
+    /**
+     * Remove diacritics from a string and set it lowercase.
+     *
+     * Mysql is case insensitive and skips diacritics so php should do the same.
+     *
+     * Don't use iconv() neither mb_convert_encoding(), that are system
+     * dependant and that provides bad conversion by default.
+     */
+    public function stringToLowercaseAscii($string): string
+    {
+        static $isLogged;
+
+        // Don't use iconv, that transliterates badly to ascii, depending on
+        // system config. The same for mb_convert_encoding(),
+        $string = (string) $string;
+        if (extension_loaded('intl')) {
+            $transliterator = \Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;');
+            $string = $transliterator->transliterate($string);
+        } elseif (!$isLogged) {
+            $this->getServiceLocator()->get('Omeka\Logger')->warn(
+                'The php extension "intl" is not installed, so transliteration to ascii is not managed.' // @translate
+            );
+            $isLogged = true;
+        }
+        return mb_strtolower($string, 'UTF-8');
     }
 }

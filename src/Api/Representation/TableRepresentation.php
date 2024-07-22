@@ -136,13 +136,15 @@ class TableRepresentation extends AbstractEntityRepresentation
         $this->cleanCodes = [];
         $this->cleanLabels = [];
 
+        // Prepare all tables and cleaned codes one time.
+
         /** @var \Table\Entity\Code $code */
         foreach ($this->resource->getCodes() as $code) {
             $codeCode = $code->getCode();
             $label = $code->getLabel();
             $this->codes[$codeCode] = $label;
-            $this->cleanCodes[$codeCode] = $this->stringToLowercaseAscii($codeCode);
-            $this->cleanLabels[$codeCode] = $this->stringToLowercaseAscii($label);
+            $this->cleanCodes[$codeCode] = $this->adapter->stringToLowercaseAscii($codeCode);
+            $this->cleanLabels[$codeCode] = $this->adapter->stringToLowercaseAscii($label);
         }
         return $this->codes;
     }
@@ -167,7 +169,7 @@ class TableRepresentation extends AbstractEntityRepresentation
         if ($strict) {
             return null;
         }
-        $cleanCode = $this->stringToLowercaseAscii($code);
+        $cleanCode = $this->adapter->stringToLowercaseAscii($code);
         return $this->cleanCodes[$cleanCode] ?? null;
     }
 
@@ -184,7 +186,7 @@ class TableRepresentation extends AbstractEntityRepresentation
         if ($strict) {
             return null;
         }
-        $cleanLabel = $this->stringToLowercaseAscii($label);
+        $cleanLabel = $this->adapter->stringToLowercaseAscii($label);
         $code = array_search($cleanLabel, $this->cleanLabels);
         return $code === false
             ? null
@@ -226,26 +228,9 @@ class TableRepresentation extends AbstractEntityRepresentation
      * Remove diacritics from a string and set it lowercase.
      *
      * Mysql is case insensitive and skips diacritics so php should do the same.
-     *
-     * Don't use iconv() neither mb_convert_encoding(), that are system
-     * dependant and that provides bad conversion by default.
      */
     public function stringToLowercaseAscii($string): string
     {
-        static $isLogged;
-
-        // Don't use iconv, that transliterates badly to ascii, depending on
-        // system config. The same for mb_convert_encoding(),
-        $string = (string) $string;
-        if (extension_loaded('intl')) {
-            $transliterator = \Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;');
-            $string = $transliterator->transliterate($string);
-        } elseif (!$isLogged) {
-            $this->getServiceLocator()->get('Omeka\Logger')->warn(
-                'The php extension "intl" is not installed, so transliteration to ascii is not managed.' // @translate
-            );
-            $isLogged = true;
-        }
-        return mb_strtolower($string, 'UTF-8');
+        return $this->adapter->stringToLowercaseAscii($string);
     }
 }

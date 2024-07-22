@@ -2,9 +2,9 @@
 
 namespace Table\Form;
 
+use Common\Form\Element as CommonElement;
 use Laminas\Form\Element;
 use Laminas\Form\Form;
-use Omeka\Form\Element as OmekaElement;
 
 class TableForm extends Form
 {
@@ -69,10 +69,13 @@ class TableForm extends Form
             ])
             ->add([
                 'name' => 'o:codes',
-                'type' => OmekaElement\ArrayTextarea::class,
+                'type' => CommonElement\DataTextarea::class,
                 'options' => [
                     'label' => 'List of code and label separated by "="', // @translate
-                    'as_key_value' => true,
+                    'data_options' => [
+                        'code' => null,
+                        'label' => null,
+                    ],
                 ],
                 'attributes' => [
                     'id' => 'o-codes',
