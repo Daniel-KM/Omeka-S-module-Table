@@ -24,7 +24,7 @@ $form->prepare();
 <div id="page-actions">
     <?= $deleteButton ?? '' ?>
     <?= $this->cancelButton() ?>
-    <button type="submit" name="table-submit"><?= $escape($submitLabel) ?></button>
+    <button type="submit" name="table-submit" class="button"><?= $escape($submitLabel) ?></button>
 </div>
 
 <?php $this->trigger("view.$action.form.after", ['form' => $form]); ?>

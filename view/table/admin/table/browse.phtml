@@ -46,7 +46,7 @@ $canBatchDeleteAll = $this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class
             <?php endif; ?>
         </select>
         <div class="batch-actions">
-            <button type="button" class="default active" disabled="true"><?= $translate('Go') ?></button>
+            <button type="button" class="default active button" disabled="true"><?= $translate('Go') ?></button>
             <input type="hidden" name="query" class="batch-query" value="<?= $escape(json_encode($this->params()->fromQuery())); ?>">
             <a class="delete button sidebar-content delete-selected" data-sidebar-selector="#sidebar-delete-selected"><?= $translate('Go') ?></a>
             <a class="delete button sidebar-content delete-all" data-sidebar-selector="#sidebar-delete-all"><?= $translate('Go') ?></a>
