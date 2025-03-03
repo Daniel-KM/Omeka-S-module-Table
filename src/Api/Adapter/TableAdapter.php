@@ -464,7 +464,7 @@ class TableAdapter extends AbstractEntityAdapter
     /**
      * Deduplicate transliterated codes from an array of arrays with key "code".
      *
-     * @param $codes Codes should be already prepared via cleanListOfCodesAndLabelsAndLangs().
+     * @param array $codes Codes should be already prepared via cleanListOfCodesAndLabelsAndLangs().
      */
     public function deduplicateByTransliteratedCodes(array $codes): array
     {
