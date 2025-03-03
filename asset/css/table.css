@@ -1,4 +1,4 @@
-@media screen {
+@media all {
     header nav .table:before,
     .tables .subhead::before {
         content:"\f0ce"; /* fas fa-table */
