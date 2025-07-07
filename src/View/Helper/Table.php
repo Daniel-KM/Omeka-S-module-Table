@@ -15,8 +15,13 @@ class Table extends AbstractHelper
         if (!$idOrSlug) {
             return null;
         }
-        return $this->getView()->api()
-            ->searchOne('tables', is_numeric($idOrSlug) ? ['id' => $idOrSlug] : ['slug' => $idOrSlug])
-            ->getContent();
+
+        try {
+            return $this->getView()->api()
+                ->read('tables', is_numeric($idOrSlug) ? ['id' => $idOrSlug] : ['slug' => $idOrSlug])
+                ->getContent();
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }
