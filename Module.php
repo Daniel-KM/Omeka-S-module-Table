@@ -83,7 +83,7 @@ class Module extends AbstractModule
                     'delete-confirm',
                     'batch-edit',
                     'batch-delete',
-                ],
+                ]
             )
             ->allow(
                 [
@@ -99,7 +99,7 @@ class Module extends AbstractModule
                     'delete',
                     'batch_update',
                     'batch_delete',
-                ],
+                ]
             )
             ->allow(
                 [
