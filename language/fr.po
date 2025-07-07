@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-22 00:00+0000\n"
-"PO-Revision-Date: 2024-07-22 00:00+0000\n"
+"POT-Creation-Date: 2025-07-07 00:00+0000\n"
+"PO-Revision-Date: 2025-07-07 00:00+0000\n"
 "Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: fr\n"
@@ -127,51 +127,51 @@ msgid "List of code and label separated by \"=\", with optional language"
 msgstr ""
 "Liste des codes et libellés séparés par « = », avec une langue facultative"
 
-#: src/Api/Adapter/TableAdapter.php:274 src/Api/Adapter/TableAdapter.php:401
+#: src/Api/Adapter/TableAdapter.php:275 src/Api/Adapter/TableAdapter.php:402
 msgid "A table must have a title."
 msgstr "Une table doit avoir un titre."
 
-#: src/Api/Adapter/TableAdapter.php:282
+#: src/Api/Adapter/TableAdapter.php:283
 msgid "The codes must be an array."
 msgstr "Les codes doivent être un tableau."
 
-#: src/Api/Adapter/TableAdapter.php:328 src/Api/Adapter/TableAdapter.php:353
+#: src/Api/Adapter/TableAdapter.php:329 src/Api/Adapter/TableAdapter.php:354
 msgid "Some codes are not unique once transliterated: {list}."
 msgstr "Certains codes ne sont pas uniques après translittération : {list}."
 
-#: src/Api/Adapter/TableAdapter.php:377
+#: src/Api/Adapter/TableAdapter.php:378
 msgid "Some labels have not a unique language once transliterated: {list}."
 msgstr ""
 "Certains libellés n’ont pas une langue unique après translittération : "
 "{list}."
 
-#: src/Api/Adapter/TableAdapter.php:389
+#: src/Api/Adapter/TableAdapter.php:390
 msgid "A table cannot mix codes with languages and codes without languages."
 msgstr ""
 "Une table ne peut pas mélanger des codes avec langues et des codes sans "
 "langues."
 
-#: src/Api/Adapter/TableAdapter.php:409
+#: src/Api/Adapter/TableAdapter.php:410
 msgid "A slug cannot be longer than 190 characters."
 msgstr "Un identifiant ne peut pas être plus long que 190 caractères."
 
-#: src/Api/Adapter/TableAdapter.php:414
+#: src/Api/Adapter/TableAdapter.php:415
 msgid "A slug should be lower case."
 msgstr "Un identifiant doit être en minuscule."
 
-#: src/Api/Adapter/TableAdapter.php:416
+#: src/Api/Adapter/TableAdapter.php:417
 msgid "A slug should not be a numeric string."
 msgstr "Un identifiant ne doit pas être un nombre."
 
-#: src/Api/Adapter/TableAdapter.php:418
+#: src/Api/Adapter/TableAdapter.php:419
 msgid "A slug cannot be a reserved keyword."
 msgstr "Un identifiant ne peut pas être un mot réservé."
 
-#: src/Api/Adapter/TableAdapter.php:422
+#: src/Api/Adapter/TableAdapter.php:423
 msgid "The slug \"{slug}\" is already taken."
 msgstr "Le nom « {slug} » est déjà utilisé."
 
-#: src/Api/Adapter/TableAdapter.php:499
+#: src/Api/Adapter/TableAdapter.php:500
 msgid ""
 "The php extension \"intl\" is not installed, so transliteration to ascii is "
 "not managed."
