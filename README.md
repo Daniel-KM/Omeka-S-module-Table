@@ -90,7 +90,9 @@ TODO
 - [ ] Use js [datatables] (or see packagist/github) or use direct edition (see
       module Group).
 - [ ] Provide common tables by default (languages, countries, unimarc).
-- [ ] Finalize integration in resource template.
+- [ ] Finalize integration in resource template.
+- [ ] Remove the limit of two columns (three with lang).
+- [ ] Allow to use any column header.
 
 
 Warning
@@ -143,7 +145,7 @@ Copyright
 
 * Copyright Daniel Berthereau, 2023-2025 (see [Daniel-KM] on GitLab)
 
-Initially created for the digital Library [Numistral].
+Initially created for the digital library [Numistral].
 
 
 [Table]: https://gitlab.com/Daniel-KM/Omeka-S-module-Table
