@@ -23,7 +23,7 @@ $canBatchUpdate = $this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class, '
 $canBatchDeleteAll = $this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class, 'batch_delete_all');
 ?>
 
-<?= $this->pageTitle($translate('Tables')) ?>
+<?= $this->pageTitle(null, 1, $translate('Tables')) ?>
 
 <div id="page-actions">
     <?php if ($this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class, 'create')): ?>
@@ -40,13 +40,13 @@ $canBatchDeleteAll = $this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class
     <div class="batch-inputs">
         <select class="batch-actions-select" aria-label="<?= $translate('Batch actions') ?>">
             <option value="default"><?= $translate('Batch actions') ?></option>
-            <option value="delete-selected" disabled="true"><?= $translate('Delete selected') ?></option>
+            <option value="delete-selected" disabled="disabled"><?= $translate('Delete selected') ?></option>
             <?php if ($canBatchDeleteAll): ?>
             <option value="delete-all"><?= $translate('Delete all') ?></option>
             <?php endif; ?>
         </select>
         <div class="batch-actions">
-            <button type="button" class="default active button" disabled="true"><?= $translate('Go') ?></button>
+            <button type="button" class="default active button" disabled="disabled"><?= $translate('Go') ?></button>
             <input type="hidden" name="query" class="batch-query" value="<?= $escape(json_encode($this->params()->fromQuery())); ?>">
             <a class="delete button sidebar-content delete-selected" data-sidebar-selector="#sidebar-delete-selected"><?= $translate('Go') ?></a>
             <a class="delete button sidebar-content delete-all" data-sidebar-selector="#sidebar-delete-all"><?= $translate('Go') ?></a>

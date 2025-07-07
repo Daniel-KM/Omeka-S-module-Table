@@ -3,9 +3,10 @@
     .tables .subhead::before {
         content:"\f0ce"; /* fas fa-table */
     }
+
     .tables .no-resources:before,
     #table .no-table:before,
     .table .no-resources:before {
         content:"\f0ce"; /* fas fa-table */
     }
-  }
+}

@@ -252,10 +252,9 @@ class TableController extends AbstractActionController
                     ),
                     'job_id' => $job->getId(),
                     'link_end' => '</a>',
-                    'link_log' => sprintf(
-                        '<a href="%s">',
-                        htmlspecialchars($urlPlugin->fromRoute('admin/log/default', [], ['query' => ['job_id' => $job->getId()]]))
-                    ),
+                    'link_log' => class_exists('Log\Module', false)
+                        ? sprintf('<a href="%1$s">', $urlPlugin->fromRoute('admin/default', ['controller' => 'log'], ['query' => ['job_id' => $job->getId()]]))
+                        : sprintf('<a href="%1$s" target="_blank">', $urlPlugin->fromRoute('admin/id', ['controller' => 'job', 'action' => 'log', 'id' => $job->getId()])),
                 ]
             );
             $message->setEscapeHtml(false);
