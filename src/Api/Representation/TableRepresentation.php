@@ -54,31 +54,26 @@ class TableRepresentation extends AbstractEntityRepresentation
     public function getJsonLd()
     {
         $owner = $this->owner();
-
-        $created = [
-            '@value' => $this->getDateTime($this->created()),
-            '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime',
-        ];
-
         $modified = $this->modified();
-        if ($modified) {
-            $modified = [
-                '@value' => $this->getDateTime($modified),
-                '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime',
-            ];
-        }
 
         return [
             'o:id' => $this->id(),
-            'o:owner' => $owner ? $owner->getReference() : null,
+            'o:owner' => $owner ? $owner->getReference()->jsonSerialize() : null,
             'o:slug' => $this->slug(),
             'o:is_associative' => $this->isAssociative(),
             'o:title' => $this->title(),
             'o:lang' => $this->lang(),
             'o:source' => $this->source(),
             'o:comment' => $this->comment(),
-            'o:created' => $created,
-            'o:modified' => $modified,
+            'o:created' => [
+                '@value' => $this->getDateTime($this->created())->jsonSerialize(),
+                '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime',
+            ],
+            'o:modified' => $modified
+                ? [
+                    '@value' => $this->getDateTime($modified)->jsonSerialize(),
+                    '@type' => 'http://www.w3.org/2001/XMLSchema#dateTime',
+                ] : null,
             'o:codes' => $this->codes(),
         ];
     }
