@@ -161,8 +161,14 @@ class TableAdapter extends AbstractEntityAdapter
 
         $this->hydrateOwner($request, $entity);
 
+        // Set title first, because it may be used for the slug.
+        if ($this->shouldHydrate($request, 'o:title')) {
+            $title = trim($data['o:title'] ?? '') ?: null;
+            $entity->setTitle($title);
+        }
+
         if ($this->shouldHydrate($request, 'o:slug')) {
-            $title = $entity->getTitle();
+            $title = $entity->getTitle() ?? $data['o:title'] ?? null;
             $slug = mb_strtolower(trim($data['o:slug'] ?? ''));
             if ($slug === ''
                 && $request->getOperation() === Request::CREATE
@@ -180,11 +186,6 @@ class TableAdapter extends AbstractEntityAdapter
 
         if ($this->shouldHydrate($request, 'o:is_associative')) {
             $entity->setIsAssociative(!empty($data['o:is_associative']));
-        }
-
-        if ($this->shouldHydrate($request, 'o:title')) {
-            $title = trim($data['o:title'] ?? '') ?: null;
-            $entity->setTitle($title);
         }
 
         if ($this->shouldHydrate($request, 'o:lang')) {
