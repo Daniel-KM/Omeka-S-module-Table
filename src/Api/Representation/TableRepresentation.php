@@ -135,11 +135,12 @@ class TableRepresentation extends AbstractEntityRepresentation
     }
 
     /**
-     * Get the codes of the tables.
+     * Get all codes of the table, according to value of "is_associative".
      *
-     * The codes are a flat array of codes/labels pairs when the table is
-     * associative, else it is a list of codes associated to an array of labels,
-     * keyed by languages if any.
+     * When the table is associative, the codes are a flat array of codes/labels
+     * pairs.
+     * When the table is not associative, the codes are a list of codes
+     * associated to an array of labels, keyed by languages if any.
      */
     public function codes(): array
     {
@@ -152,19 +153,20 @@ class TableRepresentation extends AbstractEntityRepresentation
         $this->cleanLabelsToCodes = [];
         $this->labelsToCodes = [];
 
-        // Prepare all tables and cleaned codes one time.
+        // Prepare all internal lists of codes and cleaned codes one time.
         // Order is done via doctrine.
+
+        // In case of duplicates, the last code is kept, like in database.
+        // TODO Find a way to convert only the last one (but useless, because it should be the first one in most of the cases).
 
         /** @var \Table\Entity\Code $code */
         if ($this->isAssociative()) {
             foreach ($this->resource->getCodes() as $code) {
                 $codeCode = $code->getCode();
                 $codeLabel = $code->getLabel();
-                $this->codes[$codeCode] = $codeLabel;
-                // In case of duplicates, the last code is kept, like in database.
-                // TODO Find a way to convert only the last one (but useless, because it should be the first one in most of the cases).
                 $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode);
                 $cleanLabel = $this->adapter->stringToLowercaseAscii($codeLabel);
+                $this->codes[$codeCode] = $codeLabel;
                 $this->cleanCodesToCodes[$cleanCode] = $codeCode;
                 $this->cleanLabelsToCodes[$cleanLabel] = $codeCode;
                 $this->labelsToCodes[$codeLabel] = $codeCode;
@@ -175,12 +177,10 @@ class TableRepresentation extends AbstractEntityRepresentation
                 $codeCode = $code->getCode();
                 $codeLabel = $code->getLabel();
                 $codeLang = $code->getLang();
-                $codesLabelsByLang[$codeCode][$codeLang] = $codeLabel;
-                $countByCodes[$codeCode] = empty($countByCodes[$codeCode]) ? 1 : ++$countByCodes[$codeCode];
-                $this->codes[$codeCode][] = $codeLabel;
-                // In case of duplicates, the last code is kept, like in database.
                 $cleanCode = $this->adapter->stringToLowercaseAscii($codeCode);
                 $cleanLabel = $this->adapter->stringToLowercaseAscii($codeLabel);
+                $codesLabelsByLang[$codeCode][$codeLang] = $codeLabel;
+                $this->codes[$codeCode][] = $codeLabel;
                 $this->cleanCodesToCodes[$cleanCode] = $codeCode;
                 $this->cleanLabelsToCodes[$cleanLabel] = $codeCode;
                 $this->labelsToCodes[$codeLabel] = $codeCode;
@@ -197,7 +197,6 @@ class TableRepresentation extends AbstractEntityRepresentation
                 $this->codes = $codesLabelsByLang;
             }
         }
-
         return $this->codes;
     }
 
@@ -247,9 +246,9 @@ class TableRepresentation extends AbstractEntityRepresentation
     {
         $result = [];
         foreach ($this->resource->getCodes() as $codeEntity) {
-            $code = $codeEntity->getCode();
+            // The code may be used multiple times, so it is not used as key.
             $result[] = [
-                'code' => $code,
+                'code' => $codeEntity->getCode(),
                 'label' => $codeEntity->getLabel(),
                 'lang' => $codeEntity->getLang(),
             ];
@@ -374,7 +373,9 @@ class TableRepresentation extends AbstractEntityRepresentation
     }
 
     /**
-     * Use slug instead of the id.
+     * Use slug instead of the id and force action "show" when empty.
+     *
+     * @todo The route doesn't exclude add/edit etc., so an action is required.
      *
      * {@inheritDoc}
      * @see \Omeka\Api\Representation\AbstractResourceRepresentation::adminUrl()
