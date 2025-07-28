@@ -4,12 +4,19 @@ namespace Table\Form\Element;
 
 use Common\Form\Element\TraitGroupByOwner;
 use Common\Form\Element\TraitOptionalElement;
+use Omeka\Api\Manager as ApiManager;
 use Omeka\Form\Element\AbstractGroupByOwnerSelect;
 
 class TablesSelect extends AbstractGroupByOwnerSelect
 {
     use TraitGroupByOwner;
     use TraitOptionalElement;
+
+    public function setApiManager(ApiManager $apiManager): self
+    {
+        $this->api = $apiManager;
+        return $this;
+    }
 
     public function getResourceName()
     {

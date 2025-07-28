@@ -23,9 +23,10 @@ class TableSelect extends Select
     /**
      * @param ApiManager $apiManager
      */
-    public function setApiManager(ApiManager $apiManager): void
+    public function setApiManager(ApiManager $apiManager): self
     {
         $this->api = $apiManager;
+        return $this;
     }
 
     public function getValueOptions(): array
