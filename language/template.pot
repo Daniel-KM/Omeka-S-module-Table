@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-07 00:00+0000\n"
+"POT-Creation-Date: 2025-07-28 00:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,47 +115,47 @@ msgstr ""
 msgid "List of code and label separated by \"=\", with optional language"
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:275 src/Api/Adapter/TableAdapter.php:402
+#: src/Api/Adapter/TableAdapter.php:221 src/Api/Adapter/TableAdapter.php:348
 msgid "A table must have a title."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:283
+#: src/Api/Adapter/TableAdapter.php:229
 msgid "The codes must be an array."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:329 src/Api/Adapter/TableAdapter.php:354
+#: src/Api/Adapter/TableAdapter.php:275 src/Api/Adapter/TableAdapter.php:300
 msgid "Some codes are not unique once transliterated: {list}."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:378
+#: src/Api/Adapter/TableAdapter.php:324
 msgid "Some labels have not a unique language once transliterated: {list}."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:390
+#: src/Api/Adapter/TableAdapter.php:336
 msgid "A table cannot mix codes with languages and codes without languages."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:410
+#: src/Api/Adapter/TableAdapter.php:356
 msgid "A slug cannot be longer than 190 characters."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:415
+#: src/Api/Adapter/TableAdapter.php:361
 msgid "A slug should be lower case."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:417
+#: src/Api/Adapter/TableAdapter.php:363
 msgid "A slug should not be a numeric string."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:419
+#: src/Api/Adapter/TableAdapter.php:365
 msgid "A slug cannot be a reserved keyword."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:423
+#: src/Api/Adapter/TableAdapter.php:369
 msgid "The slug \"{slug}\" is already taken."
 msgstr ""
 
-#: src/Api/Adapter/TableAdapter.php:500
+#: src/Api/Adapter/TableAdapter.php:446
 msgid ""
 "The php extension \"intl\" is not installed, so transliteration to ascii is "
 "not managed."
