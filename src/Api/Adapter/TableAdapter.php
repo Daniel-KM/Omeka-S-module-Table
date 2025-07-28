@@ -2,8 +2,12 @@
 
 namespace Table\Api\Adapter;
 
+if (!class_exists('Common\Api\Adapter\CommonAdapterTrait', false)) {
+    require_once dirname(__DIR__, 4) . '/Common/src/Api/Adapter/CommonAdapterTrait.php';
+}
+
+use Common\Api\Adapter\CommonAdapterTrait;
 use Common\Stdlib\PsrMessage;
-use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Omeka\Api\Adapter\AbstractEntityAdapter;
 use Omeka\Api\Adapter\SiteSlugTrait;
@@ -15,6 +19,7 @@ use Table\Entity\Table;
 
 class TableAdapter extends AbstractEntityAdapter
 {
+    use CommonAdapterTrait;
     use SiteSlugTrait;
 
     protected $sortFields = [
@@ -43,6 +48,34 @@ class TableAdapter extends AbstractEntityAdapter
         'modified' => 'modified',
     ];
 
+    protected $queryFields = [
+        'id' => [
+            'owner_id' => 'owner',
+        ],
+        'string' => [
+            'slug' => 'slug',
+            'title' => 'title',
+            'lang' => 'lang',
+            'source' => 'source',
+            'comment' => 'comment',
+        ],
+        'bool' => [
+            'is_associative' => 'isAssociative',
+        ],
+        'datetime' => [
+            'created' => ['eq', 'created'],
+            'created_before' => ['lt', 'created'],
+            'created_after' => ['gt', 'created'],
+            'created_until' => ['lte', 'created'],
+            'created_since' => ['gte', 'created'],
+            'modified' => ['eq', 'modified'],
+            'modified_before' => ['lt', 'modified'],
+            'modified_after' => ['gt', 'modified'],
+            'modified_until' => ['lte', 'modified'],
+            'modified_since' => ['gte', 'modified'],
+        ],
+    ];
+
     public function getResourceName()
     {
         return 'tables';
@@ -60,94 +93,7 @@ class TableAdapter extends AbstractEntityAdapter
 
     public function buildQuery(QueryBuilder $qb, array $query): void
     {
-        $expr = $qb->expr();
-
-        if (isset($query['owner_id']) && strlen((string) $query['owner_id'])) {
-            $qb->andWhere($expr->eq(
-                'omeka_root.owner',
-                $this->createNamedParameter($qb, $query['owner_id'])
-            ));
-        }
-
-        if (isset($query['slug']) && strlen((string) $query['slug'])) {
-            $qb->andWhere($expr->eq(
-                'omeka_root.slug',
-                $this->createNamedParameter($qb, $query['slug']))
-            );
-        }
-
-        if (isset($query['is_associative']) && (is_numeric($query['is_associative']) || is_bool($query['is_associative']))) {
-            $qb->andWhere($expr->eq(
-                'omeka_root.isAssociative',
-                $this->createNamedParameter($qb, (bool) $query['is_associative'])
-            ));
-        }
-
-        if (isset($query['title']) && strlen((string) $query['title'])) {
-            $qb->andWhere($expr->eq(
-                'omeka_root.title',
-                $this->createNamedParameter($qb, $query['title']))
-            );
-        }
-
-        if (isset($query['lang']) && strlen((string) $query['lang'])) {
-            $qb->andWhere($expr->eq(
-                'omeka_root.lang',
-                $this->createNamedParameter($qb, $query['lang']))
-            );
-        }
-
-        if (isset($query['source']) && strlen((string) $query['source'])) {
-            $qb->andWhere($expr->eq(
-                'omeka_root.source',
-                $this->createNamedParameter($qb, $query['source']))
-            );
-        }
-
-        if (isset($query['comment']) && strlen((string) $query['comment'])) {
-            $qb->andWhere($expr->eq(
-                'omeka_root.comment',
-                $this->createNamedParameter($qb, $query['comment']))
-            );
-        }
-
-        /** @see \Omeka\Api\Adapter\AbstractResourceEntityAdapter::buildQuery() */
-        $dateSearches = [
-            'created' => ['eq', 'created'],
-            'created_before' => ['lt', 'created'],
-            'created_after' => ['gt', 'created'],
-            'created_before_on' => ['lte', 'created'],
-            'created_after_on' => ['gte', 'created'],
-            'modified' => ['eq', 'modified'],
-            'modified_before' => ['lt', 'modified'],
-            'modified_before_on' => ['lte', 'modified'],
-            'modified_after' => ['gt', 'modified'],
-            'modified_after_on' => ['gte', 'modified'],
-        ];
-        $dateGranularities = [
-            DateTime::ISO8601,
-            '!Y-m-d\TH:i:s',
-            '!Y-m-d\TH:i',
-            '!Y-m-d\TH',
-            '!Y-m-d',
-            '!Y-m',
-            '!Y',
-        ];
-        foreach ($dateSearches as $dateSearchKey => $dateSearch) {
-            if (isset($query[$dateSearchKey])) {
-                foreach ($dateGranularities as $dateGranularity) {
-                    $date = DateTime::createFromFormat($dateGranularity, $query[$dateSearchKey]);
-                    if (false !== $date) {
-                        break;
-                    }
-                }
-                $qb->andWhere($expr->{$dateSearch[0]} (
-                    sprintf('omeka_root.%s', $dateSearch[1]),
-                    // If the date is invalid, pass null to ensure no results.
-                    $this->createNamedParameter($qb, $date ?: null)
-                ));
-            }
-        }
+        $this->buildQueryFields($qb, $query);
     }
 
     public function hydrate(
