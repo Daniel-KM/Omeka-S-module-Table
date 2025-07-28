@@ -216,7 +216,7 @@ class TableRepresentation extends AbstractEntityRepresentation
             $this->codes();
         }
 
-        return array_column($this->codes, 'label', 'code');
+        return array_map('end', $this->codes);
     }
 
     /**
