@@ -2,10 +2,6 @@
 
 namespace Table\Api\Adapter;
 
-if (!class_exists('Common\Api\Adapter\CommonAdapterTrait', false)) {
-    require_once dirname(__DIR__, 4) . '/Common/src/Api/Adapter/CommonAdapterTrait.php';
-}
-
 use Common\Api\Adapter\CommonAdapterTrait;
 use Common\Stdlib\PsrMessage;
 use Doctrine\ORM\QueryBuilder;
@@ -55,6 +51,9 @@ class TableAdapter extends AbstractEntityAdapter
         'string' => [
             'slug' => 'slug',
             'title' => 'title',
+        ],
+        // TODO string_empty or string ???
+        'string_empty' => [
             'lang' => 'lang',
             'source' => 'source',
             'comment' => 'comment',
@@ -62,17 +61,9 @@ class TableAdapter extends AbstractEntityAdapter
         'bool' => [
             'is_associative' => 'isAssociative',
         ],
-        'datetime' => [
-            'created' => ['eq', 'created'],
-            'created_before' => ['lt', 'created'],
-            'created_after' => ['gt', 'created'],
-            'created_until' => ['lte', 'created'],
-            'created_since' => ['gte', 'created'],
-            'modified' => ['eq', 'modified'],
-            'modified_before' => ['lt', 'modified'],
-            'modified_after' => ['gt', 'modified'],
-            'modified_until' => ['lte', 'modified'],
-            'modified_since' => ['gte', 'modified'],
+        'datetime_operator' => [
+            'created' => 'created',
+            'modified' => 'modified',
         ],
     ];
 
