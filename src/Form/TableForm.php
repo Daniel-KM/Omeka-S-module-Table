@@ -112,32 +112,32 @@ class TableForm extends Form implements TranslatorAwareInterface
         ;
 
         $inputFilter = $this->getInputFilter();
-        $inputFilter->add([
-            'name' => 'o:codes',
-            'required' => false,
-            'filters' => [
-                [
-                    'name' => \Laminas\Filter\Callback::class,
-                    'options' => [
-                        'callback' => [$this->apiAdapterTable, 'cleanListOfCodesAndLabelsAndLangs'],
-                    ],
-                ],
-            ],
-            'validators' => [
-                [
-                    'name' => \Laminas\Validator\Callback::class,
-                    'options' => [
-                        'callback' => [$this, 'validateCodes'],
-                        'bind' => true,
-                        'messages' => [
-                            'callbackValue' => $this->translator->translate(
-                                'Some codes are not unique once transliterated or languages are not unique by codes or some codes have languages and some none.' // @translate
-                            ),
+        $inputFilter
+            ->add([
+                'name' => 'o:codes',
+                'required' => false,
+                'filters' => [
+                    [
+                        'name' => \Laminas\Filter\Callback::class,
+                        'options' => [
+                            'callback' => [$this->apiAdapterTable, 'cleanListOfCodesAndLabelsAndLangs'],
                         ],
                     ],
                 ],
-            ],
-        ]);
+                'validators' => [
+                    [
+                        'name' => \Laminas\Validator\Callback::class,
+                        'options' => [
+                            'callback' => fn ($codes, $context) => $this->validateCodes($codes, $context),
+                            'messages' => [
+                                'callbackValue' => $this->translator->translate(
+                                    'Some codes are not unique once transliterated or languages are not unique by codes or some codes have languages and some none.' // @translate
+                                ),
+                            ],
+                        ],
+                    ],
+                ],
+            ]);
     }
 
     public function validateCodes($codes, $context): bool
@@ -156,9 +156,9 @@ class TableForm extends Form implements TranslatorAwareInterface
         ]);
     }
 
-    public function setApiAdapterTable(TableAdapter $apiTableAdapter): self
+    public function setApiAdapterTable(TableAdapter $apiAdapterTable): self
     {
-        $this->apiAdapterTable = $apiTableAdapter;
+        $this->apiAdapterTable = $apiAdapterTable;
         return $this;
     }
 }

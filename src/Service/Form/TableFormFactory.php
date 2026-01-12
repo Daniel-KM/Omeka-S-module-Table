@@ -3,6 +3,7 @@
 namespace Table\Service\Form;
 
 use Interop\Container\ContainerInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Table\Form\TableForm;
 
@@ -13,6 +14,6 @@ class TableFormFactory implements FactoryInterface
         $element = new TableForm(null, $options ?? []);
         return $element
             ->setApiAdapterTable($services->get('Omeka\ApiAdapterManager')->get('tables'))
-            ->setTranslator($services->get('MvcTranslator'));
+            ->setTranslator($services->get(TranslatorInterface::class));
     }
 }
