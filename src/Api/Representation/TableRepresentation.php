@@ -215,7 +215,11 @@ class TableRepresentation extends AbstractEntityRepresentation
             $this->codes();
         }
 
-        return array_map('end', $this->codes);
+        $result = [];
+        foreach ($this->codes as $code => $labels) {
+            $result[$code] = is_array($labels) ? end($labels) : $labels;
+        }
+        return $result;
     }
 
     /**
