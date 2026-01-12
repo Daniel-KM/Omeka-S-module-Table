@@ -4,6 +4,7 @@ namespace Table;
 
 return [
     'api_adapters' => [
+        // This key is checked in module Internationalisation.
         'invokables' => [
             'tables' => Api\Adapter\TableAdapter::class,
         ],
@@ -62,7 +63,7 @@ return [
                             // TODO Exclude common action as slug (add, edit, browse, show, delete, etc.). So action will be skippable. For now, a check is done during hydration.
                             'route' => '/table/:slug/:action',
                             'constraints' => [
-                                // The slug may be a id or a slug. A slug should never be fully numeric.
+                                // The slug may be an id or a slug. A slug should never be fully numeric.
                                 'slug' => '[a-z0-9_-]+',
                                 'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ],
@@ -108,7 +109,7 @@ return [
     'translator' => [
         'translation_file_patterns' => [
             [
-                'type' => 'gettext',
+                'type' => \Laminas\I18n\Translator\Loader\Gettext::class,
                 'base_dir' => dirname(__DIR__) . '/language',
                 'pattern' => '%s.mo',
                 'text_domain' => null,

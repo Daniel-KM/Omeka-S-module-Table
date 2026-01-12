@@ -131,8 +131,7 @@ class Table extends AbstractEntity
      *     targetEntity="Table\Entity\Code",
      *     mappedBy="table",
      *     orphanRemoval=true,
-     *     cascade={"persist", "remove", "detach"},
-     *     indexBy="property_id"
+     *     cascade={"persist", "remove", "detach"}
      * )
      * @OrderBy(
      *     {

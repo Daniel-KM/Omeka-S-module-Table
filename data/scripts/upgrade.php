@@ -34,20 +34,20 @@ if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActi
 
 if (version_compare($oldVersion, '3.4.1', '<')) {
     $sql = <<<'SQL'
-ALTER TABLE `tables`
-CHANGE `title` `title` varchar(190) NOT NULL AFTER `owner_id`,
-ADD`source` TEXT DEFAULT NULL AFTER `title`,
-ADD `comment` TEXT DEFAULT NULL AFTER `source`,
-CHANGE `slug` `slug` varchar(190) NOT NULL AFTER `comment`;
-SQL;
+        ALTER TABLE `tables`
+        CHANGE `title` `title` varchar(190) NOT NULL AFTER `owner_id`,
+        ADD`source` TEXT DEFAULT NULL AFTER `title`,
+        ADD `comment` TEXT DEFAULT NULL AFTER `source`,
+        CHANGE `slug` `slug` varchar(190) NOT NULL AFTER `comment`;
+        SQL;
     $connection->executeStatement($sql);
 }
 
 if (version_compare($oldVersion, '3.4.3', '<')) {
     $sql = <<<'SQL'
-ALTER TABLE `tables`
-DROP INDEX `idx_table_slug`;
-SQL;
+        ALTER TABLE `tables`
+        DROP INDEX `idx_table_slug`;
+        SQL;
     try {
         $connection->executeStatement($sql);
     } catch (\Exception $e) {
@@ -55,26 +55,26 @@ SQL;
     }
 
     $sql = <<<'SQL'
-ALTER TABLE `tables`
-CHANGE `slug` `slug` varchar(190) NOT NULL AFTER `owner_id`,
-ADD `is_associative` tinyint(1) NOT NULL DEFAULT 0 AFTER `slug`,
-CHANGE `title` `title` varchar(190) NOT NULL AFTER `is_associative`,
-CHANGE `lang` `lang` varchar(190) DEFAULT NULL AFTER `title`,
-CHANGE `source` `source` text DEFAULT NULL AFTER `lang`,
-CHANGE `comment` `comment` text DEFAULT NULL AFTER `source`;
-SQL;
+        ALTER TABLE `tables`
+        CHANGE `slug` `slug` varchar(190) NOT NULL AFTER `owner_id`,
+        ADD `is_associative` tinyint(1) NOT NULL DEFAULT 0 AFTER `slug`,
+        CHANGE `title` `title` varchar(190) NOT NULL AFTER `is_associative`,
+        CHANGE `lang` `lang` varchar(190) DEFAULT NULL AFTER `title`,
+        CHANGE `source` `source` text DEFAULT NULL AFTER `lang`,
+        CHANGE `comment` `comment` text DEFAULT NULL AFTER `source`;
+        SQL;
     $connection->executeStatement($sql);
 
     $sql = <<<'SQL'
-UPDATE `tables`
-SET `is_associative` = 1;
-SQL;
+        UPDATE `tables`
+        SET `is_associative` = 1;
+        SQL;
     $connection->executeStatement($sql);
 
     $sql = <<<'SQL'
-ALTER TABLE `table_code`
-ADD `lang` varchar(190) DEFAULT NULL AFTER `label`;
-SQL;
+        ALTER TABLE `table_code`
+        ADD `lang` varchar(190) DEFAULT NULL AFTER `label`;
+        SQL;
     $connection->executeStatement($sql);
 
     $message = new PsrMessage(
