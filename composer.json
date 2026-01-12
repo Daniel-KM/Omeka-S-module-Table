@@ -25,5 +25,13 @@
         "psr-4": {
             "Table\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TableTest\\": "tests/TableTest/"
+        }
+    },
+    "extra": {
+        "installer-name": "Table"
     }
 }
