@@ -14,22 +14,11 @@ use Omeka\Entity\AbstractEntity;
  * @Entity
  * @Table(
  *     name="table_code",
- *      indexes={
+ *     indexes={
  *         @Index(
  *             name="idx_table_code",
  *             columns={
- *                 "table_id",
- *                 "code"
- *             }
- *         ),
- *         @Index(
- *             name="idx_table_label",
- *             columns={
- *                 "table_id",
- *                 "label"
- *             },
- *             options={
- *                 "lengths": {null, 190}
+ *                 "table_id", "code"
  *             }
  *         )
  *     }
