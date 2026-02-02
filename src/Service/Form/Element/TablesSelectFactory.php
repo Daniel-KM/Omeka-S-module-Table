@@ -8,7 +8,7 @@ use Table\Form\Element\TablesSelect;
 
 class TablesSelectFactory implements FactoryInterface
 {
-    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
+    public function __invoke(ContainerInterface $services, $requestedName, ?array $options = null)
     {
         $element = new TablesSelect(null, $options ?? []);
         return $element
