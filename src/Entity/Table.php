@@ -136,8 +136,7 @@ class Table extends AbstractEntity
      * @OrderBy(
      *     {
      *         "code"="ASC",
-     *         "label"="ASC",
-     *         "lang"="ASC"
+     *         "label"="ASC"
      *     }
      * )
      */

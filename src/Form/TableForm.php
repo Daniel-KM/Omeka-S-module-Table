@@ -97,11 +97,10 @@ class TableForm extends Form implements TranslatorAwareInterface
                 'name' => 'o:codes',
                 'type' => CommonElement\DataTextarea::class,
                 'options' => [
-                    'label' => 'List of code and label separated by "=", with optional language', // @translate
+                    'label' => 'List of code and label separated by "="', // @translate
                     'data_options' => [
                         'code' => null,
                         'label' => null,
-                        'lang' => null,
                     ],
                 ],
                 'attributes' => [
@@ -120,7 +119,7 @@ class TableForm extends Form implements TranslatorAwareInterface
                     [
                         'name' => \Laminas\Filter\Callback::class,
                         'options' => [
-                            'callback' => [$this->apiAdapterTable, 'cleanListOfCodesAndLabelsAndLangs'],
+                            'callback' => [$this->apiAdapterTable, 'cleanListOfCodesAndLabels'],
                         ],
                     ],
                 ],
@@ -131,7 +130,7 @@ class TableForm extends Form implements TranslatorAwareInterface
                             'callback' => fn ($codes, $context) => $this->validateCodes($codes, $context),
                             'messages' => [
                                 'callbackValue' => $this->translator->translate(
-                                    'Some codes are not unique once transliterated or languages are not unique by codes or some codes have languages and some none.' // @translate
+                                    'Some codes are not unique once transliterated.' // @translate
                                 ),
                             ],
                         ],

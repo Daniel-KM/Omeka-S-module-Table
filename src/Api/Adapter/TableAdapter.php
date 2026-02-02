@@ -171,7 +171,7 @@ class TableAdapter extends AbstractEntityAdapter
         $codes = $request->getValue('o:codes') ?: [];
 
         // Codes are already checked in validateRequest().
-        $codes = $this->cleanListOfCodesAndLabelsAndLangs($codes);
+        $codes = $this->cleanListOfCodesAndLabels($codes);
 
         // Only associative should deduplicate codes by code.
         $isAssociative = $table->isAssociative();
@@ -194,13 +194,9 @@ class TableAdapter extends AbstractEntityAdapter
                 $existingCodes[key($existingCodes)] = null;
                 next($existingCodes);
             }
-            $lang = $isAssociative || empty($codeData['lang']) || is_numeric($codeData['lang'])
-                ? null
-                : (string) $codeData['lang'];
             $codeEntity
                 ->setCode((string) $codeData['code'])
-                ->setLabel((string) $codeData['label'])
-                ->setLang($lang);
+                ->setLabel((string) $codeData['label']);
         }
 
         // Remove any codes that weren't reused.
@@ -246,17 +242,13 @@ class TableAdapter extends AbstractEntityAdapter
     }
 
     /**
-     * Check if a list of codes (code/label/language) is valid.
+     * Check if a list of codes (code/label) is valid.
      *
      * If the codes are associative (one label by code), the transliterated
-     * codes should be unique and the language is skipped.
+     * codes should be unique.
      *
      * When multiple labels are allowed, codes can be duplicated, except when
      * they are variants (diacritic and case).
-     * Furthermore, if there are languages, they should be single and not mixed
-     * with numeric keys.
-     * Finally, if a code has a language, all codes with multiple labels should
-     * have a language.
      *
      *  @param array $context Managed keys:
      *  - o:is_associative (bool)
@@ -272,7 +264,7 @@ class TableAdapter extends AbstractEntityAdapter
         $errorStore = $context['error_store'] ?? new ErrorStore();
 
         // Pre-normalize codes to simplify checks.
-        $codes = $this->cleanListOfCodesAndLabelsAndLangs($codes);
+        $codes = $this->cleanListOfCodesAndLabels($codes);
 
         if ($isAssociative) {
             $clean = $this->deduplicateByTransliteratedCodes($codes);
@@ -284,20 +276,16 @@ class TableAdapter extends AbstractEntityAdapter
                 ));
                 return false;
             }
-            // TODO May add a warning when languages are used with associative table.
             return true;
         }
 
         // Prepare checks one time.
         $checks = [];
         $checks2 = [];
-        $checksLang = [];
         foreach ($codes as $codeData) {
             $code = $this->stringToLowercaseAscii($codeData['code']);
-            $lang = empty($codeData['lang']) || is_numeric($codeData['lang']) ? null : $codeData['lang'];
             $checks[$codeData['code']] = true;
             $checks2[$code] = true;
-            $checksLang[$code][] = $lang;
         }
 
         // Checks transliterated codes.
@@ -306,41 +294,6 @@ class TableAdapter extends AbstractEntityAdapter
             $errorStore->addError('o:codes', new PsrMessage(
                 'Some codes are not unique once transliterated: {list}.', // @translate
                 ['list' => implode(', ', $errors)]
-            ));
-            return false;
-        }
-
-        // Prepare next checks for languages.
-        $errors = [];
-        $haveOnlyNull = [];
-        $haveOnlyStringsAndOneNull = [];
-        foreach ($checksLang as $code => $langs) {
-            // Checks for unique language by code.
-            // Prepare checks for mixing numeric/languages: an empty language
-            // is allowed.
-            $haveOnlyNull[$code] = count(array_filter($langs, 'is_null')) === count($langs);
-            $haveOnlyStringsAndOneNull[$code] = count(array_filter($langs, 'is_null')) <= 1;
-            $hasMultipleLanguages = count(array_filter($langs)) > 0;
-            if ($hasMultipleLanguages && count(array_unique($langs)) !== count($langs)) {
-                $errors[] = $code;
-            }
-        }
-
-        if ($errors) {
-            $errorStore->addError('o:codes', new PsrMessage(
-                'Some labels have not a unique language once transliterated: {list}.', // @translate
-                ['list' => implode(', ', $errors)]
-            ));
-            return false;
-        }
-
-        // Check for mixing labels with and without languages.
-        $hasMixed = count(array_filter($haveOnlyNull)) !== count($haveOnlyNull)
-            && count(array_filter($haveOnlyStringsAndOneNull))
-            && count(array_filter($haveOnlyStringsAndOneNull)) !== count($haveOnlyStringsAndOneNull);
-        if ($hasMixed) {
-            $errorStore->addError('o:codes', new PsrMessage(
-                'A table cannot mix codes with languages and codes without languages.' // @translate
             ));
             return false;
         }
@@ -381,34 +334,32 @@ class TableAdapter extends AbstractEntityAdapter
     }
 
     /**
-     * Check if values are well-formed with code/label/lang and deduplicate.
+     * Check if values are well-formed with code/label and deduplicate.
      *
      * Normally, this is checked in form, but it may be skipped via api.
      */
-    public function cleanListOfCodesAndLabelsAndLangs(array $codes): array
+    public function cleanListOfCodesAndLabels(array $codes): array
     {
         $result = [];
 
         foreach ($codes as $codeData) {
-            $codeData = array_filter(array_map(fn ($v) => strlen($v ?? '') ? trim((string) $v) : '', $codeData), 'strlen') + ['lang' => null];
+            $codeData = array_filter(array_map(fn ($v) => strlen($v ?? '') ? trim((string) $v) : '', $codeData), 'strlen');
             ksort($codeData);
             if (isset($codeData['code']) || isset($codeData['label']) && ($codeData['code'] ?? $codeData['label'] ?? '') !== '') {
                 $result[] = [
                     'code' => $codeData['code'] ?? $codeData['label'],
                     'label' => $codeData['label'] ?? $codeData['code'],
-                    'lang' => empty($codeData['lang']) || is_numeric($codeData['lang']) ? null : $codeData['lang'],
                 ];
             }
         }
 
-        // In all cases, remove full duplicates (code, label and lang).
+        // In all cases, remove full duplicates (code and label).
         $result = array_values(array_map('unserialize', array_unique(array_map('serialize', $result))));
 
-        // Order codes by code, labels and language early.
+        // Order codes by code and labels early.
         $cmp = function ($a, $b) {
             return strcasecmp((string) $a['code'], (string) $b['code'])
-                ?: strcasecmp((string) $a['label'], (string) $b['label'])
-                ?: strcasecmp((string) $a['lang'], (string) $b['lang']);
+                ?: strcasecmp((string) $a['label'], (string) $b['label']);
         };
         usort($result, $cmp);
 
