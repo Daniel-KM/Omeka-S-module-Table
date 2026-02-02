@@ -87,6 +87,22 @@ class TableAdapter extends AbstractEntityAdapter
         $this->buildQueryFields($qb, $query);
     }
 
+    public function sortQuery(QueryBuilder $qb, array $query): void
+    {
+        if (isset($query['sort_by']) && $query['sort_by'] === 'code_count') {
+            $expr = $qb->expr();
+            $alias = $this->getEntityClass();
+            $codeAlias = $this->createAlias();
+            $qb
+                ->leftJoin(\Table\Entity\Code::class, $codeAlias, 'WITH', $expr->eq("$codeAlias.table", "omeka_root.id"))
+                ->addSelect("COUNT($codeAlias.id) AS HIDDEN code_count")
+                ->groupBy('omeka_root.id')
+                ->addOrderBy('code_count', $query['sort_order'] ?? 'asc');
+            return;
+        }
+        parent::sortQuery($qb, $query);
+    }
+
     public function hydrate(
         Request $request,
         EntityInterface $entity,
