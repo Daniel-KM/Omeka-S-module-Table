@@ -231,7 +231,12 @@ class TableController extends AbstractActionController
         }
 
         // Derive the query, removing limiting and sorting params.
-        $query = json_decode($this->params()->fromPost('query', []), true);
+        $rawQuery = $this->params()->fromPost('query', '');
+        $query = is_string($rawQuery) ? json_decode($rawQuery, true) : null;
+        if (!is_array($query)) {
+            $this->messenger()->addError('Invalid batch query.'); // @translate
+            return $this->redirect()->toRoute('admin/table', ['action' => 'browse'], true);
+        }
         unset($query['submit'], $query['page'], $query['per_page'], $query['limit'],
             $query['offset'], $query['sort_by'], $query['sort_order']);
 
