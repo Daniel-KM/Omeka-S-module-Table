@@ -7,7 +7,10 @@ Table (module for Omeka S)
 
 [Table] is a module for [Omeka S] that allows to manage tables of data, for
 example a list of language codes, a list of country codes, or unimarc codes.
-Each code can have multiple labels, for example for translations.
+Each code can have multiple labels, for example for variants.
+
+A table has a single optional language, common to all its labels. To manage
+translations, create one table per language.
 
 It is a library useful to normalize data or to denormalize them. It can be used
 by some other modules or in themes:
@@ -26,7 +29,7 @@ by some other modules or in themes:
 - [User Profile] to add a select in user form.
 
 An associative table contains two columns: a code, a keyword or a uri and the
-matching value or label, with an optional language.
+matching value or label. The language, when set, applies to the whole table.
 
 When using a uri, the purpose is similar to a list of uris managed by the module
 [Custom Vocab]. Of course, when possible, it is recommended to use online
@@ -67,9 +70,10 @@ Usage
 -----
 
 Just fill the form: set a unique name (the slug, a lower case string starting
-with a letter), a title, a language and fill the text area with a list of codes
-and labels, separated with a `=`, one pair by line. A language may be appended
-too when the table is not associative.
+with a letter), a title, an optional language for the whole table, and fill
+the text area with a list of codes and labels, separated with a `=`, one pair
+by line. When the table is not associative, the same code can appear on
+multiple lines with different labels.
 
 ### User Profile and config of themes
 
@@ -100,7 +104,7 @@ TODO
       module Group).
 - [ ] Provide common tables by default (languages, countries, unimarc).
 - [ ] Finalize integration in resource template.
-- [ ] Remove the limit of two columns (three with lang).
+- [ ] Remove the limit of two columns.
 - [ ] Allow to use any column header.
 
 
