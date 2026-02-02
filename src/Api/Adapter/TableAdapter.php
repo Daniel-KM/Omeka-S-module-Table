@@ -397,7 +397,8 @@ class TableAdapter extends AbstractEntityAdapter
         // system config. The same for mb_convert_encoding(),
         $string = (string) $string;
         if (extension_loaded('intl')) {
-            $transliterator = \Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;');
+            static $transliterator;
+            $transliterator ??= \Transliterator::createFromRules(':: NFD; :: [:Nonspacing Mark:] Remove; :: NFC;');
             $string = $transliterator->transliterate($string);
         } elseif (!$isLogged) {
             $this->getServiceLocator()->get('Omeka\Logger')->warn(
