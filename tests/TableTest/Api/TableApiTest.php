@@ -79,11 +79,11 @@ class TableApiTest extends AbstractHttpControllerTestCase
     public function testCreateMultilingualTable(): void
     {
         $table = $this->createMultilingualTable('Greetings', [
-            ['code' => 'hello', 'label' => 'Hello', 'lang' => 'en'],
-            ['code' => 'hello', 'label' => 'Bonjour', 'lang' => 'fr'],
-            ['code' => 'hello', 'label' => 'Hola', 'lang' => 'es'],
-            ['code' => 'goodbye', 'label' => 'Goodbye', 'lang' => 'en'],
-            ['code' => 'goodbye', 'label' => 'Au revoir', 'lang' => 'fr'],
+            ['code' => 'hello', 'label' => 'Hello'],
+            ['code' => 'hello', 'label' => 'Bonjour'],
+            ['code' => 'hello', 'label' => 'Hola'],
+            ['code' => 'goodbye', 'label' => 'Goodbye'],
+            ['code' => 'goodbye', 'label' => 'Au revoir'],
         ]);
 
         $this->assertFalse($table->isAssociative());

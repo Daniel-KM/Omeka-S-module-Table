@@ -140,7 +140,7 @@ trait TableTestTrait
      * Create a multilingual table for testing.
      *
      * @param string $title Table title.
-     * @param array $codes Array of ['code' => x, 'label' => y, 'lang' => z].
+     * @param array $codes Array of ['code' => x, 'label' => y].
      * @return TableRepresentation
      */
     protected function createMultilingualTable(string $title, array $codes): TableRepresentation

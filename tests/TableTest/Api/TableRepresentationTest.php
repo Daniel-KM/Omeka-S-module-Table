@@ -172,19 +172,18 @@ class TableRepresentationTest extends AbstractHttpControllerTestCase
     public function testCodesMultilingualStructure(): void
     {
         $table = $this->createMultilingualTable('Multilingual', [
-            ['code' => 'hello', 'label' => 'Hello', 'lang' => 'en'],
-            ['code' => 'hello', 'label' => 'Bonjour', 'lang' => 'fr'],
+            ['code' => 'hello', 'label' => 'Hello'],
+            ['code' => 'hello', 'label' => 'Bonjour'],
         ]);
 
         $codes = $table->codes();
 
         $this->assertIsArray($codes);
         $this->assertArrayHasKey('hello', $codes);
-        // Should be keyed by language.
-        $this->assertArrayHasKey('en', $codes['hello']);
-        $this->assertArrayHasKey('fr', $codes['hello']);
-        $this->assertEquals('Hello', $codes['hello']['en']);
-        $this->assertEquals('Bonjour', $codes['hello']['fr']);
+        $this->assertIsArray($codes['hello']);
+        $this->assertCount(2, $codes['hello']);
+        $this->assertContains('Hello', $codes['hello']);
+        $this->assertContains('Bonjour', $codes['hello']);
     }
 
     /**
@@ -193,9 +192,9 @@ class TableRepresentationTest extends AbstractHttpControllerTestCase
     public function testLabelsFromCodeMultilingual(): void
     {
         $table = $this->createMultilingualTable('Greetings', [
-            ['code' => 'hello', 'label' => 'Hello', 'lang' => 'en'],
-            ['code' => 'hello', 'label' => 'Bonjour', 'lang' => 'fr'],
-            ['code' => 'hello', 'label' => 'Hola', 'lang' => 'es'],
+            ['code' => 'hello', 'label' => 'Hello'],
+            ['code' => 'hello', 'label' => 'Bonjour'],
+            ['code' => 'hello', 'label' => 'Hola'],
         ]);
 
         $labels = $table->labelsFromCode('hello');
@@ -212,9 +211,9 @@ class TableRepresentationTest extends AbstractHttpControllerTestCase
     public function testCodesAssociativeConversion(): void
     {
         $table = $this->createMultilingualTable('Multilingual', [
-            ['code' => 'a', 'label' => 'Alpha EN', 'lang' => 'en'],
-            ['code' => 'a', 'label' => 'Alpha FR', 'lang' => 'fr'],
-            ['code' => 'b', 'label' => 'Beta', 'lang' => 'en'],
+            ['code' => 'a', 'label' => 'Alpha EN'],
+            ['code' => 'a', 'label' => 'Alpha FR'],
+            ['code' => 'b', 'label' => 'Beta'],
         ]);
 
         $codes = $table->codesAssociative();
@@ -255,8 +254,8 @@ class TableRepresentationTest extends AbstractHttpControllerTestCase
     public function testCodesDataReturnsRawData(): void
     {
         $table = $this->createMultilingualTable('Test', [
-            ['code' => 'a', 'label' => 'Alpha', 'lang' => 'en'],
-            ['code' => 'a', 'label' => 'Alpha FR', 'lang' => 'fr'],
+            ['code' => 'a', 'label' => 'Alpha'],
+            ['code' => 'a', 'label' => 'Alpha FR'],
         ]);
 
         $data = $table->codesData();
@@ -265,7 +264,6 @@ class TableRepresentationTest extends AbstractHttpControllerTestCase
         foreach ($data as $item) {
             $this->assertArrayHasKey('code', $item);
             $this->assertArrayHasKey('label', $item);
-            $this->assertArrayHasKey('lang', $item);
         }
     }
 
@@ -289,9 +287,9 @@ class TableRepresentationTest extends AbstractHttpControllerTestCase
     public function testCodeCountMultilingual(): void
     {
         $table = $this->createMultilingualTable('Multilingual Count', [
-            ['code' => 'a', 'label' => 'A EN', 'lang' => 'en'],
-            ['code' => 'a', 'label' => 'A FR', 'lang' => 'fr'],
-            ['code' => 'b', 'label' => 'B', 'lang' => 'en'],
+            ['code' => 'a', 'label' => 'A EN'],
+            ['code' => 'a', 'label' => 'A FR'],
+            ['code' => 'b', 'label' => 'B'],
         ]);
 
         // Should count all code entries, not unique codes.
