@@ -2,9 +2,9 @@
 
 namespace Table\Service\Form;
 
-use Interop\Container\ContainerInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use Table\Form\TableForm;
 
 class TableFormFactory implements FactoryInterface

@@ -2,8 +2,8 @@
 
 namespace Table\Service\Form\Element;
 
-use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 use Table\Form\Element\TablesSelect;
 
 class TablesSelectFactory implements FactoryInterface
