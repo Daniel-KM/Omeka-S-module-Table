@@ -29,7 +29,8 @@ if (!method_exists($this, 'checkModuleActiveVersion') || !$this->checkModuleActi
         $translate('The module %1$s should be upgraded to version %2$s or later.'), // @translate
         'Common', '3.4.77'
     );
-    throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $message);
+    $messenger->addError($message);
+    throw new \Omeka\Module\Exception\ModuleCannotInstallException((string) $translate('Missing requirement. Unable to upgrade.')); // @translate
 }
 
 if (version_compare($oldVersion, '3.4.1', '<')) {
@@ -89,6 +90,33 @@ if (version_compare($oldVersion, '3.4.3', '<')) {
 
     $message = new PsrMessage(
         'The api output did not change for associative tables, but is different for tables with multiple labels. Check your code if needed.' // @translate
+    );
+    $messenger->addWarning($message);
+}
+
+if (version_compare($oldVersion, '3.4.8', '<')) {
+    $sql = <<<'SQL'
+        ALTER TABLE `table_code`
+        DROP INDEX `idx_table_label`;
+        SQL;
+    try {
+        $connection->executeStatement($sql);
+    } catch (\Throwable $e) {
+        // No index.
+    }
+
+    $sql = <<<'SQL'
+        ALTER TABLE `table_code`
+        DROP COLUMN `lang`;
+        SQL;
+    try {
+        $connection->executeStatement($sql);
+    } catch (\Throwable $e) {
+        // No column.
+    }
+
+    $message = new PsrMessage(
+        'The language is no longer set on each code: use the language of the table instead.' // @translate
     );
     $messenger->addWarning($message);
 }
