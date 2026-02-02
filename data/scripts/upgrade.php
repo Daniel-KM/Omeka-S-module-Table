@@ -50,7 +50,7 @@ if (version_compare($oldVersion, '3.4.3', '<')) {
         SQL;
     try {
         $connection->executeStatement($sql);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         // No index.
     }
 

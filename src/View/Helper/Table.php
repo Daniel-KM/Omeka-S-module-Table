@@ -20,7 +20,7 @@ class Table extends AbstractHelper
             return $this->getView()->api()
                 ->read('tables', is_numeric($idOrSlug) ? ['id' => $idOrSlug] : ['slug' => $idOrSlug])
                 ->getContent();
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return null;
         }
     }
