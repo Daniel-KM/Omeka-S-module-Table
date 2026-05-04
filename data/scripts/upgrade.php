@@ -120,3 +120,25 @@ if (version_compare($oldVersion, '3.4.8', '<')) {
     );
     $messenger->addWarning($message);
 }
+
+if (version_compare($oldVersion, '3.4.9', '<')) {
+    $sql = <<<'SQL'
+        ALTER TABLE `tables`
+        ADD `is_public` tinyint(1) NOT NULL DEFAULT 1 AFTER `is_associative`;
+        SQL;
+    try {
+        $connection->executeStatement($sql);
+    } catch (\Throwable $e) {
+        // Column already exists.
+    }
+
+    $message = new PsrMessage(
+        'Tables have a visibility flag: existing tables are public by default.' // @translate
+    );
+    $messenger->addSuccess($message);
+
+    $message = new PsrMessage(
+        'Tables are now data types and can be used as property values. Update your resource templates to use them. The code is stored and displayed as label with the locale of the site.' // @translate
+    );
+    $messenger->addSuccess($message);
+}
