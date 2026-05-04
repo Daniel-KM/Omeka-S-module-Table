@@ -55,7 +55,7 @@ class TableForm extends Form implements TranslatorAwareInterface
                     ],
                 ],
                 'attributes' => [
-                    'id' => 'o-slug',
+                    'id' => 'o-is-associative',
                     'required' => false,
                     'value' => '0',
                 ],
@@ -123,36 +123,7 @@ class TableForm extends Form implements TranslatorAwareInterface
                         ],
                     ],
                 ],
-                'validators' => [
-                    [
-                        'name' => \Laminas\Validator\Callback::class,
-                        'options' => [
-                            'callback' => fn ($codes, $context) => $this->validateCodes($codes, $context),
-                            'messages' => [
-                                'callbackValue' => $this->translator->translate(
-                                    'Some codes are not unique once transliterated.' // @translate
-                                ),
-                            ],
-                        ],
-                    ],
-                ],
             ]);
-    }
-
-    public function validateCodes($codes, $context): bool
-    {
-        if (empty($codes)) {
-            return true;
-        }
-
-        // The context is the post.
-
-        // TODO Output messages of the error store when validating, without dividing the checks.
-        $errorStore = new \Omeka\Stdlib\ErrorStore();
-        return $this->apiAdapterTable->validateCodes($codes, [
-            'o:is_associative' => !empty($context['o:is_associative']),
-            'error_store' => $errorStore,
-        ]);
     }
 
     public function setApiAdapterTable(TableAdapter $apiAdapterTable): self

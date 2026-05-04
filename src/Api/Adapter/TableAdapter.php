@@ -372,7 +372,7 @@ class TableAdapter extends AbstractEntityAdapter
         foreach ($codes as $codeData) {
             $codeData = array_filter(array_map(fn ($v) => strlen($v ?? '') ? trim((string) $v) : '', $codeData), 'strlen');
             ksort($codeData);
-            if (isset($codeData['code']) || isset($codeData['label']) && ($codeData['code'] ?? $codeData['label'] ?? '') !== '') {
+            if (isset($codeData['code']) || isset($codeData['label'])) {
                 $result[] = [
                     'code' => $codeData['code'] ?? $codeData['label'],
                     'label' => $codeData['label'] ?? $codeData['code'],

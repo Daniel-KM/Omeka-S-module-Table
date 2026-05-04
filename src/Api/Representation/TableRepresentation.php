@@ -359,8 +359,8 @@ class TableRepresentation extends AbstractEntityRepresentation
     /**
      * Get a code from a label.
      *
-     * @param string|int $code Int is managed in order to fix array issues.
-     * @param bool $strict Don't check transliterated lower case code.
+     * @param string|int $label Int is managed in order to fix array issues.
+     * @param bool $strict Don't check transliterated lower case label.
      * @return string|null In case of a transliterated lower case duplicate, the
      *   last one is returned, like database.
      */

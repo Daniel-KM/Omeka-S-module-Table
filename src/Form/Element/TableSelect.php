@@ -39,7 +39,7 @@ class TableSelect extends Select
             if (count($tables)) {
                 /** @var \Table\Api\Representation\TableRepresentation $table */
                 $table = reset($tables);
-                $valueOptions = $table->codes();
+                $valueOptions = $table->codesAssociative();
             }
         }
 
