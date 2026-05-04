@@ -152,6 +152,9 @@ class Table extends AbstractDataType implements ValueAnnotatingInterface
             if (isset(self::ISO_639_1_TO_2T[$primary])) {
                 $candidates[] = self::ISO_639_1_TO_2T[$primary];
             }
+            if (isset(self::ISO_639_1_TO_2B[$primary])) {
+                $candidates[] = self::ISO_639_1_TO_2B[$primary];
+            }
         }
         return $candidates;
     }
@@ -175,6 +178,19 @@ class Table extends AbstractDataType implements ValueAnnotatingInterface
         'ru' => 'rus', 'sk' => 'slk', 'sl' => 'slv', 'sq' => 'sqi',
         'sr' => 'srp', 'sv' => 'swe', 'th' => 'tha', 'tr' => 'tur',
         'uk' => 'ukr', 'vi' => 'vie', 'zh' => 'zho',
+    ];
+
+    /**
+     * ISO 639-1 (alpha-2) to ISO 639-2 bibliographic (alpha-3) mapping for the
+     * 22 languages that have both T and B forms. Used as a secondary lookup
+     * when a sibling slug uses the historical bibliographic code.
+     */
+    private const ISO_639_1_TO_2B = [
+        'bo' => 'tib', 'cs' => 'cze', 'cy' => 'wel', 'de' => 'ger',
+        'el' => 'gre', 'eu' => 'baq', 'fa' => 'per', 'fr' => 'fre',
+        'hy' => 'arm', 'is' => 'ice', 'ka' => 'geo', 'mi' => 'mao',
+        'mk' => 'mac', 'ms' => 'may', 'my' => 'bur', 'nl' => 'dut',
+        'ro' => 'rum', 'sk' => 'slo', 'sq' => 'alb', 'zh' => 'chi',
     ];
 
     protected function canonical(): ?TableRepresentation
