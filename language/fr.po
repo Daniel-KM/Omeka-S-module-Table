@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-28 00:00+0000\n"
-"PO-Revision-Date: 2025-07-28 00:00+0000\n"
+"POT-Creation-Date: 2026-05-04 00:00+0000\n"
+"PO-Revision-Date: 2026-05-04 00:00+0000\n"
 "Last-Translator: Daniel Berthereau <Daniel.fr@Berthereau.net>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: fr\n"
@@ -15,20 +15,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.6\n"
 
-#: data/scripts/upgrade.php:29 Module.php:182
+#: data/scripts/upgrade.php:29 Module.php:322
 #, php-format
 msgid "The module %1$s should be upgraded to version %2$s or later."
 msgstr "Le module %1$s doit être mis à niveau à la version %2$s ou ultérieure."
 
-#: src/Form/TableForm.php:134
-msgid ""
-"Some codes are not unique once transliterated or languages are not unique by "
-"codes or some codes have languages and some none."
-msgstr ""
-"Certains codes ne sont pas uniques après translittération ou les langues ne "
-"sont pas uniques par code ou certains codes ont des langues et d’autres non."
+#: data/scripts/upgrade.php:33
+msgid "Missing requirement. Unable to upgrade."
+msgstr "Pré-requis absent. Impossible de mettre à jour."
+
+#: src/DataType/Table.php:66
+msgid "Select a value…"
+msgstr "Choisir une valeur…"
 
 #: view/table/admin/table/add.phtml:17
 msgid "New table"
@@ -43,21 +43,21 @@ msgstr "Tables"
 msgid "Add new table"
 msgstr "Ajouter une nouvelle table"
 
-#: view/table/admin/table/browse.phtml:69
+#: view/table/admin/table/browse.phtml:88
 msgid "Select table"
 msgstr "Choisir une table"
 
-#: view/table/admin/table/browse.phtml:126
-#: view/table/admin/table/browse.phtml:146
+#: view/table/admin/table/browse.phtml:145
+#: view/table/admin/table/browse.phtml:165
 msgid "Delete tables"
 msgstr "Supprimer les tables"
 
-#: view/table/admin/table/browse.phtml:127
+#: view/table/admin/table/browse.phtml:146
 msgid "Are you sure you would like to delete the selected tables?"
 msgstr "Êtes-vous sûr de vouloir supprimer les tables sélectionnées ?"
 
-#: view/table/admin/table/browse.phtml:129
-#: view/table/admin/table/browse.phtml:149
+#: view/table/admin/table/browse.phtml:148
+#: view/table/admin/table/browse.phtml:168
 #, php-format
 msgid ""
 "%1$s: this action will permanently delete %2$s tables and cannot be undone."
@@ -65,12 +65,12 @@ msgstr ""
 "%1$s : cette action supprimera définitivement les %2$s tables et ne pourra "
 "pas être annulée."
 
-#: view/table/admin/table/browse.phtml:147
+#: view/table/admin/table/browse.phtml:166
 msgid ""
 "Are you sure you would like to delete all tables on all pages of this result?"
 msgstr "Êtes-vous sûr de vouloir supprimer toutes les tables du résultat ?"
 
-#: view/table/admin/table/browse.phtml:190
+#: view/table/admin/table/browse.phtml:209
 msgid "Omeka could not find any tables."
 msgstr "Omeka ne trouve pas de table."
 
@@ -79,7 +79,7 @@ msgstr "Omeka ne trouve pas de table."
 msgid "Manage multiple labels by code"
 msgstr "Gérer plusieurs libellés par code"
 
-#: view/table/admin/table/show-details.phtml:70
+#: view/table/admin/table/show-details.phtml:74
 msgid "Total codes"
 msgstr "Total des codes"
 
@@ -87,21 +87,17 @@ msgstr "Total des codes"
 msgid "Edit table"
 msgstr "Modifier la table"
 
-#: view/table/admin/table/show.phtml:83
-msgid "Lang"
-msgstr "Langue"
-
 #: view/table/admin/table/show.phtml:96
 msgid "No codes"
 msgstr "Pas de code"
 
-#: data/scripts/upgrade.php:81
+#: data/scripts/upgrade.php:82
 msgid "It is now possible to create table with multiple labels for one code."
 msgstr ""
 "Il est désormais possible de créer une table avec plusieurs libellés par "
 "code."
 
-#: data/scripts/upgrade.php:86
+#: data/scripts/upgrade.php:87
 msgid ""
 "It is now possible to set a language to labels. When set, all labels should "
 "have a different language."
@@ -109,7 +105,7 @@ msgstr ""
 "Il est désormais possible d’ajouter des langues aux libellés. Lorsque c’est "
 "le cas, tous les libellés doivent avoir des langues différentes."
 
-#: data/scripts/upgrade.php:91
+#: data/scripts/upgrade.php:92
 msgid ""
 "The api output did not change for associative tables, but is different for "
 "tables with multiple labels. Check your code if needed."
@@ -118,66 +114,82 @@ msgstr ""
 "différente pour les tables avec plusieurs labels par code. Vérifiez votre "
 "code si besoin."
 
+#: data/scripts/upgrade.php:119
+msgid ""
+"The language is no longer set on each code: use the language of the table "
+"instead."
+msgstr ""
+"La langue n’est plus gérée sur chaque code : utiliser la langue de la table "
+"à la place."
+
+#: data/scripts/upgrade.php:136
+msgid "Tables have a visibility flag: existing tables are public by default."
+msgstr ""
+"Les tables ont désormais une visibilité. Les tables existantes sont "
+"publiques."
+
+#: data/scripts/upgrade.php:141
+msgid ""
+"Tables are now data types and can be used as property values. Update your "
+"resource templates to use them. The code is stored and displayed as label "
+"with the locale of the site."
+msgstr ""
+"Les tables sont désormais des types de données qui peuvent être utilisées "
+"comme des valeurs de propriétés. Mettez à jour vos modèles pour les "
+"utiliser. Le code est enregistré et affiché en tant que label selon la "
+"langue du site."
+
 #: src/Form/TableForm.php:78
 msgid "Source (generally a url)"
 msgstr "Source (généralement une url)"
 
 #: src/Form/TableForm.php:100
-msgid "List of code and label separated by \"=\", with optional language"
-msgstr ""
-"Liste des codes et libellés séparés par « = », avec une langue facultative"
+msgid "List of code and label separated by \"=\""
+msgstr "Liste des codes et libellés séparés par « = »"
 
-#: src/Api/Adapter/TableAdapter.php:221 src/Api/Adapter/TableAdapter.php:348
+#: src/Api/Adapter/TableAdapter.php:251 src/Api/Adapter/TableAdapter.php:335
 msgid "A table must have a title."
 msgstr "Une table doit avoir un titre."
 
-#: src/Api/Adapter/TableAdapter.php:229
+#: src/Api/Adapter/TableAdapter.php:259
 msgid "The codes must be an array."
 msgstr "Les codes doivent être un tableau."
 
-#: src/Api/Adapter/TableAdapter.php:275 src/Api/Adapter/TableAdapter.php:300
+#: src/Api/Adapter/TableAdapter.php:301 src/Api/Adapter/TableAdapter.php:322
 msgid "Some codes are not unique once transliterated: {list}."
 msgstr "Certains codes ne sont pas uniques après translittération : {list}."
 
-#: src/Api/Adapter/TableAdapter.php:324
-msgid "Some labels have not a unique language once transliterated: {list}."
-msgstr ""
-"Certains libellés n’ont pas une langue unique après translittération : "
-"{list}."
-
-#: src/Api/Adapter/TableAdapter.php:336
-msgid "A table cannot mix codes with languages and codes without languages."
-msgstr ""
-"Une table ne peut pas mélanger des codes avec langues et des codes sans "
-"langues."
-
-#: src/Api/Adapter/TableAdapter.php:356
+#: src/Api/Adapter/TableAdapter.php:343
 msgid "A slug cannot be longer than 190 characters."
 msgstr "Un identifiant ne peut pas être plus long que 190 caractères."
 
-#: src/Api/Adapter/TableAdapter.php:361
+#: src/Api/Adapter/TableAdapter.php:348
 msgid "A slug should be lower case."
 msgstr "Un identifiant doit être en minuscule."
 
-#: src/Api/Adapter/TableAdapter.php:363
+#: src/Api/Adapter/TableAdapter.php:350
 msgid "A slug should not be a numeric string."
 msgstr "Un identifiant ne doit pas être un nombre."
 
-#: src/Api/Adapter/TableAdapter.php:365
+#: src/Api/Adapter/TableAdapter.php:352
 msgid "A slug cannot be a reserved keyword."
 msgstr "Un identifiant ne peut pas être un mot réservé."
 
-#: src/Api/Adapter/TableAdapter.php:369
+#: src/Api/Adapter/TableAdapter.php:356
 msgid "The slug \"{slug}\" is already taken."
 msgstr "Le nom « {slug} » est déjà utilisé."
 
-#: src/Api/Adapter/TableAdapter.php:446
+#: src/Api/Adapter/TableAdapter.php:432
 msgid ""
 "The php extension \"intl\" is not installed, so transliteration to ascii is "
 "not managed."
 msgstr ""
 "L’extension php « intl » n’est pas installé et la translittération vers "
 "l’ascii ne peut pas être gérée."
+
+#: src/DataType/Table.php:48
+msgid "Table"
+msgstr "Table"
 
 #: src/Controller/Admin/TableController.php:101
 msgid "Table successfully created. {link}Add another table?{link_end}"
@@ -203,7 +215,11 @@ msgstr "Vous devez choisir au moins une table  à supprimer."
 msgid "Tables successfully deleted."
 msgstr "Table supprimée avec succès."
 
-#: src/Controller/Admin/TableController.php:247
+#: src/Controller/Admin/TableController.php:237
+msgid "Invalid batch query."
+msgstr "Requête en lot incorrecte."
+
+#: src/Controller/Admin/TableController.php:252
 msgid ""
 "Deleting tables started in background (job {link_job}#{job_id}{link_end}, "
 "{link_log}logs{link_end})."
@@ -211,9 +227,30 @@ msgstr ""
 "Suppression des tables lancée en arrière plan (tâche {link_job}#{job_id}"
 "{link_end}, {link_log}journaux{link_end})."
 
-#: config/module.config.php:104
+#: config/module.config.php:116
 msgid "Code count"
 msgstr "Total des codes"
+
+#~ msgid ""
+#~ "Some codes are not unique once transliterated or languages are not unique "
+#~ "by codes or some codes have languages and some none."
+#~ msgstr ""
+#~ "Certains codes ne sont pas uniques après translittération ou les langues "
+#~ "ne sont pas uniques par code ou certains codes ont des langues et "
+#~ "d’autres non."
+
+#~ msgid "Lang"
+#~ msgstr "Langue"
+
+#~ msgid "Some labels have not a unique language once transliterated: {list}."
+#~ msgstr ""
+#~ "Certains libellés n’ont pas une langue unique après translittération : "
+#~ "{list}."
+
+#~ msgid "A table cannot mix codes with languages and codes without languages."
+#~ msgstr ""
+#~ "Une table ne peut pas mélanger des codes avec langues et des codes sans "
+#~ "langues."
 
 #~ msgid "Add another table?"
 #~ msgstr "Ajouter une autre table ?"
@@ -260,8 +297,8 @@ msgstr "Total des codes"
 #~ msgstr "Tables supprimées avec succès"
 
 #~ msgid ""
-#~ "Logging is not active. You should enable it in the file config/local."
-#~ "config.php: `'log' => true`."
+#~ "Logging is not active. You should enable it in the file config/"
+#~ "local.config.php: `'log' => true`."
 #~ msgstr ""
 #~ "Les journaux ne sont pas activés. Vous devez les activer dans le fichier "
 #~ "config/local.config.php : `'log' => true`."
@@ -270,8 +307,8 @@ msgstr "Total des codes"
 #~ "You may need to update config/local.config.php to update your log "
 #~ "settings."
 #~ msgstr ""
-#~ "Il peut être nécessaire de mettre à jour le fichier config/local.config."
-#~ "php pour les paramètres des journaux."
+#~ "Il peut être nécessaire de mettre à jour le fichier config/"
+#~ "local.config.php pour les paramètres des journaux."
 
 #, php-format
 #~ msgid "See examples of config in the %sreadme%s."
@@ -391,8 +428,8 @@ msgstr "Total des codes"
 #~ msgstr "Absent du message non traduit"
 
 #~ msgid ""
-#~ "The logger is currently disabled for database. Check config/local.config."
-#~ "php."
+#~ "The logger is currently disabled for database. Check config/"
+#~ "local.config.php."
 #~ msgstr ""
 #~ "Le journal en base de données est actuellement désactivé. Vérifier config/"
 #~ "local.config.php."
