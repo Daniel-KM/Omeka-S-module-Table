@@ -118,24 +118,64 @@ class Table extends AbstractDataType implements ValueAnnotatingInterface
     {
         $table = null;
         if ($view !== null) {
-            $locale = $this->resolveLocale($view);
-            if ($locale) {
-                $sibling = $this->api->search('tables', ['slug' => $this->base . '-' . $locale, 'limit' => 1])->getContent();
-                $table = $sibling ? reset($sibling) : null;
+            foreach ($this->resolveLangCandidates($view) as $lang) {
+                $sibling = $this->api->search('tables', ['slug' => $this->base . '-' . $lang, 'limit' => 1])->getContent();
+                if ($sibling) {
+                    $table = reset($sibling);
+                    break;
+                }
             }
         }
         $table ??= $this->canonical();
         return $table ? ($table->labelFromCode($code) ?? $code) : $code;
     }
 
-    protected function resolveLocale(PhpRenderer $view): ?string
+    /**
+     * Ordered list of language code candidates derived from the view locale.
+     * Tries the two-letter primary code first, then the three-letter
+     * terminologic code when known.
+     */
+    protected function resolveLangCandidates(PhpRenderer $view): array
     {
         try {
-            return $view->plugin('lang')->__invoke();
+            $locale = (string) $view->plugin('lang')->__invoke();
         } catch (\Throwable $e) {
-            return null;
+            $locale = '';
         }
+        if ($locale === '') {
+            return [];
+        }
+        $primary = strtolower(strtok($locale, '_-')) ?: '';
+        $candidates = [];
+        if ($primary !== '') {
+            $candidates[] = $primary;
+            if (isset(self::ISO_639_1_TO_2T[$primary])) {
+                $candidates[] = self::ISO_639_1_TO_2T[$primary];
+            }
+        }
+        return $candidates;
     }
+
+    /**
+     * ISO 639-1 (alpha-2) to ISO 639-2 terminologic (alpha-3) mapping for the
+     * most common UI locales. Used to find a sibling table whose lang is
+     * declared with three letters.
+     */
+    private const ISO_639_1_TO_2T = [
+        'ar' => 'ara', 'bg' => 'bul', 'bn' => 'ben', 'br' => 'bre',
+        'ca' => 'cat', 'cs' => 'ces', 'cy' => 'cym', 'da' => 'dan',
+        'de' => 'deu', 'el' => 'ell', 'en' => 'eng', 'es' => 'spa',
+        'et' => 'est', 'eu' => 'eus', 'fa' => 'fas', 'fi' => 'fin',
+        'fr' => 'fra', 'ga' => 'gle', 'gl' => 'glg', 'he' => 'heb',
+        'hi' => 'hin', 'hr' => 'hrv', 'hu' => 'hun', 'id' => 'ind',
+        'is' => 'isl', 'it' => 'ita', 'ja' => 'jpn', 'ka' => 'kat',
+        'ko' => 'kor', 'la' => 'lat', 'lt' => 'lit', 'lv' => 'lav',
+        'mk' => 'mkd', 'mn' => 'mon', 'nl' => 'nld', 'no' => 'nor',
+        'oc' => 'oci', 'pl' => 'pol', 'pt' => 'por', 'ro' => 'ron',
+        'ru' => 'rus', 'sk' => 'slk', 'sl' => 'slv', 'sq' => 'sqi',
+        'sr' => 'srp', 'sv' => 'swe', 'th' => 'tha', 'tr' => 'tur',
+        'uk' => 'ukr', 'vi' => 'vie', 'zh' => 'zho',
+    ];
 
     protected function canonical(): ?TableRepresentation
     {
