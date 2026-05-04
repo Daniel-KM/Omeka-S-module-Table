@@ -4,6 +4,7 @@ namespace Table\DataType;
 
 use Laminas\View\Renderer\PhpRenderer;
 use Omeka\Api\Adapter\AbstractEntityAdapter;
+use Omeka\Api\Manager as ApiManager;
 use Omeka\Api\Representation\ValueRepresentation;
 use Omeka\DataType\AbstractDataType;
 use Omeka\DataType\ValueAnnotatingInterface;
@@ -11,27 +12,35 @@ use Omeka\Entity\Value;
 use Table\Api\Representation\TableRepresentation;
 
 /**
- * Data type backed by a Table. Stores the code as @value with no @language.
+ * Data type backed by a group of tables sharing a base slug.
  *
- * Display follows the current locale via slug convention "<base>-<lang>".
+ * Stores the code as @value with no @language. Renders the label from the
+ * sibling table matching the current locale (slug "<base>-<lang>"), with
+ * fallback on the canonical table (slug equal to base).
  */
 class Table extends AbstractDataType implements ValueAnnotatingInterface
 {
-    protected TableRepresentation $table;
+    protected string $base;
 
-    public function __construct(TableRepresentation $table)
+    protected ApiManager $api;
+
+    protected ?TableRepresentation $canonical = null;
+
+    public function __construct(string $base, ApiManager $api)
     {
-        $this->table = $table;
+        $this->base = $base;
+        $this->api = $api;
     }
 
     public function getName()
     {
-        return 'table:' . $this->table->id();
+        return 'table:' . $this->base;
     }
 
     public function getLabel()
     {
-        return $this->table->displayTitle();
+        $canonical = $this->canonical();
+        return $canonical ? $canonical->displayTitle() : $this->base;
     }
 
     public function getOptgroupLabel()
@@ -46,7 +55,8 @@ class Table extends AbstractDataType implements ValueAnnotatingInterface
 
     public function form(PhpRenderer $view)
     {
-        $codes = $this->table->codesAssociative();
+        $canonical = $this->canonical();
+        $codes = $canonical ? $canonical->codesAssociative() : [];
         $select = (new \Laminas\Form\Element\Select('table'))
             ->setValueOptions($codes)
             ->setEmptyOption('');
@@ -63,7 +73,8 @@ class Table extends AbstractDataType implements ValueAnnotatingInterface
         if (!is_string($value) || trim($value) === '') {
             return false;
         }
-        return $this->table->labelFromCode($value, true) !== null;
+        $canonical = $this->canonical();
+        return $canonical && $canonical->labelFromCode($value, true) !== null;
     }
 
     public function hydrate(array $valueObject, Value $value, AbstractEntityAdapter $adapter)
@@ -105,12 +116,16 @@ class Table extends AbstractDataType implements ValueAnnotatingInterface
 
     protected function labelFor(string $code, ?PhpRenderer $view): string
     {
-        $table = $this->table;
+        $table = null;
         if ($view !== null) {
             $locale = $this->resolveLocale($view);
-            $table = $this->table->siblingForLang($locale);
+            if ($locale) {
+                $sibling = $this->api->search('tables', ['slug' => $this->base . '-' . $locale, 'limit' => 1])->getContent();
+                $table = $sibling ? reset($sibling) : null;
+            }
         }
-        return $table->labelFromCode($code) ?? $code;
+        $table ??= $this->canonical();
+        return $table ? ($table->labelFromCode($code) ?? $code) : $code;
     }
 
     protected function resolveLocale(PhpRenderer $view): ?string
@@ -120,5 +135,24 @@ class Table extends AbstractDataType implements ValueAnnotatingInterface
         } catch (\Throwable $e) {
             return null;
         }
+    }
+
+    protected function canonical(): ?TableRepresentation
+    {
+        if ($this->canonical !== null) {
+            return $this->canonical;
+        }
+        // Prefer the table whose slug equals the base.
+        $exact = $this->api->search('tables', ['slug' => $this->base, 'limit' => 1])->getContent();
+        if ($exact) {
+            return $this->canonical = reset($exact);
+        }
+        // Fallback: first table whose baseSlug matches.
+        foreach ($this->api->search('tables')->getContent() as $t) {
+            if ($t->baseSlug() === $this->base) {
+                return $this->canonical = $t;
+            }
+        }
+        return null;
     }
 }

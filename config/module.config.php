@@ -79,7 +79,7 @@ return [
         ],
     ],
     'data_types' => [
-        'factories' => [
+        'abstract_factories' => [
             Service\DataType\TableFactory::class,
         ],
     ],

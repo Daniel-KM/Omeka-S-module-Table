@@ -209,18 +209,44 @@ class Module extends AbstractModule
     {
         $tables = $this->getServiceLocator()->get('Omeka\ApiManager')
             ->search('tables')->getContent();
-        $names = $event->getParam('registered_names');
+        $bases = [];
         foreach ($tables as $table) {
-            $names[] = 'table:' . $table->id();
+            $bases[$table->baseSlug()] = true;
+        }
+        $names = $event->getParam('registered_names');
+        foreach (array_keys($bases) as $base) {
+            $names[] = 'table:' . $base;
         }
         $event->setParam('registered_names', $names);
     }
 
     public function resetTableDataTypeOnRemove(Event $event): void
     {
+        /** @var \Table\Entity\Table $table */
         $table = $event->getTarget();
-        $name = 'table:' . $table->getId();
-        $conn = $this->getServiceLocator()->get('Omeka\Connection');
+        $services = $this->getServiceLocator();
+
+        // Compute base slug from the entity being removed.
+        $slug = $table->getSlug();
+        $lang = $table->getLang();
+        $base = ($lang && str_ends_with($slug, '-' . $lang))
+            ? substr($slug, 0, -strlen($lang) - 1)
+            : $slug;
+
+        // Only reset when no other table in the group remains.
+        $api = $services->get('Omeka\ApiManager');
+        $remaining = 0;
+        foreach ($api->search('tables')->getContent() as $t) {
+            if ($t->id() !== $table->getId() && $t->baseSlug() === $base) {
+                $remaining++;
+            }
+        }
+        if ($remaining > 0) {
+            return;
+        }
+
+        $name = 'table:' . $base;
+        $conn = $services->get('Omeka\Connection');
 
         $stmt = $conn->prepare('UPDATE value SET type = "literal" WHERE type = ?');
         $stmt->bindValue(1, $name);

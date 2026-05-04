@@ -3,7 +3,6 @@
 namespace Table\Service\DataType;
 
 use Laminas\ServiceManager\Factory\AbstractFactoryInterface;
-use Omeka\Api\Exception\NotFoundException;
 use Psr\Container\ContainerInterface;
 use Table\DataType\Table;
 
@@ -11,21 +10,27 @@ class TableFactory implements AbstractFactoryInterface
 {
     public function canCreate(ContainerInterface $services, $requestedName)
     {
-        if (!preg_match('/^table:(\d+)$/', $requestedName, $matches)) {
+        if (!preg_match('/^table:([a-z0-9_-]+)$/', $requestedName, $matches)) {
             return false;
         }
-        try {
-            $services->get('Omeka\ApiManager')->read('tables', $matches[1]);
-        } catch (NotFoundException $e) {
-            return false;
+        $base = $matches[1];
+        $api = $services->get('Omeka\ApiManager');
+        // Match by exact slug.
+        if ($api->search('tables', ['slug' => $base, 'limit' => 1])->getTotalResults()) {
+            return true;
         }
-        return true;
+        // Or by base slug among siblings.
+        foreach ($api->search('tables')->getContent() as $t) {
+            if ($t->baseSlug() === $base) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function __invoke(ContainerInterface $services, $requestedName, ?array $options = null)
     {
-        $id = (int) substr($requestedName, strrpos($requestedName, ':') + 1);
-        $table = $services->get('Omeka\ApiManager')->read('tables', $id)->getContent();
-        return new Table($table);
+        $base = substr($requestedName, strrpos($requestedName, ':') + 1);
+        return new Table($base, $services->get('Omeka\ApiManager'));
     }
 }

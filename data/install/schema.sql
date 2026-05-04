@@ -3,6 +3,7 @@ CREATE TABLE `tables` (
     `owner_id` INT DEFAULT NULL,
     `slug` VARCHAR(190) NOT NULL,
     `is_associative` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_public` TINYINT(1) NOT NULL DEFAULT 1,
     `title` VARCHAR(190) NOT NULL,
     `lang` VARCHAR(190) DEFAULT NULL,
     `source` TEXT DEFAULT NULL,
@@ -18,10 +19,8 @@ CREATE TABLE `table_code` (
     `table_id` INT NOT NULL,
     `code` VARCHAR(190) NOT NULL,
     `label` LONGTEXT NOT NULL,
-    `lang` VARCHAR(190) DEFAULT NULL,
     INDEX IDX_3DC37053ECFF285C (`table_id`),
     INDEX idx_table_code (`table_id`, `code`),
-    INDEX idx_table_label (`table_id`, `label`(190)),
     PRIMARY KEY(`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 ALTER TABLE `tables` ADD CONSTRAINT FK_844702217E3C61F9 FOREIGN KEY (`owner_id`) REFERENCES `user` (`id`) ON DELETE SET NULL;
