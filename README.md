@@ -36,6 +36,48 @@ When using a uri, the purpose is similar to a list of uris managed by the module
 standard vocabularies via module [Value Suggest], for example for countries or
 languages.
 
+### Visibility
+
+Each table has a public/private flag. Private tables remain editable by users
+with the right permissions but are excluded from public API responses and from
+the default browse for users without `view-all`. Existing tables are public by
+default after upgrade.
+
+### Resource templates and data types
+
+Each group of sibling tables is exposed as a data type named `table:<base>`,
+where `<base>` is the slug shared by sibling tables minus the `-<lang>` suffix
+(for example, the tables `iso639-1-eng`, `iso639-1-fra` and `iso639-1-spa` are
+grouped under the data type `table:iso639-1`). The language can be the code with
+two or three letters.
+
+In a resource template, pick the data type for a property as for any other
+data type. In the resource form, a Chosen select is displayed with the labels
+of the active locale; only the code is stored as `@value` (no `@language`).
+On render, the label is resolved from the sibling table matching the current
+view locale, with a fallback chain: primary alpha-2 code => ISO 639-2/T
+(terminologic) => ISO 639-2/B (bibliographic) => canonical table whose slug
+equals `<base>`. The same data type is also available for value annotations.
+
+When the last sibling of a group is deleted, the corresponding `table:<base>`
+data type is removed from all resource templates automatically.
+
+### Sibling tables convention
+
+To provide labels in several languages for the same set of codes, create one
+table per language and use the convention `<base>-<lang>` for the slug, with
+`<lang>` matching the table's own `lang` field. For example:
+
+| Slug             | Lang  | Title                       |
+|------------------|-------|-----------------------------|
+| `iso639-1-eng`   | `eng` | ISO 639-1 language codes    |
+| `iso639-1-fra`   | `fra` | Codes de langue ISO 639-1   |
+| `iso639-1-spa`   | `spa` | Códigos de idioma ISO 639-1 |
+
+A table whose slug equals `<base>` (no `-<lang>` suffix) is treated as the
+canonical fallback when no sibling matches the view locale. The language can be
+the code with two or three letters.
+
 
 Installation
 ------------
@@ -102,10 +144,13 @@ TODO
       meanings. The point is mainly the api representation.
 - [ ] Use js [datatables] (or see packagist/github) or use direct edition (see
       module Group).
-- [ ] Provide common tables by default (languages, countries, unimarc).
-- [ ] Finalize integration in resource template.
-- [ ] Remove the limit of two columns.
-- [ ] Allow to use any column header.
+- [ ] Provide common tables by default (languages, countries, unimarc). The
+      module [Value Suggest] already include them, but hard to translate by site.
+- [x] Finalize integration in resource template (each table is exposed as a
+      data type `table:<base>`, with sibling-language fallback at render).
+- [-] Remove the limit of two columns. Decided: kept at two columns (KISS,
+      variants handled by insertion order, translations by sibling tables).
+- [-] Allow to use any column header. Decided: not needed with two columns.
 
 
 Warning
