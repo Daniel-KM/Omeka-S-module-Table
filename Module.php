@@ -9,6 +9,8 @@ if (!class_exists('Common\TraitModule', false)) {
 }
 
 use Common\TraitModule;
+use Laminas\EventManager\Event;
+use Laminas\EventManager\SharedEventManagerInterface;
 use Laminas\Mvc\MvcEvent;
 use Omeka\Module\AbstractModule;
 use Omeka\Permissions\Assertion\OwnsEntityAssertion;
@@ -187,6 +189,58 @@ class Module extends AbstractModule
                 ['view-all']
             )
         ;
+    }
+
+    public function attachListeners(SharedEventManagerInterface $sharedEventManager): void
+    {
+        $sharedEventManager->attach(
+            'Omeka\DataType\Manager',
+            'service.registered_names',
+            [$this, 'registerTableDataTypeNames']
+        );
+        $sharedEventManager->attach(
+            \Table\Entity\Table::class,
+            'entity.remove.pre',
+            [$this, 'resetTableDataTypeOnRemove']
+        );
+    }
+
+    public function registerTableDataTypeNames(Event $event): void
+    {
+        $tables = $this->getServiceLocator()->get('Omeka\ApiManager')
+            ->search('tables')->getContent();
+        $names = $event->getParam('registered_names');
+        foreach ($tables as $table) {
+            $names[] = 'table:' . $table->id();
+        }
+        $event->setParam('registered_names', $names);
+    }
+
+    public function resetTableDataTypeOnRemove(Event $event): void
+    {
+        $table = $event->getTarget();
+        $name = 'table:' . $table->getId();
+        $conn = $this->getServiceLocator()->get('Omeka\Connection');
+
+        $stmt = $conn->prepare('UPDATE value SET type = "literal" WHERE type = ?');
+        $stmt->bindValue(1, $name);
+        $stmt->executeStatement();
+
+        // resource_template_property.data_type is a JSON array of names.
+        $sql = <<<'SQL'
+            UPDATE resource_template_property
+            SET data_type = JSON_REMOVE(data_type, JSON_UNQUOTE(JSON_SEARCH(data_type, 'one', ?)))
+            WHERE JSON_SEARCH(data_type, 'one', ?) IS NOT NULL
+            SQL;
+        $stmt = $conn->prepare($sql);
+        $stmt->bindValue(1, $name);
+        $stmt->bindValue(2, $name);
+        $stmt->executeStatement();
+
+        $conn->executeStatement(
+            'UPDATE resource_template_property SET data_type = NULL WHERE data_type = ?',
+            ['[]']
+        );
     }
 
     protected function preInstall(): void

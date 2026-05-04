@@ -78,6 +78,11 @@ return [
             ],
         ],
     ],
+    'data_types' => [
+        'factories' => [
+            Service\DataType\TableFactory::class,
+        ],
+    ],
     'column_types' => [
         'invokables' => [
             'table_is_public' => ColumnType\IsPublic::class,

@@ -120,6 +120,35 @@ class TableRepresentation extends AbstractEntityRepresentation
         return $this->resource->getLang();
     }
 
+    /**
+     * Base slug, without the trailing "-<lang>" suffix when it matches the
+     * declared language. Used to group sibling translation tables.
+     */
+    public function baseSlug(): string
+    {
+        $slug = $this->slug();
+        $lang = $this->lang();
+        if ($lang !== null && $lang !== '' && str_ends_with($slug, '-' . $lang)) {
+            return substr($slug, 0, -strlen($lang) - 1);
+        }
+        return $slug;
+    }
+
+    /**
+     * Find a sibling table for the given locale, by slug convention
+     * "<baseSlug>-<locale>". Falls back to this table when none matches.
+     */
+    public function siblingForLang(?string $lang): self
+    {
+        if ($lang === null || $lang === '' || $lang === $this->lang()) {
+            return $this;
+        }
+        $candidate = $this->baseSlug() . '-' . $lang;
+        $api = $this->getServiceLocator()->get('Omeka\ApiManager');
+        $tables = $api->search('tables', ['slug' => $candidate, 'limit' => 1])->getContent();
+        return $tables ? reset($tables) : $this;
+    }
+
     public function source(): ?string
     {
         return $this->resource->getSource();
