@@ -208,6 +208,29 @@ class Module extends AbstractModule
             'data_types.value_annotating',
             [$this, 'addTableDataTypesToValueAnnotating']
         );
+        $sharedEventManager->attach(
+            '*',
+            'csv_import.config',
+            [$this, 'addTableDataTypesToCsvImportConfig']
+        );
+    }
+
+    public function addTableDataTypesToCsvImportConfig(Event $event): void
+    {
+        $config = $event->getParam('config');
+        $tables = $this->getServiceLocator()->get('Omeka\ApiManager')
+            ->search('tables')->getContent();
+        $bases = [];
+        foreach ($tables as $table) {
+            $bases[$table->baseSlug()] ??= $table->displayTitle();
+        }
+        foreach ($bases as $base => $label) {
+            $config['data_types']['table:' . $base] = [
+                'label' => $label,
+                'adapter' => 'literal',
+            ];
+        }
+        $event->setParam('config', $config);
     }
 
     public function addTableDataTypesToValueAnnotating(Event $event): void
