@@ -78,11 +78,17 @@ return [
             ],
         ],
     ],
+    'column_types' => [
+        'invokables' => [
+            'table_is_public' => ColumnType\IsPublic::class,
+        ],
+    ],
     'column_defaults' => [
         'admin' => [
             'tables' => [
                 ['type' => 'owner'],
                 ['type' => 'slug'],
+                ['type' => 'table_is_public'],
                 ['type' => 'created'],
             ],
         ],

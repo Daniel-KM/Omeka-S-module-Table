@@ -40,6 +40,8 @@ $owner = $table->owner();
             <dd class="value"><?= $escape($table->slug()) ?></dd>
             <dt><?= $translate('Manage multiple labels by code') ?></dt>
             <dd class="value"><?= $escape($table->isAssociative() ? $translate('No') : $translate('Yes')) ?></dd>
+            <dt><?= $translate('Visibility') ?></dt>
+            <dd class="value"><?= $escape($table->isPublic() ? $translate('Public') : $translate('Private')) ?></dd>
             <?php if ($v = $table->lang()): ?>
             <dt><?= $translate('Language') ?></dt>
             <dd class="value"><?= $escape($v) ?></dd>

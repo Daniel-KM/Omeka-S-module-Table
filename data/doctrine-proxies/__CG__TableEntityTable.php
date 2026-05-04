@@ -67,10 +67,10 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
     public function __sleep()
     {
         if ($this->__isInitialized__) {
-            return ['__isInitialized__', 'id', 'owner', 'slug', 'isAssociative', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
+            return ['__isInitialized__', 'id', 'owner', 'slug', 'isAssociative', 'isPublic', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
         }
 
-        return ['__isInitialized__', 'id', 'owner', 'slug', 'isAssociative', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
+        return ['__isInitialized__', 'id', 'owner', 'slug', 'isAssociative', 'isPublic', 'title', 'lang', 'source', 'comment', 'created', 'modified', 'codes'];
     }
 
     /**
@@ -267,6 +267,39 @@ class Table extends \Table\Entity\Table implements \Doctrine\ORM\Proxy\Proxy
         $this->__initializer__ && $this->__initializer__->__invoke($this, 'isAssociative', []);
 
         return parent::isAssociative();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setIsPublic(?bool $isPublic): \Table\Entity\Table
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'setIsPublic', [$isPublic]);
+
+        return parent::setIsPublic($isPublic);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getIsPublic(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'getIsPublic', []);
+
+        return parent::getIsPublic();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isPublic(): bool
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'isPublic', []);
+
+        return parent::isPublic();
     }
 
     /**

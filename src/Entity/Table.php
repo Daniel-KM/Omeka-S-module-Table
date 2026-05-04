@@ -65,6 +65,19 @@ class Table extends AbstractEntity
     protected $isAssociative = false;
 
     /**
+     * @var bool
+     *
+     * @Column(
+     *     type="boolean",
+     *     nullable=false,
+     *     options={
+     *         "default"=1
+     *     }
+     * )
+     */
+    protected $isPublic = true;
+
+    /**
      * @var string
      *
      * @Column(
@@ -191,6 +204,25 @@ class Table extends AbstractEntity
     public function isAssociative(): bool
     {
         return $this->isAssociative;
+    }
+
+    public function setIsPublic(?bool $isPublic): self
+    {
+        $this->isPublic = (bool) $isPublic;
+        return $this;
+    }
+
+    public function getIsPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    /**
+     * Alias of getIsPublic().
+     */
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
     }
 
     public function setTitle(string $title): self

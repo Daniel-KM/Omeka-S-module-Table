@@ -171,6 +171,21 @@ class Module extends AbstractModule
                     \Table\Entity\Code::class,
                 ]
             )
+
+            // Reviewer, Editor and admins can see private tables (Reviewer can
+            // already update all tables, so they must be able to browse them).
+            ->allow(
+                [
+                    $acl::ROLE_REVIEWER,
+                    $acl::ROLE_EDITOR,
+                    $acl::ROLE_SITE_ADMIN,
+                    $acl::ROLE_GLOBAL_ADMIN,
+                ],
+                [
+                    \Table\Entity\Table::class,
+                ],
+                ['view-all']
+            )
         ;
     }
 

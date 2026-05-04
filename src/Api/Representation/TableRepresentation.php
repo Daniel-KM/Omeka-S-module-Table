@@ -61,6 +61,7 @@ class TableRepresentation extends AbstractEntityRepresentation
             'o:owner' => $owner ? $owner->getReference()->jsonSerialize() : null,
             'o:slug' => $this->slug(),
             'o:is_associative' => $this->isAssociative(),
+            'o:is_public' => $this->isPublic(),
             'o:title' => $this->title(),
             'o:lang' => $this->lang(),
             'o:source' => $this->source(),
@@ -94,6 +95,11 @@ class TableRepresentation extends AbstractEntityRepresentation
     public function isAssociative(): bool
     {
         return $this->resource->isAssociative();
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->resource->isPublic();
     }
 
     public function title(): string

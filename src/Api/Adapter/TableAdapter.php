@@ -23,6 +23,7 @@ class TableAdapter extends AbstractEntityAdapter
         'owner' => 'owner',
         'slug' => 'slug',
         'is_associative' => 'isAssociative',
+        'is_public' => 'isPublic',
         'title' => 'title',
         'lang' => 'lang',
         'source' => 'source',
@@ -36,6 +37,7 @@ class TableAdapter extends AbstractEntityAdapter
         'owner' => 'owner',
         'slug' => 'slug',
         'is_associative' => 'isAssociative',
+        'is_public' => 'isPublic',
         'title' => 'title',
         'lang' => 'lang',
         'source' => 'source',
@@ -60,6 +62,7 @@ class TableAdapter extends AbstractEntityAdapter
         ],
         'bool' => [
             'is_associative' => 'isAssociative',
+            'is_public' => 'isPublic',
         ],
         'datetime_operator' => [
             'created' => 'created',
@@ -85,6 +88,26 @@ class TableAdapter extends AbstractEntityAdapter
     public function buildQuery(QueryBuilder $qb, array $query): void
     {
         $this->buildQueryFields($qb, $query);
+        $this->filterVisibility($qb);
+    }
+
+    protected function filterVisibility(QueryBuilder $qb): void
+    {
+        $services = $this->getServiceLocator();
+        $acl = $services->get('Omeka\Acl');
+        if ($acl->userIsAllowed(\Table\Entity\Table::class, 'view-all')) {
+            return;
+        }
+        $identity = $services->get('Omeka\AuthenticationService')->getIdentity();
+        $expr = $qb->expr();
+        if ($identity) {
+            $qb->andWhere($expr->orX(
+                $expr->eq('omeka_root.isPublic', '1'),
+                $expr->eq('omeka_root.owner', $qb->createNamedParameter($identity))
+            ));
+        } else {
+            $qb->andWhere($expr->eq('omeka_root.isPublic', '1'));
+        }
     }
 
     public function sortQuery(QueryBuilder $qb, array $query): void
@@ -139,6 +162,10 @@ class TableAdapter extends AbstractEntityAdapter
 
         if ($this->shouldHydrate($request, 'o:is_associative')) {
             $entity->setIsAssociative(!empty($data['o:is_associative']));
+        }
+
+        if ($this->shouldHydrate($request, 'o:is_public')) {
+            $entity->setIsPublic((bool) $request->getValue('o:is_public', true));
         }
 
         if ($this->shouldHydrate($request, 'o:lang')) {

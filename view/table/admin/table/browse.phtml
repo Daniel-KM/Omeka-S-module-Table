@@ -33,6 +33,25 @@ $canBatchDeleteAll = $this->userIsAllowed(\Table\Api\Adapter\TableAdapter::class
 
 <?php $this->trigger('view.browse.before'); ?>
 
+<?php
+$currentQuery = $this->params()->fromQuery();
+$currentIsPublic = $currentQuery['is_public'] ?? '';
+?>
+<form method="get" id="visibility-filter" class="filter">
+    <label for="is_public"><?= $translate('Visibility') ?></label>
+    <select name="is_public" id="is_public" onchange="this.form.submit()">
+        <option value=""><?= $translate('All') ?></option>
+        <option value="1"<?= $currentIsPublic === '1' ? ' selected' : '' ?>><?= $translate('Public') ?></option>
+        <option value="0"<?= $currentIsPublic === '0' ? ' selected' : '' ?>><?= $translate('Private') ?></option>
+    </select>
+    <?php foreach ($currentQuery as $key => $value): ?>
+        <?php if ($key === 'is_public' || $key === 'page') continue; ?>
+        <?php if (is_scalar($value)): ?>
+            <input type="hidden" name="<?= $escape($key) ?>" value="<?= $escape((string) $value) ?>">
+        <?php endif; ?>
+    <?php endforeach; ?>
+</form>
+
 <?php if ($tables): ?>
 
 <form method="post" id="batch-form" class="disable-unsaved-warning">

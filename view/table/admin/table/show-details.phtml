@@ -38,6 +38,10 @@ $owner = $table->owner();
         <h4><?= $translate('Manage multiple labels by code') ?></h4>
         <div class="value"><?= $table->isAssociative() ? $translate('No') : $translate('Yes') ?></div>
     </div>
+    <div class="meta-group">
+        <h4><?= $translate('Visibility') ?></h4>
+        <div class="value"><?= $table->isPublic() ? $translate('Public') : $translate('Private') ?></div>
+    </div>
     <?php if ($v = $table->lang()): ?>
     <div class="meta-group">
         <h4><?= $translate('Language') ?></h4>

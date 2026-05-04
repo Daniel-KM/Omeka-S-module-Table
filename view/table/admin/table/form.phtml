@@ -11,8 +11,12 @@
 
 $plugins = $this->getHelperPluginManager();
 $escape = $plugins->get('escapeHtml');
+$translate = $plugins->get('translate');
+$hyperlink = $plugins->get('hyperlink');
 
 $form->prepare();
+
+$isPublic = isset($table) ? $table->isPublic() : true;
 ?>
 
 <?= $this->form()->openTag($form) ?>
@@ -22,10 +26,36 @@ $form->prepare();
 <?= $this->formCollection($form) ?>
 
 <div id="page-actions">
+    <?php if ($isPublic): ?>
+    <?= $hyperlink('', '#', ['class' => 'o-icon-public button', 'title' => $translate('Make private')]) ?>
+    <input type="hidden" name="o:is_public" value="1">
+    <?php else: ?>
+    <?= $hyperlink('', '#', ['class' => 'o-icon-private button', 'title' => $translate('Make public')]) ?>
+    <input type="hidden" name="o:is_public" value="0">
+    <?php endif; ?>
     <?= $deleteButton ?? '' ?>
     <?= $this->cancelButton() ?>
     <button type="submit" name="table-submit" class="button"><?= $escape($submitLabel) ?></button>
 </div>
+
+<script>
+$(document).ready(function() {
+    $('#page-actions').on('click', '.o-icon-public, .o-icon-private', function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $input = $btn.next('input[name="o:is_public"]');
+        if ($btn.hasClass('o-icon-public')) {
+            $btn.removeClass('o-icon-public').addClass('o-icon-private')
+                .attr('title', <?= json_encode($translate('Make public')) ?>);
+            $input.val('0');
+        } else {
+            $btn.removeClass('o-icon-private').addClass('o-icon-public')
+                .attr('title', <?= json_encode($translate('Make private')) ?>);
+            $input.val('1');
+        }
+    });
+});
+</script>
 
 <?php $this->trigger("view.$action.form.after", ['form' => $form]); ?>
 
