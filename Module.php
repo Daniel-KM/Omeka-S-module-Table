@@ -203,6 +203,26 @@ class Module extends AbstractModule
             'entity.remove.pre',
             [$this, 'resetTableDataTypeOnRemove']
         );
+        $sharedEventManager->attach(
+            '*',
+            'data_types.value_annotating',
+            [$this, 'addTableDataTypesToValueAnnotating']
+        );
+    }
+
+    public function addTableDataTypesToValueAnnotating(Event $event): void
+    {
+        $tables = $this->getServiceLocator()->get('Omeka\ApiManager')
+            ->search('tables')->getContent();
+        $bases = [];
+        foreach ($tables as $table) {
+            $bases[$table->baseSlug()] = true;
+        }
+        $valueAnnotating = $event->getParam('data_types');
+        foreach (array_keys($bases) as $base) {
+            $valueAnnotating[] = 'table:' . $base;
+        }
+        $event->setParam('data_types', $valueAnnotating);
     }
 
     public function registerTableDataTypeNames(Event $event): void
